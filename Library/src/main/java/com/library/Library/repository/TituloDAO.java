@@ -1,4 +1,10 @@
-package persistencia;
+package com.library.Library.repository;
 
-public class TituloDAO extends EntityDAO {
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.library.Library.entity.Titulo;
+
+@Repository
+public interface TituloDAO extends CrudRepository<Titulo, Long>{
 }
