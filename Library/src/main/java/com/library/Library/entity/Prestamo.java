@@ -1,4 +1,6 @@
-package domain.entities;
+package com.library.Library.entity;
+
+import java.sql.Date;
 
 public class Prestamo {
 
