@@ -1,4 +1,9 @@
-package persistencia;
+package com.library.Library.repository;
 
-public class EjemplarDAO extends EntityDAO {
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+import com.library.Library.entity.*;
+
+@Repository
+public interface EjemplarDAO extends CrudRepository<Ejemplar, Long> {
 }
