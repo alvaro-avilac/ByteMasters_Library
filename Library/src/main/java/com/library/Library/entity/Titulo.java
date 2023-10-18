@@ -21,23 +21,20 @@ public class Titulo {
 	private String numReserva;
 	
 	private List<Autor> autores;
-	private List<Ejemplar> ejemplares;
-	private List<Reserva> reservas;
+
 	
 	public Titulo() {
 		super();
 	}
 
 	public Titulo(Long id, String titulo, String isbn, String numReserva, List<Autor> autores,
-			List<Ejemplar> ejemplares, List<Reserva> reservas) {
+			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
 		this.isbn = isbn;
 		this.numReserva = numReserva;
 		this.autores = autores;
-		this.ejemplares = ejemplares;
-		this.reservas = reservas;
 	}
 
 	public Long getId() {
@@ -79,25 +76,5 @@ public class Titulo {
 	public void setAutores(List<Autor> autores) {
 		this.autores = autores;
 	}
-
-	public List<Ejemplar> getEjemplares() {
-		return ejemplares;
-	}
-
-	public void setEjemplares(List<Ejemplar> ejemplares) {
-		this.ejemplares = ejemplares;
-	}
-
-	public List<Reserva> getReservas() {
-		return reservas;
-	}
-
-	public void setReservas(List<Reserva> reservas) {
-		this.reservas = reservas;
-	}
-	
-	
-	
-
 
 }
