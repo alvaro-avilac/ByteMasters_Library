@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,21 +23,26 @@ public class Titulo {
 	private String isbn;
 	private String numReserva;
 	
-	private List<Autor> autores;
-
+	@ManyToOne
+	@JoinColumn(name = "autor_id")
+	private Autor autor;
+	
+	@OneToMany(mappedBy = "titulo")
+	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {
 		super();
 	}
 
-	public Titulo(Long id, String titulo, String isbn, String numReserva, List<Autor> autores,
+	public Titulo(Long id, String titulo, String isbn, String numReserva, Autor autores,
 			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
 		this.isbn = isbn;
 		this.numReserva = numReserva;
-		this.autores = autores;
+		this.autor = autores;
+		this.ejemplares = ejemplares;
 	}
 
 	public Long getId() {
@@ -69,12 +77,30 @@ public class Titulo {
 		this.numReserva = numReserva;
 	}
 
-	public List<Autor> getAutores() {
-		return autores;
+	public Autor getAutores() {
+		return autor;
 	}
 
-	public void setAutores(List<Autor> autores) {
-		this.autores = autores;
+	public void setAutores(Autor autores) {
+		this.autor = autores;
 	}
+
+	public Autor getAutor() {
+		return autor;
+	}
+
+	public void setAutor(Autor autor) {
+		this.autor = autor;
+	}
+
+	public List<Ejemplar> getEjemplares() {
+		return ejemplares;
+	}
+
+	public void setEjemplares(List<Ejemplar> ejemplares) {
+		this.ejemplares = ejemplares;
+	}
+	
+	
 
 }

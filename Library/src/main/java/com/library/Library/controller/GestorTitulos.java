@@ -14,8 +14,8 @@ import com.library.Library.service.IServiceTitulo;
 @RequestMapping("/")
 public class GestorTitulos {
 	
-	@Autowired
-	private IServiceTitulo tituloService; //Uso interfaz de servicios de titulo
+	//@Autowired
+	//private IServiceTitulo tituloService; //Uso interfaz de servicios de titulo
 	
 	@GetMapping("/") //endpoint que estamos mapeando
 	public String crearTitulo(Model model) {
