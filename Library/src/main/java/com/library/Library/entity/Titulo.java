@@ -34,14 +34,14 @@ public class Titulo {
 		super();
 	}
 
-	public Titulo(Long id, String titulo, String isbn, String numReserva, Autor autores,
+	public Titulo(Long id, String titulo, String isbn, String numReserva, Autor autor,
 			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
 		this.isbn = isbn;
 		this.numReserva = numReserva;
-		this.autor = autores;
+		this.autor = autor;
 		this.ejemplares = ejemplares;
 	}
 
