@@ -17,17 +17,15 @@ public class Ejemplar {
 	private Long id;
 	
 	private Titulo titulo;
-	private Prestamo prestamos;
 
 	public Ejemplar() {
 		super();
 	}
 
-	public Ejemplar(Long id, Titulo titulo, Prestamo prestamos) {
+	public Ejemplar(Long id, Titulo titulo) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
-		this.prestamos = prestamos;
 	}
 
 	public Long getId() {
@@ -44,14 +42,6 @@ public class Ejemplar {
 
 	public void setTitulo(Titulo titulo) {
 		this.titulo = titulo;
-	}
-
-	public Prestamo getPrestamos() {
-		return prestamos;
-	}
-	
-	public void setPrestamos(Prestamo prestamos) {
-		this.prestamos = prestamos;
 	}
 
 }

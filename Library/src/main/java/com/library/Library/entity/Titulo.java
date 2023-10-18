@@ -28,7 +28,7 @@ public class Titulo {
 	}
 
 	public Titulo(Long id, String titulo, String isbn, String numReserva, List<Autor> autores,
-			List<Ejemplar> ejemplares, List<Reserva> reservas) {
+			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
 		this.titulo = titulo;
