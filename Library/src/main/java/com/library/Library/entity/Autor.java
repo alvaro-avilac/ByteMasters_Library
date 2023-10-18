@@ -2,10 +2,66 @@ package com.library.Library.entity;
 
 import java.util.*;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "autores")
 public class Autor {
 
-	Collection<Titulo> titulos;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
 	private String nombre;
 	private String apellido;
+	private List<Titulo> titulos;
+
+	public Autor() {
+		super();
+	}
+
+	public Autor(Long id, String nombre, String apellido, List<Titulo> titulos) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.titulos = titulos;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getApellido() {
+		return apellido;
+	}
+
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+
+	public List<Titulo> getTitulos() {
+		return titulos;
+	}
+
+	public void setTitulos(List<Titulo> titulos) {
+		this.titulos = titulos;
+	}
 
 }

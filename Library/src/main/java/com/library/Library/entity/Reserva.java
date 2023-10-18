@@ -1,33 +1,35 @@
 package com.library.Library.entity;
 
+import java.sql.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ejemplares")
-public class Ejemplar {
+@Table(name = "reservas")
+public class Reserva {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	private Usuario usuario;
 	private Titulo titulo;
-	private Prestamo prestamos;
-
-	public Ejemplar() {
+	private Date fecha;
+	
+	public Reserva() {
 		super();
 	}
 
-	public Ejemplar(Long id, Titulo titulo, Prestamo prestamos) {
+	public Reserva(Long id, Usuario usuario, Titulo titulo, Date fecha) {
 		super();
 		this.id = id;
+		this.usuario = usuario;
 		this.titulo = titulo;
-		this.prestamos = prestamos;
+		this.fecha = fecha;
 	}
 
 	public Long getId() {
@@ -38,6 +40,14 @@ public class Ejemplar {
 		this.id = id;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 	public Titulo getTitulo() {
 		return titulo;
 	}
@@ -46,12 +56,15 @@ public class Ejemplar {
 		this.titulo = titulo;
 	}
 
-	public Prestamo getPrestamos() {
-		return prestamos;
-	}
-	
-	public void setPrestamos(Prestamo prestamos) {
-		this.prestamos = prestamos;
+	public Date getFecha() {
+		return fecha;
 	}
 
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+	
+	
+	
+	
 }
