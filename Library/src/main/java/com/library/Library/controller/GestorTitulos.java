@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Titulo;
 import com.library.Library.service.IServiceTitulo;
 
@@ -23,17 +24,19 @@ public class GestorTitulos {
 	public String mostrarForm(Model model) {
 		
 		Titulo titulo = new Titulo();
-		model.addAttribute("titulo",titulo);
-				
+		Ejemplar ejemplar = new Ejemplar();
+		
+		model.addAttribute("titulo", titulo);
+		model.addAttribute("ejemplar", ejemplar);
 				
 		return "views/titulos/formAltaTitulo"; //RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
 
 	@PostMapping("/saved")
-	public String altaTitulo(@ModelAttribute Titulo titulo) {
+	public String altaTitulo(@ModelAttribute("titulo") Titulo titulo) {
 		
 		tituloService.altaTitulo(titulo);
-		return "redirect:index";
+		return "redirect:/";
 	}
 
 }
