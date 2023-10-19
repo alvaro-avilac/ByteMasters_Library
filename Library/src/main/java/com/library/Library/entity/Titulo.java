@@ -19,7 +19,7 @@ public class Titulo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String titulo;
+	private String nombre;
 	private String isbn;
 	private String numReserva;
 	
@@ -27,18 +27,17 @@ public class Titulo {
 	@JoinColumn(name = "autor_id")
 	private Autor autor;
 	
-	@OneToMany(mappedBy = "titulo")
+	@OneToMany(mappedBy = "title")
 	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {
-		super();
 	}
 
-	public Titulo(Long id, String titulo, String isbn, String numReserva, Autor autor,
+	public Titulo(Long id, String nombre, String isbn, String numReserva, Autor autor,
 			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
-		this.titulo = titulo;
+		this.nombre = nombre;
 		this.isbn = isbn;
 		this.numReserva = numReserva;
 		this.autor = autor;
@@ -53,12 +52,12 @@ public class Titulo {
 		this.id = id;
 	}
 
-	public String getTitulo() {
-		return titulo;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getIsbn() {

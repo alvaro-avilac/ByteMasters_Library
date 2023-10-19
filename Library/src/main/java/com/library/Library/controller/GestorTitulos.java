@@ -12,8 +12,8 @@ import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Titulo;
 import com.library.Library.service.IServiceTitulo;
 
-@Controller
 @RequestMapping("/")
+@Controller
 public class GestorTitulos {
 	
 	@Autowired
@@ -24,16 +24,14 @@ public class GestorTitulos {
 	public String mostrarForm(Model model) {
 		
 		Titulo titulo = new Titulo();
-		Ejemplar ejemplar = new Ejemplar();
 		
 		model.addAttribute("titulo", titulo);
-		model.addAttribute("ejemplar", ejemplar);
 				
 		return "views/titulos/formAltaTitulo"; //RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
 
 	@PostMapping("/saved")
-	public String altaTitulo(@ModelAttribute("titulo") Titulo titulo) {
+	public String altaTitulo(@ModelAttribute Titulo titulo) {
 		
 		tituloService.altaTitulo(titulo);
 		return "redirect:/";

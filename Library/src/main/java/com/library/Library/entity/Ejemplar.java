@@ -18,7 +18,7 @@ public class Ejemplar {
 	
 	@ManyToOne
 	@JoinColumn(name = "titulo_id")
-	private Titulo titulo;
+	private Titulo title;
 
 	public Ejemplar() {
 		super();
@@ -27,7 +27,7 @@ public class Ejemplar {
 	public Ejemplar(Long id, Titulo titulo) {
 		super();
 		this.id = id;
-		this.titulo = titulo;
+		this.title = titulo;
 	}
 
 	public Long getId() {
@@ -39,11 +39,11 @@ public class Ejemplar {
 	}
 
 	public Titulo getTitulo() {
-		return titulo;
+		return title;
 	}
 
 	public void setTitulo(Titulo titulo) {
-		this.titulo = titulo;
+		this.title = titulo;
 	}
 
 }

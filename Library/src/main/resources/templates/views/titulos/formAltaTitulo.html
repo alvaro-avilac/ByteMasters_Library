@@ -4,6 +4,8 @@
 <head th:replace="plantilla/template :: head"> </head>
 
 <body>
+	
+	
 
 	<header th:replace="plantilla/template :: header">
 	</header>
@@ -11,13 +13,13 @@
 	<form th:action="@{/saved}" th:object="${titulo}" method="POST">
 		
 		<div class="m-3 form-group row">
-			<label for="titulo" class="col-md-3">Nombre del titulo</label>
-			<input type="text" name="nombre" th:field="*{titulo}" class="form-control form-control-sm col-md-6" id="titulo" placeholder="nombre del titulo">
+			<label for="nombre" class="col-md-3">Nombre del titulo</label>
+			<input type="text" name="nombre" th:field="*{nombre}" class="form-control form-control-sm col-md-6" id="nombre" placeholder="nombre del titulo"/>
 		</div>
 		
 		<div class="m-3 form-group row">
 			<label for="isbn" class="col-md-3">ISBN</label>
-			<input type="text" name="isbn" th:field="*{isbn}" class="form-control form-control-sm col-md-6" id="isbn" placeholder="introduzca el isbn">
+			<input type="text" name="isbn" th:field="*{isbn}" class="form-control form-control-sm col-md-6" id="isbn" placeholder="introduzca el isbn"/>
 		</div>
 		
 		<!--<div class="m-3 form-group row">
