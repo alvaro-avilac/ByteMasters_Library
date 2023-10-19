@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th:="http://www.thymeleaf.org">
 
-<head th:replace="plantilla/template :: head"> </head>
+<head th:replace="~{plantilla/template :: head}"> </head>
 
 <body>
 	
 	
 
-	<header th:replace="plantilla/template :: header">
+	<header th:replace="~{plantilla/template :: header}">
 	</header>
 		
 	<form th:action="@{/saved}" th:object="${titulo}" method="POST">
@@ -30,7 +30,7 @@
 		<input type="submit" class="btn btn-primary m-3" value="Guardar">
 	</form>
 	
-	<footer th:replace="plantilla/template :: footer">
+	<footer th:replace="~{plantilla/template :: footer}">
 	</footer>
 
 </body>
