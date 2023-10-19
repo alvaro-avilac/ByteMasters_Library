@@ -3,10 +3,13 @@ package com.library.Library.entity;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -23,9 +26,8 @@ public class Titulo {
 	private String isbn;
 	private String numReserva;
 	
-	@ManyToOne
-	@JoinColumn(name = "autor_id")
-	private Autor autor;
+	@ManyToMany(fetch = FetchType.LAZY)
+	private List<Autor> autores;
 	
 	@OneToMany(mappedBy = "title")
 	private List<Ejemplar> ejemplares;
@@ -33,14 +35,14 @@ public class Titulo {
 	public Titulo() {
 	}
 
-	public Titulo(Long id, String nombre, String isbn, String numReserva, Autor autor,
+	public Titulo(Long id, String nombre, String isbn, String numReserva, List<Autor> autores,
 			List<Ejemplar> ejemplares) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.isbn = isbn;
 		this.numReserva = numReserva;
-		this.autor = autor;
+		this.autores = autores;
 		this.ejemplares = ejemplares;
 	}
 
@@ -76,20 +78,12 @@ public class Titulo {
 		this.numReserva = numReserva;
 	}
 
-	public Autor getAutores() {
-		return autor;
+	public List<Autor> getAutores() {
+		return autores;
 	}
 
-	public void setAutores(Autor autores) {
-		this.autor = autores;
-	}
-
-	public Autor getAutor() {
-		return autor;
-	}
-
-	public void setAutor(Autor autor) {
-		this.autor = autor;
+	public void setAutores(List<Autor> autores) {
+		this.autores = autores;
 	}
 
 	public List<Ejemplar> getEjemplares() {
