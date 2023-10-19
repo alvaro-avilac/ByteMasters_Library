@@ -59,5 +59,13 @@ public class GestorTitulos {
 		
 		return "redirect:/";
 	}
-
+	
+	
+	@GetMapping("/mostrar")
+	public String mostrarTitulos(Model model) {
+		List<Titulo> listadoTitulos = tituloService.listarTitulos();
+		model.addAttribute("nombre", "Lista de titulos");
+		model.addAttribute("titulos", listadoTitulos);
+		return "/views/titulos/mostrarTitulos";
+	}
 }
