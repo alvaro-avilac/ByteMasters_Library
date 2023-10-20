@@ -5,7 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,7 +16,9 @@ public class Ejemplar {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private Titulo titulo;
+	@ManyToOne
+	@JoinColumn(name = "titulo_id")
+	private Titulo title;
 
 	public Ejemplar() {
 		super();
@@ -25,7 +27,7 @@ public class Ejemplar {
 	public Ejemplar(Long id, Titulo titulo) {
 		super();
 		this.id = id;
-		this.titulo = titulo;
+		this.title = titulo;
 	}
 
 	public Long getId() {
@@ -37,11 +39,11 @@ public class Ejemplar {
 	}
 
 	public Titulo getTitulo() {
-		return titulo;
+		return title;
 	}
 
 	public void setTitulo(Titulo titulo) {
-		this.titulo = titulo;
+		this.title = titulo;
 	}
 
 }

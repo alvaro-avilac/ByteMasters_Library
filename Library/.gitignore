@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 /database/
 derby.log
+/.dbeaver
 
 ### STS ###
 .apt_generated
