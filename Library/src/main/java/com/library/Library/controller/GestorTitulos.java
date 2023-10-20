@@ -57,7 +57,7 @@ public class GestorTitulos {
 		tituloService.altaTitulo(titulo);
 		ejemplarService.altaEjemplar(ejemplar);
 		
-		return "redirect:/";
+		return "redirect:/mostrar";
 	}
 	
 	

@@ -2,39 +2,43 @@
 <html xmlns:th:="http://www.thymeleaf.org">
 
 <head th:replace="plantilla/template :: head">
-</head>	
+</head>
 
 <body>
-	
-	<header th:replace="plantilla/template :: header">	
+
+	<header th:replace="plantilla/template :: header">
 	</header>
-	
+
 	<div class="container">
 		<h1 th:text="${nombre}"></h1>
 	</div>
 	<div class="container">
 		<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">id</th>
-      <th scope="col">Titulo</th>
-      <th scope="col">ISBN</th>
-      <th scope="col">Autor</th>
-    </tr>
-  </thead>
-  <tbody class="table-group-divider">
-  <tr th:each="ti:${titulos}">
-  <td th scope="row" th:text="${ti.id}"></td>
-  <td th:text="${ti.nombre}"></td>
-  <td th:text="${ti.isbn}"></td>
-  <td th:text="${ti.autores}"></td>
-  </tr>
-  </tbody>
-</table>
+			<thead>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">Titulo</th>
+					<th scope="col">ISBN</th>
+					<th scope="col">Autor</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="ti:${titulos}">
+					<td th scope="row" th:text="${ti.id}"></td>
+					<td th:text="${ti.nombre}"></td>
+					<td th:text="${ti.isbn}"></td>
+					<td>
+						<span th:each="autor : ${ti.autores}">
+							<span th:text="${autor.nombre}"></span>
+						</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 	<footer th:replace="plantilla/template :: footer">
 	</footer>
-	
+
 </body>
-	
+
 </html>
