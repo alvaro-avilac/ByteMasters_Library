@@ -5,10 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +68,30 @@ public class GestorTitulos {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		model.addAttribute("nombre", "Lista de titulos");
 		model.addAttribute("titulos", listadoTitulos);
+		return "/views/titulos/mostrarTitulos";
+	}
+	
+	@GetMapping("/detalle/{id}")
+	public String detallesTitulo(@PathVariable("id") Long tituloId, Model model) {
+		
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		model.addAttribute("titulo", titulo);
+		return "/views/titulos/detalleTitulo";
+	}
+	
+	@GetMapping("detalle/edit/{id}")
+	public String mostrarFormEditarTitulo(@PathVariable("id") Long tituloId, Model model) {
+		
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		model.addAttribute("titulo", titulo);
+		return "/views/titulos/formAltaTitulo";
+	}
+	
+	@GetMapping("detalle/delete/{id}")
+	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
+		
+		tituloService.bajaTitulo(tituloId);
+		
 		return "/views/titulos/mostrarTitulos";
 	}
 }

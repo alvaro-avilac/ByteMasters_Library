@@ -20,6 +20,7 @@
 					<th scope="col">Titulo</th>
 					<th scope="col">ISBN</th>
 					<th scope="col">Autor</th>
+					<th scope="col">Detalles del titulo</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -27,10 +28,14 @@
 					<td th scope="row" th:text="${ti.id}"></td>
 					<td th:text="${ti.nombre}"></td>
 					<td th:text="${ti.isbn}"></td>
+					
 					<td>
 						<span th:each="autor : ${ti.autores}">
-							<span th:text="${autor.nombre}"></span>
+							<span th:text="${autor.nombre} + ${autor.apellido}"></span>
 						</span>
+					</td>
+					<td>
+						<a class="btn btn-primary" th:href="@{/detalle/} + ${ti.id}" role="button">+ info</a>
 					</td>
 				</tr>
 			</tbody>

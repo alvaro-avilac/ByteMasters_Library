@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/template :: head}"> </head>
+
+<body>
+
+	<header th:replace="~{plantilla/template :: header}">
+	</header>
+
+
+	<div class="container m-4">
+
+		<h1 class="mb-3" th:text="'Titulo: ' + ${titulo.nombre}"></h1>
+
+		<a class="btn btn-success" th:href="@{/detalle/edit/} + ${titulo.id}" role="button">Editar</a>
+
+		<a class="btn btn-danger" th:href="@{/detalle/delete/} + ${titulo.id}" role="button">Eliminar</a>
+
+
+		<ul class="list-group list-unstyled mt-3">
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">ISBN</h5>
+					<small th:text="${titulo.isbn}"></small>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">Autor(es)</h5>
+					<span th:each="autor : ${titulo.autores}">
+						<span th:text="${autor.nombre} + ${autor.apellido}"></span>
+					</span>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">Numero de ejemplares</h5>
+					<small></small>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">Numero de reservas</h5>
+					<small></small>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<footer th:replace="~{plantilla/template :: footer}">
+	</footer>
+
+</body>
+
+</html>
