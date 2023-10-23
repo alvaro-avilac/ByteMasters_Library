@@ -20,6 +20,7 @@
 					<th scope="col">Titulo</th>
 					<th scope="col">ISBN</th>
 					<th scope="col">Autor</th>
+					<th scope="col">Ejemplares</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -32,6 +33,10 @@
 							<span th:text="${autor.nombre}"></span>
 						</span>
 					</td>
+					<td>
+					   <span th:text="${#lists.size(ti.ejemplares)}"></span>
+					</td>
+
 				</tr>
 			</tbody>
 		</table>
