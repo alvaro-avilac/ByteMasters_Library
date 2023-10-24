@@ -27,11 +27,11 @@ public class Usuario {
 	private Date fechaFinPenalizacion;
 	
 	//con prestamo
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "usuario")
 	private List<Prestamo> prestamos;
 	
 	//con reserva
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "usuario")
 	private List<Reserva> reservas;
 
 	public Usuario(Long id, String nombre, String apellidos, Date fechaFinPenalizacion, List<Prestamo> prestamos,
