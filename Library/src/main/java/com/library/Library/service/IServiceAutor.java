@@ -10,5 +10,5 @@ public interface IServiceAutor {
 	public void altaAutor(Autor a);
 	public void bajaAutor(Long id);
 	public Optional<Autor> buscarAutorPorId(Long id);
-	public List<Autor> buscarNombreYApellido(String nombre, String apellido);
+	public Optional<Autor> buscarNombreYApellido(String nombre, String apellido);
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Titulo;
-import com.library.Library.repository.AutorDAO;
+import com.library.Library.service.IServiceAutor;
 import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServiceTitulo;
 
@@ -32,13 +33,13 @@ public class GestorTitulos {
 	private IServiceEjemplar ejemplarService;
 	
 	@Autowired 
-	private AutorDAO autorDAO;
+	private IServiceAutor autorService;
 	
 	@GetMapping("/altaTitulo") //endpoint que estamos mapeando
 	public String mostrarForm(Model model) {
 		
 		Titulo titulo = new Titulo();
-		List<Autor> autores = (List<Autor>) autorDAO.findAll();
+		List<Autor> autores = (List<Autor>) autorService.listarAutores();
 		
 		log.info(tituloService.listarTitulos().toString());
 		
@@ -53,6 +54,23 @@ public class GestorTitulos {
 		
 		Ejemplar ejemplar = new Ejemplar();
 		ejemplar.setTitulo(titulo);
+		
+		List<Autor> autores = titulo.getAutores();
+		
+		for (int i = 0; i < autores.size(); i++) {
+			Optional<Autor> autorOpcional = autorService.buscarNombreYApellido(autores.get(i).getNombre(), autores.get(i).getApellido());
+			
+			if (autorOpcional.isEmpty()) {
+				Autor nuevoAutor = new Autor();
+				nuevoAutor.setNombre(autores.get(i).getNombre());
+				nuevoAutor.setApellido(autores.get(i).getApellido());
+				autores.set(i, nuevoAutor);
+			} else {
+				autores.set(i, autorOpcional.get());
+			}
+			
+			titulo.setAutores(autores);
+		}
 		
 		tituloService.altaTitulo(titulo);
 		ejemplarService.altaEjemplar(ejemplar);

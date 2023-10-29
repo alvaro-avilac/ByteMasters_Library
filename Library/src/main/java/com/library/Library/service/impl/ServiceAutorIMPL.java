@@ -10,6 +10,7 @@ import com.library.Library.entity.Autor;
 import com.library.Library.repository.AutorDAO;
 import com.library.Library.service.IServiceAutor;
 
+@Service
 public class ServiceAutorIMPL implements IServiceAutor{
 	
 	@Autowired
@@ -35,7 +36,7 @@ public class ServiceAutorIMPL implements IServiceAutor{
 		return autorDAO.findById(id);
 	}
 	
-	public List<Autor> buscarNombreYApellido(String nombre, String apellido) {
+	public Optional<Autor> buscarNombreYApellido(String nombre, String apellido) {
 		return autorDAO.findByNombreAndApellido(nombre, apellido);
 	}
 
