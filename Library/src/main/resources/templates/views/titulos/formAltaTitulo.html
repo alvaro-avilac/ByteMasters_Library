@@ -24,8 +24,9 @@
 		
 		<div class="m-3 form-group row">
 			<label for="autores" class="col-md-3">Autor(es)</label>
-			<input  type="text" name="autores" th:field="*{autores}" class="form-control form-control-sm col-md-6" id="autor" placeholder="Nombre del autor"/>
+			<input type="text" th:field="*{autoresStr}" class="form-control form-control-sm col-md-6" id="autores" placeholder="Nombre de autores separados por comas"/>
 		</div>
+		
 		
 		<input type="submit" class="btn btn-primary m-3" value="Guardar">
 	</form>

@@ -8,8 +8,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,25 +55,29 @@ public class GestorTitulos {
 	@PostMapping("/saved")
 	public String altaTitulo(@ModelAttribute Titulo titulo) {
 		
+		List<String> nombresAutores = Arrays.asList(titulo.getAutoresStr().split("\\s*,\\s*"));
+		
+		List<Autor> autores = new ArrayList<>();
+		
+		for (String nombreApellido : nombresAutores) {
+			String[] partes = nombreApellido.split(" ");
+			if (partes.length >= 2) {
+				Autor autor = new Autor();
+				autor.setNombre(partes[0]);
+				autor.setApellido(partes[1]);
+				autorService.altaAutor(autor);
+				autores.add(autor);
+			} else {
+				Autor autor = new Autor();
+				autor.setNombre(partes[0]);
+				autorService.altaAutor(autor);
+				autores.add(autor);
+			}
+		}
+		
+		titulo.setAutores(autores);
 		Ejemplar ejemplar = new Ejemplar();
 		ejemplar.setTitulo(titulo);
-		
-		List<Autor> autores = titulo.getAutores();
-		
-		for (int i = 0; i < autores.size(); i++) {
-			Optional<Autor> autorOpcional = autorService.buscarNombreYApellido(autores.get(i).getNombre(), autores.get(i).getApellido());
-			
-			if (autorOpcional.isEmpty()) {
-				Autor nuevoAutor = new Autor();
-				nuevoAutor.setNombre(autores.get(i).getNombre());
-				nuevoAutor.setApellido(autores.get(i).getApellido());
-				autores.set(i, nuevoAutor);
-			} else {
-				autores.set(i, autorOpcional.get());
-			}
-			
-			titulo.setAutores(autores);
-		}
 		
 		tituloService.altaTitulo(titulo);
 		ejemplarService.altaEjemplar(ejemplar);
