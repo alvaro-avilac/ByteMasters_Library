@@ -102,4 +102,8 @@ public class Titulo {
 	public void setAutoresStr(String autoresStr) {
 		this.autoresStr = autoresStr;
 	}
+	
+	public String toString() {
+		return String.format("Titulo [id=%s, libro=%s, isbn=%s]", id, nombre, isbn);
+	}
 }

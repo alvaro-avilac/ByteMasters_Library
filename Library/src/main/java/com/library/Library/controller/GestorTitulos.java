@@ -44,6 +44,7 @@ public class GestorTitulos {
 		Titulo titulo = new Titulo();
 		List<Autor> autores = (List<Autor>) autorService.listarAutores();
 		
+		
 		log.info(tituloService.listarTitulos().toString());
 		
 		model.addAttribute("titulo", titulo);
@@ -61,17 +62,34 @@ public class GestorTitulos {
 		
 		for (String nombreApellido : nombresAutores) {
 			String[] partes = nombreApellido.split(" ");
-			if (partes.length >= 2) {
-				Autor autor = new Autor();
-				autor.setNombre(partes[0]);
-				autor.setApellido(partes[1]);
-				autorService.altaAutor(autor);
-				autores.add(autor);
+			if (partes.length >= 2) {			
+				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+				
+				if (autorExistente != null) {
+					log.info("encontrado autor existente " + autorExistente.toString());
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autor.setApellido(partes[1]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor " + autor.toString());
+					autores.add(autor);
+				}
+				
 			} else {
-				Autor autor = new Autor();
-				autor.setNombre(partes[0]);
-				autorService.altaAutor(autor);
-				autores.add(autor);
+				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+				
+				if (autorExistente != null) {
+					log.info("autor existente encontrado");
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor");
+					autores.add(autor);
+				}
 			}
 		}
 		

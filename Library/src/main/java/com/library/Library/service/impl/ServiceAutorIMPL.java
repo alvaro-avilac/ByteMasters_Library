@@ -36,4 +36,14 @@ public class ServiceAutorIMPL implements IServiceAutor{
 		return autorDAO.findById(id);
 	}
 
+	@Override
+	public Autor buscarAutorPorNombreYApellido(String n, String a) {
+		return autorDAO.findByNombreAndApellido(n, a);
+	}
+	
+	@Override
+	public Autor buscarAutorPorNombre(String n) {
+		return autorDAO.findByNombre(n);
+	}
+	
 }

@@ -10,4 +10,6 @@ public interface IServiceAutor {
 	public void altaAutor(Autor a);
 	public void bajaAutor(Long id);
 	public Optional<Autor> buscarAutorPorId(Long id);
+	public Autor buscarAutorPorNombreYApellido(String n, String a);
+	public Autor buscarAutorPorNombre(String n);
 }
