@@ -24,10 +24,9 @@
 		
 		<div class="m-3 form-group row">
 			<label for="autores" class="col-md-3">Autor(es)</label>
-			<select type="text" name="autores" th:fields="*{autores}" class="form-control form-control-sm col-md-6" id="autor" placeholder="">
-				<option th:each="a : ${listaAutores}" th:value="${a.id}" th:text="${a.nombre}"/>			
-			</select>
+			<input type="text" th:field="*{autoresStr}" class="form-control form-control-sm col-md-6" id="autores" placeholder="Nombre de autores separados por comas"/>
 		</div>
+		
 		
 		<input type="submit" class="btn btn-primary m-3" value="Guardar">
 	</form>
