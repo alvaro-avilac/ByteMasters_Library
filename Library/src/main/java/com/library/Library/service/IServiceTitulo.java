@@ -10,5 +10,5 @@ public interface IServiceTitulo {
 	public List<Titulo> listarTitulos();
 	public void altaTitulo(Titulo t);
 	public void bajaTitulo(Long id);
-	public Optional<Titulo> buscarTituloPorId(Long id);
+	public Titulo buscarTituloPorId(Long id);
 }

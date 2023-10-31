@@ -33,8 +33,8 @@ public class ServiceTituloIMPL implements IServiceTitulo{
 	}
 
 	@Override
-	public Optional<Titulo> buscarTituloPorId(Long id) {
-		return tituloDAO.findById(id);
+	public Titulo buscarTituloPorId(Long id) {
+		return tituloDAO.findById(id).get();
 	}
 
 }
