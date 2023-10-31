@@ -54,5 +54,10 @@ public class Autor {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("Autor [id=%s, nombre=%s, apellido=%s]", id, nombre, apellido);
+	}
 
 }
