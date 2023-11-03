@@ -2,6 +2,9 @@ package com.library.Library.entity;
 
 import java.util.List;
 
+import io.micrometer.common.lang.NonNull;
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +32,7 @@ public class Titulo {
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Autor> autores;
 	
-	@OneToMany(mappedBy = "title")
+	@OneToMany(mappedBy = "title", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {

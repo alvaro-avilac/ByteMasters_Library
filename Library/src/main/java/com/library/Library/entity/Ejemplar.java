@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,9 +18,13 @@ public class Ejemplar {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "titulo_id")
+	@JoinColumn(name = "titulo_id", nullable=false)
 	private Titulo title;
 
+	/* @OneToOne
+	 @JoinColumn(name = "prestamo_id", unique=true)
+	 private Prestamo prestamo;*/
+	
 	public Ejemplar() {
 		super();
 	}

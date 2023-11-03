@@ -20,14 +20,14 @@ public class Reserva {
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
 		private Long id;
 		
-		@ManyToOne 
-		@JoinColumn (name ="usario_id")
+		@ManyToOne (optional=true)
+		@JoinColumn (name ="usario_id", nullable=false)
 		private Usuario usuario;
 		private Date fecha;
 		
 		
-		@ManyToOne 
-		@JoinColumn (name= "titulo_id")
+		@ManyToOne (optional=true)
+		@JoinColumn (name= "titulo_id", nullable=false)
 		private Titulo titulo ;
 
 		public Reserva() {

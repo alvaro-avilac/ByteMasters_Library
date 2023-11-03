@@ -2,6 +2,7 @@ package com.library.Library.entity;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,15 +24,17 @@ public class Prestamo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@ManyToOne 
-	@JoinColumn (name ="usario_id")
+	@ManyToOne (optional=true)
+	@JoinColumn (name ="usario_id", nullable=false)
 	private Usuario usuario;
 	private Date fechaInicio;
 	private Date fechaFinal;
 	private boolean activo;
 	
-	@OneToOne 
+	@OneToOne(optional = true)
+	@JoinColumn(name = "ejemplar_id", nullable=false)
 	private Ejemplar ejemplar;
+
 	
 	public Prestamo() {
 	}
