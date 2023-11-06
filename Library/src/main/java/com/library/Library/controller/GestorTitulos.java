@@ -129,7 +129,13 @@ public class GestorTitulos {
 	public String detallesTitulo(@PathVariable("id") Long tituloId, Model model) {
 		
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		
 		model.addAttribute("titulo", titulo);
+		Formulario formulario = new Formulario();
+		formulario.setAutoresString(titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
+		formulario.setNumeroEjemplares(String.valueOf(titulo.getEjemplares().size()));
+		
+		model.addAttribute("formulario", formulario);
 		return "/views/titulos/detalleTitulo";
 	}
 	

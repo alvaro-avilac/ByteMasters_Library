@@ -31,7 +31,7 @@
 					
 					<td>
 						<span th:each="autor : ${ti.autores}">
-							<span th:text="${autor.nombre} + ${autor.apellido}"></span>
+							<span th:text="${autor.nombre} +' '+ ${autor.apellido} + ','"></span>
 						</span>
 					</td>
 					<td>
