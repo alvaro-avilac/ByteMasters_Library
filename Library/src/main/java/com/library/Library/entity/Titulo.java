@@ -25,7 +25,6 @@ public class Titulo {
 	private String nombre;
 	private String isbn;
 	private String numReserva;
-	private String autoresStr;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Autor> autores;
@@ -93,14 +92,6 @@ public class Titulo {
 
 	public void setEjemplares(List<Ejemplar> ejemplares) {
 		this.ejemplares = ejemplares;
-	}
-	
-	public String getAutoresStr() {
-		return autoresStr;
-	}
-	
-	public void setAutoresStr(String autoresStr) {
-		this.autoresStr = autoresStr;
 	}
 	
 	public String toString() {

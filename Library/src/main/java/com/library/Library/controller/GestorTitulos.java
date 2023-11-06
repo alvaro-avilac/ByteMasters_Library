@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
+import com.library.Library.entity.Formulario;
 import com.library.Library.entity.Titulo;
 import com.library.Library.service.IServiceAutor;
 import com.library.Library.service.IServiceEjemplar;
@@ -45,21 +46,22 @@ public class GestorTitulos {
 	public String mostrarForm(Model model) {
 		
 		Titulo titulo = new Titulo();
+		Formulario formulario = new Formulario();
 		List<Autor> autores = (List<Autor>) autorService.listarAutores();
 		
-		
-		log.info(tituloService.listarTitulos().toString());
+		//log.info(tituloService.listarTitulos().toString());
 		
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaAutores", autores);
+		model.addAttribute("formulario", formulario);
 				
 		return "views/titulos/formAltaTitulo"; //RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
 
 	@PostMapping("/saved")
-	public String altaTitulo(@ModelAttribute Titulo titulo) {
+	public String altaTitulo(@ModelAttribute Titulo titulo, Formulario formulario) {
 		
-		List<String> nombresAutores = Arrays.asList(titulo.getAutoresStr().split("\\s*,\\s*"));
+		List<String> nombresAutores = Arrays.asList(formulario.getAutoresString().split("\\s*,\\s*"));
 		
 		List<Autor> autores = new ArrayList<>();
 		
@@ -97,11 +99,19 @@ public class GestorTitulos {
 		}
 		
 		titulo.setAutores(autores);
-		Ejemplar ejemplar = new Ejemplar();
-		ejemplar.setTitulo(titulo);
-		
 		tituloService.altaTitulo(titulo);
-		ejemplarService.altaEjemplar(ejemplar);
+		
+		int nEjemplares = Integer.parseInt(formulario.getNumeroEjemplares());
+		List<Ejemplar> ejemplares = new ArrayList<>();
+		
+		for (int i = 0; i < nEjemplares; i++) {
+			Ejemplar ejemplar = new Ejemplar();
+			ejemplar.setTitulo(titulo);			
+			ejemplarService.altaEjemplar(ejemplar);
+			ejemplares.add(ejemplar);
+		}
+		titulo.setEjemplares(ejemplares);
+		tituloService.altaTitulo(titulo);
 		
 		return "redirect:/mostrar";
 	}
@@ -127,7 +137,12 @@ public class GestorTitulos {
 	public String mostrarFormEditarTitulo(@PathVariable("id") Long tituloId, Model model) {
 		
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		Formulario formulario = new Formulario();
 		model.addAttribute("titulo", titulo);
+		formulario.setAutoresString(titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
+		formulario.setNumeroEjemplares(String.valueOf(titulo.getEjemplares().size()));
+		
+		model.addAttribute("formulario", formulario);
 		return "/views/titulos/formAltaTitulo";
 	}
 	
