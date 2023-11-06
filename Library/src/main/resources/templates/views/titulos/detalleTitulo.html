@@ -29,7 +29,7 @@
 				<div>
 					<h5 class="mb-1">Autor(es)</h5>
 					<span th:each="autor : ${titulo.autores}">
-						<span th:text="${autor.nombre} + ' ' + ${autor.apellido}"></span>
+						<span th:text="${autor.nombre} + ' ' + ${autor.apellido} + ','"></span>
 					</span>
 				</div>
 			</li>

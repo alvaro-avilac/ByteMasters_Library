@@ -111,7 +111,6 @@ public class GestorTitulos {
 			ejemplares.add(ejemplar);
 		}
 		titulo.setEjemplares(ejemplares);
-		tituloService.altaTitulo(titulo);
 		
 		return "redirect:/mostrar";
 	}
