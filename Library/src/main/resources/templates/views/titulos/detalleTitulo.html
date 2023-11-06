@@ -29,14 +29,8 @@
 				<div>
 					<h5 class="mb-1">Autor(es)</h5>
 					<span th:each="autor : ${titulo.autores}">
-						<span th:text="${autor.nombre} + ' ' + ${autor.apellido} + ','"></span>
+						<span th:text="${autor.nombre} + ' ' + ${autor.apellido == null ? '' : autor.apellido}"></span>
 					</span>
-				</div>
-			</li>
-			<li class="list-group-item p-3 mb-2 bg-light">
-				<div>
-					<h5 class="mb-1">Numero de ejemplares</h5>
-					<small th:text="${formulario.numeroEjemplares}"></small>
 				</div>
 			</li>
 			<li class="list-group-item p-3 mb-2 bg-light">
@@ -45,6 +39,26 @@
 					<small></small>
 				</div>
 			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<h5 class="mb-1" th:text="'Numero de ejemplares: ' + ${numEjemplares}"></h5>
+
+				<form id="eliminarForm" th:action="@{/detalle/delete_ejemplares}" method="post">
+					<select id="selected_ejemplares" name="selected_ejemplares" multiple="multiple" required>
+						<th:block th:each="e : ${listaEjemplares}">
+							<option th:text="${e.id}" th:value="${e.id}"></option>
+						</th:block>
+					</select>
+					<button class="btn btn-danger" type="submit">Eliminar</button>
+				</form>
+
+				<form id="agregarForm" th:action="@{/detalle/agregar_ejemplares} " method="post">
+					<input type="number" class="form-control" id="numEjemplares" name="numEjemplares"
+						placeholder="Ingresa el número de ejemplares" min="1" />
+					<button class="btn btn-success" type="submit">Agregar</button>
+				</form>
+
+			</li>
+
 		</ul>
 	</div>
 

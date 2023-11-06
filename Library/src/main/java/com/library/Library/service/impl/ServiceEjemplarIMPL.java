@@ -35,5 +35,10 @@ public class ServiceEjemplarIMPL implements IServiceEjemplar{
 	public Optional<Ejemplar> buscarEjemplarPorId(Long id) {
 		return ejemplarDAO.findById(id);
 	}
+
+	@Override
+	public List<Ejemplar> listarEjemplaresPorTitulo(Long id) {
+		return ejemplarDAO.findByTitleId(id);
+	}
 	
 }

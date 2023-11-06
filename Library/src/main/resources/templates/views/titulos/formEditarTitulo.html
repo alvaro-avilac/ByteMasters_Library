@@ -29,11 +29,6 @@
 				placeholder="nombre" />
 		</div>
 
-		<div class="m-3 form-group row">
-			<label for="numeroEjemplares">Número de Ejemplares:</label>
-			<input type="number" class="form-control" id="numEjemplaresStr"
-				name="numEjemplaresStr" placeholder="Ingresa el número de ejemplares" th:value="${titulo.ejemplares == null ? 1 : titulo.ejemplares.size()} " min="1" />
-		</div>
 		<input type="submit" class="btn btn-primary m-3" value="Guardar" />
 			 
 	</form>
