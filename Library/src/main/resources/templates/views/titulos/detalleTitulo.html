@@ -43,6 +43,8 @@
 				<h5 class="mb-1" th:text="'Numero de ejemplares: ' + ${numEjemplares}"></h5>
 
 				<form id="eliminarForm" th:action="@{/detalle/delete_ejemplares}" method="post">
+					<input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle"
+						placeholder="Ingresa el número de ejemplares" min="1" />
 					<select id="selected_ejemplares" name="selected_ejemplares" multiple="multiple" required>
 						<th:block th:each="e : ${listaEjemplares}">
 							<option th:text="${e.id}" th:value="${e.id}"></option>
@@ -51,8 +53,10 @@
 					<button class="btn btn-danger" type="submit">Eliminar</button>
 				</form>
 
-				<form id="agregarForm" th:action="@{/detalle/agregar_ejemplares} " method="post">
-					<input type="number" class="form-control" id="numEjemplares" name="numEjemplares"
+				<form th:object="${titulo}" id="agregarForm" th:action="@{/detalle/agregar_ejemplares} " method="post">
+					<input type="number" class="form-control" id="numeroEjemplares" name="numeroEjemplares"
+						placeholder="Ingresa el número de ejemplares" min="1" />
+					<input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle"
 						placeholder="Ingresa el número de ejemplares" min="1" />
 					<button class="btn btn-success" type="submit">Agregar</button>
 				</form>

@@ -105,6 +105,50 @@ public class GestorTitulos {
 
 		return "redirect:/mostrar";
 	}
+	
+	@PostMapping("/edited")
+	public String EditarTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr) {
+
+		List<Autor> autores = new ArrayList<>();
+
+		for (String nombreApellido : autoresStr) {
+			String[] partes = nombreApellido.split(" ");
+			if (partes.length >= 2) {
+				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+
+				if (autorExistente != null) {
+					log.info("encontrado autor existente " + autorExistente.toString());
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autor.setApellido(partes[1]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor " + autor.toString());
+					autores.add(autor);
+				}
+
+			} else {
+				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+
+				if (autorExistente != null) {
+					log.info("autor existente encontrado");
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor");
+					autores.add(autor);
+				}
+			}
+		}
+
+		titulo.setAutores(autores);
+		tituloService.altaTitulo(titulo);
+
+		return "redirect:/detalle/" + titulo.getId();
+	}
 
 	@GetMapping("/mostrar")
 	public String mostrarTitulos(Model model) {
@@ -149,24 +193,27 @@ public class GestorTitulos {
 	}
 	
 	@PostMapping("/detalle/delete_ejemplares")
-	public String EliminarEjemplares(@ModelAttribute Titulo titulo, @RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model) {
-		log.info("Lista Ejemplares seleccionados " + selected_ejemplares.toString());
-
+	public String EliminarEjemplares(@RequestParam("idTitle") Long idTitle, @RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model) {
+		log.info("Lista Ejemplares seleccionados " + selected_ejemplares);
+		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
 		for (Long ejemplar : selected_ejemplares) {
 			ejemplarService.bajaEjemplar(ejemplar);
 		}
 		
-		return "redirect: /mostrar";
+		return "redirect:/detalle/" + titulo.getId();
 	}
 	
 	@PostMapping("/detalle/agregar_ejemplares")
-	public String AgregarEjemplares(@ModelAttribute Titulo titulo,@RequestParam("numEjemplares") Integer numEjemplares, Model model) {
-		log.info("Lista Ejemplares seleccionados " + numEjemplares.toString());
+	public String AgregarEjemplares(@RequestParam("numeroEjemplares") Integer numeroEjemplares, @RequestParam("idTitle") Long idTitle, Model model) {
+		log.info("Numero de Ejemplares seleccionados " + numeroEjemplares.toString());
 		
+		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
 		
+		log.info("Titulo: " + titulo.toString());
+
 		List<Ejemplar> ejemplares = new ArrayList<>();
 
-		for (int i = 0; i < numEjemplares; i++) {
+		for (int i = 0; i < numeroEjemplares; i++) {
 			Ejemplar ejemplar = new Ejemplar();
 			ejemplar.setTitulo(titulo);
 			ejemplarService.altaEjemplar(ejemplar);
@@ -174,6 +221,6 @@ public class GestorTitulos {
 		}
 		titulo.setEjemplares(ejemplares);
 		
-		return "redirect: /mostrar";
+		return "redirect:/detalle/" + titulo.getId();
 	}
 }

@@ -8,7 +8,7 @@
 	<header th:replace="~{plantilla/template :: header}">
 	</header>
 
-	<form th:action="@{/saved}" th:object="${titulo}" method="POST">
+	<form th:action="@{/edited}" th:object="${titulo}" method="POST">
 		<div class="m-3 form-group row">
 			<input type="hidden" th:field="*{id}">
 			<label for="nombre" class="col-md-3">Nombre del titulo</label>
