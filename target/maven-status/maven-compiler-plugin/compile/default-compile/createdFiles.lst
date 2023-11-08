@@ -1,0 +1,16 @@
+com\library\Library\entity\Titulo.class
+com\library\Library\controller\GestorPenalizaciones.class
+com\library\Library\service\IServiceEjemplar.class
+com\library\Library\entity\Ejemplar.class
+com\library\Library\repository\AutorDAO.class
+com\library\Library\repository\EjemplarDAO.class
+com\library\Library\service\impl\ServiceTituloIMPL.class
+com\library\Library\LibraryApplication.class
+com\library\Library\repository\TituloDAO.class
+com\library\Library\service\IServiceAutor.class
+com\library\Library\controller\GestorTitulos.class
+com\library\Library\service\IServiceTitulo.class
+com\library\Library\entity\Autor.class
+com\library\Library\service\impl\ServiceAutorIMPL.class
+com\library\Library\controller\GestorPrestamos.class
+com\library\Library\service\impl\ServiceEjemplarIMPL.class

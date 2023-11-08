@@ -1,0 +1,17 @@
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\controller\GestorPenalizaciones.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\entity\Autor.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\IServiceTitulo.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\IServiceAutor.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\controller\GestorPrestamos.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\controller\GestorTitulos.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\impl\ServiceTituloIMPL.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\impl\ServiceEjemplarIMPL.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\impl\ServiceAutorIMPL.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\service\IServiceEjemplar.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\entity\Titulo.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\repository\TituloDAO.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\LibraryApplication.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\entity\Formulario.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\entity\Ejemplar.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\repository\EjemplarDAO.java
+D:\universidad\uclm\asignaturas\tercero\1_cuatri\ingenieria_de_software_II\proyecto\Library\src\main\java\com\library\Library\repository\AutorDAO.java
