@@ -28,8 +28,7 @@
 			<li class="list-group-item p-3 mb-2 bg-light">
 				<div>
 					<h5 class="mb-1">Autor(es)</h5>
-					<span th:each="autor : ${titulo.autores}">
-						<span th:text="${autor.nombre} + ' ' + ${autor.apellido == null ? '' : autor.apellido}"></span>
+					<span th:text="${titulo.autores.toString().substring(1, titulo.autores.toString().length() - 1)}">
 					</span>
 				</div>
 			</li>

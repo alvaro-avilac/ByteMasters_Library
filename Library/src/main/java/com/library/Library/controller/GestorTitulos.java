@@ -155,6 +155,8 @@ public class GestorTitulos {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		model.addAttribute("nombre", "Lista de titulos");
 		model.addAttribute("titulos", listadoTitulos);
+		
+		
 		return "/views/titulos/mostrarTitulos";
 	}
 
@@ -178,7 +180,7 @@ public class GestorTitulos {
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		
 		model.addAttribute("titulo", titulo);
-		model.addAttribute("autoresStr", titulo.getAutores().toString());
+		model.addAttribute("autoresStr", titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
 		model.addAttribute("numEjemplares", titulo.getEjemplares().size());
 		
 		return "/views/titulos/formEditarTitulo";

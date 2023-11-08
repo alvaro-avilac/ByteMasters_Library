@@ -57,6 +57,9 @@ public class Autor {
 	
 	@Override
 	public String toString() {
+		if (this.apellido == null) {
+			return String.format("%s %s", nombre, "");
+		}
 		return String.format("%s %s", nombre, apellido);
 	}
 
