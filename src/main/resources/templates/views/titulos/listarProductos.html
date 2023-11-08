@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="plantilla/template :: head"> </head>
+
+<body>
+
+	<header th:replace="plantilla/template :: header">
+	</header>
+	<div class="m-2">
+		<h1 th:text="${titulo}"></h1>
+	</div>
+
+	<table class="table m-3">
+		<thead>
+			<tr>
+				<th scope="col">Id</th>
+				<th scope="col">Nombre</th>
+				<th scope="col">Precio</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="p:${listadoProductos}">
+				<th scope="row" th:text="${p.id}"></th>
+				<td th:text="${p.nombre}"></td>
+				<td th:text="${p.price}"></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<footer th:replace="plantilla/template :: footer">
+	</footer>
+
+</body>
+
+</html>

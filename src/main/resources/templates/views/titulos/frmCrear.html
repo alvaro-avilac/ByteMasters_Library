@@ -1,0 +1,33 @@
+//ARCHIVO HTML DE EJEMPLO DE COMO SE HARIA UN FORM CON BOOTSTRAP Y THYMELEAF NADA QUE VER CON EL PROYECTO
+
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/template :: head}"> </head>
+
+<body>
+
+	<header th:replace="~{plantilla/template :: header}">
+	</header>
+
+	<form class="m-4">
+		<div class="form-group row mb-2">
+			<label for="product_name" class="col-md-2">Nombre del Producto</label>
+			<input type="text" class="form-control form-control-sm col-md-6" id="input_nombre_producto" placeholder="Nombre del producto">
+		</div>
+		
+		<div class="form-group row mb-2">
+			<label for="product_price" class="col-md-2">Precio del Producto</label>
+			<input type="text" class="form-control form-control-sm col-md-6" id="input_precio_producto" placeholder="Precio del producto">
+		</div>
+		
+		
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+
+	<footer th:replace="~{plantilla/template :: footer}">
+	</footer>
+
+</body>
+
+</html>
