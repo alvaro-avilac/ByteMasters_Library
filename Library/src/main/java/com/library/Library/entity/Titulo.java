@@ -33,6 +33,7 @@ public class Titulo {
 	private List<Autor> autores;
 	
 	@OneToMany(mappedBy = "title", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {
