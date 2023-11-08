@@ -4,8 +4,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 /database/
-derby.log
-/.dbeaver
+/.dbeaver/
+/derby.log
 
 ### STS ###
 .apt_generated
@@ -34,3 +34,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/database/
