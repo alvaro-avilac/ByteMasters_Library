@@ -31,7 +31,7 @@ public class Prestamo {
 	private Date fechaFinal;
 	private boolean activo;
 	
-	@OneToOne(optional = true)
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "ejemplar_id", nullable=false)
 	private Ejemplar ejemplar;
 

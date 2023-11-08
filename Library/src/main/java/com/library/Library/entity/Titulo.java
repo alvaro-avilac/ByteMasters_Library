@@ -2,6 +2,9 @@ package com.library.Library.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import io.micrometer.common.lang.NonNull;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
