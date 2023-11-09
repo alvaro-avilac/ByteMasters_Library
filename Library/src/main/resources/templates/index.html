@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th:="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{plantilla/template :: head}"> </head>	
+<head th:replace="~{plantilla/template :: head}"></head>
 
 <body>
-	
-	<header th:replace="~{plantilla/template :: header}">	
-	</header>
-	
-	<a class="btn btn-primary" th:href="@{/altaTitulo}" role="button">Dar de alta titulo</a>
-	
-	
-	<footer th:replace="~{plantilla/template :: footer}">
-	</footer>
-	
+
+    <header th:replace="~{plantilla/template :: header}"></header>
+
+    <body>
+        <div id="container" th:style="'text-align: center;'">
+            <h1>Escoge tu rol</h1>
+            <a th:href="@{/MenuUsuario}"><button>Usuario</button></a>
+            <a th:href="@{/MenuBibliotecario}"><button>Bibliotecario</button></a>
+            <a th:href="@{/MenuAdmin}"><button>Admin</button></a>
+        </div>
+    </body>
 </body>
-	
+
 </html>

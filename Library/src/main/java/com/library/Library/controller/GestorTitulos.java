@@ -45,7 +45,7 @@ public class GestorTitulos {
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaAutores", autores);
 				
-		return "views/titulos/formAltaTitulo"; //RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
+		return "views/admin/titulos/formAltaTitulo"; //RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
 
 	@PostMapping("/saved")
@@ -66,6 +66,30 @@ public class GestorTitulos {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		model.addAttribute("nombre", "Lista de titulos");
 		model.addAttribute("titulos", listadoTitulos);
-		return "/views/titulos/mostrarTitulos";
+		return "/views/admin/titulos/mostrarTitulos";
 	}
+	@GetMapping("/mostrarTitulos")
+	public String mostrarTitulosUser(Model model) {
+		List<Titulo> listadoTitulos = tituloService.listarTitulos();
+		model.addAttribute("nombre", "Lista de titulos");
+		model.addAttribute("titulos", listadoTitulos);
+		return "/views/Usuario/MostrarTitulosUser";
+		}
+	 @GetMapping("/MenuAdmin")
+	 public String menuAdmin() {
+	    return "/views/admin/titulos/MenuAdmin";
+	 }
+	 @GetMapping("/MenuUsuario")
+	 public String menuUsuario() {
+	    return "/views/Usuario/MenuUsuario";
+	 }
+	 @GetMapping("/MenuBibliotecario")
+	 public String menuBibliotecario() {
+	    return "/views/Bibliotecario/MenuBibliotecario";
+	 }
+	 @GetMapping("/prestamoUser")
+	 public String prestamoUser() {
+	    return "/views/Usuario/prestamoUser";
+	 }
+	
 }
