@@ -174,7 +174,7 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		
 		
-		return "/views/titulos/mostrarTitulos";
+		return "/views/admin/titulos/mostrarTitulos";
 	}
 	
 
