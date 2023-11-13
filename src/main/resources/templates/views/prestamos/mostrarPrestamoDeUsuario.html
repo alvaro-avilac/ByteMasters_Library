@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/template :: head}">
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/template :: header}">
+	</header>
+
+	<div class="container">
+		<h3 th:text="'Ejemplares prestados a ' + ${nombreDeUsuario}"></h3>
+	</div>
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Ejemplar id</th>
+					<th scope="col">Titulo asociado</th>
+					<th scope="col">Fecha Inicio</th>
+					<th scope="col">Fecha Final</th>
+					<th scope="col">Devolver</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="prestamo:${listadoDePrestamos}">
+					<td th scope="row" th:text="${prestamo.ejemplar.id}"></td>
+					<td th:text="${prestamo.ejemplar.getTitulo().getNombre()}"></td>
+					<td th:text="${prestamo.fechaInicio}"></td>
+					<td th:text="${prestamo.fechaFinal}"></td>
+
+					<td>
+
+						<div>
+							<a class="btn btn-secondary" th:href="@{/registrarDevolucion/} + ${prestamo.id}"
+								role="button">Devolver</a>
+						</div>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:replace="~{plantilla/template :: footer}">
+	</footer>
+
+</body>
+
+</html>
