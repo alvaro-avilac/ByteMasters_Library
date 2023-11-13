@@ -159,6 +159,7 @@ public class GestorTitulos {
 		
 		return "/views/titulos/mostrarTitulos";
 	}
+	
 
 	@GetMapping("/detalle/{id}")
 	public String detallesTitulo(@PathVariable("id") Long tituloId, Model model) {
@@ -191,7 +192,7 @@ public class GestorTitulos {
 
 		tituloService.bajaTitulo(tituloId);
 		
-		return "/views/titulos/mostrarTitulos";
+		return "redirect:/mostrar";
 	}
 	
 	@PostMapping("/detalle/delete_ejemplares")
