@@ -16,19 +16,36 @@ public class ServiceUsuarioIMPL implements IServiceUsuario{
 	@Autowired
 	UsuarioDAO usuarioDAO;
 	
+	private Usuario usuario;
+
+	
 	@Override
 	public List<Usuario> listarUsuarios() {
 		return (List<Usuario>) usuarioDAO.findAll();
 	}
 
 	@Override
-	public void guardarUsuarioporId(Usuario user) {
+	public void guardarUsuario(Usuario user) {
 		usuarioDAO.save(user);
 	}
 
 	@Override
 	public Optional<Usuario> buscarUsuarioPorId(Long id) {
 		return usuarioDAO.findById(id);
+	}
+	
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setGlobalUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+	@Override
+	public Usuario buscarUsuarioPorNombreyApellido(String nombre, String apellidos) {
+		return usuarioDAO.findByNombreAndApellidos(nombre, apellidos);
 	}
 
 }

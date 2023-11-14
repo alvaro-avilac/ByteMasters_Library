@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th:="http://www.thymeleaf.org">
 
-<head th:replace="~{plantilla/template :: head}">
+<head th:replace="~{plantilla/templateUser :: head}">
 </head>
 
 <body>
 
-	<header th:replace="~{plantilla/template :: header}">
+	<header th:replace="~{plantilla/templateUser :: header}">
 	</header>
 
 	<div class="container">
 		<h3 th:text="'Ejemplares prestados a ' + ${nombreDeUsuario}"></h3>
 	</div>
-	<div class="container">
+	<div th:if="${listadoDePrestamosActivos.size() != 0}" class="container">
 		<table class="table">
 			<thead>
 				<tr>
@@ -24,7 +24,7 @@
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
-				<tr th:each="prestamo:${listadoDePrestamos}">
+				<tr th:each="prestamo:${listadoDePrestamosActivos}">
 					<td th scope="row" th:text="${prestamo.ejemplar.id}"></td>
 					<td th:text="${prestamo.ejemplar.getTitulo().getNombre()}"></td>
 					<td th:text="${prestamo.fechaInicio}"></td>
@@ -42,7 +42,8 @@
 			</tbody>
 		</table>
 	</div>
-	<footer th:replace="~{plantilla/template :: footer}">
+	<div th:unless="${listadoDePrestamosActivos.size() != 0}">Ups! Aún no tiene títulos prestados</div>
+	<footer th:replace="~{plantilla/templateUser :: footer}">
 	</footer>
 
 </body>

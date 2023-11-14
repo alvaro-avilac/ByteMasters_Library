@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html xmlns:th:="http://www.thymeleaf.org">
 
-<head th:replace="plantilla/template :: head">
+<head th:replace="~{plantilla/templateAdmin :: head}">
 </head>
 
 <body>
 
-	<header th:replace="plantilla/template :: header">
+	<header th:replace="~{plantilla/templateAdmin :: header}">
 	</header>
 
 	<div class="container">
@@ -20,7 +20,7 @@
 					<th scope="col">Titulo</th>
 					<th scope="col">ISBN</th>
 					<th scope="col">Autor</th>
-					<th scope="col">Ejemplares</th>
+					<th scope="col">Detalles del titulo</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -28,20 +28,19 @@
 					<td th scope="row" th:text="${ti.id}"></td>
 					<td th:text="${ti.nombre}"></td>
 					<td th:text="${ti.isbn}"></td>
+					
 					<td>
-						<span th:each="autor : ${ti.autores}">
-							<span th:text="${autor.nombre}"></span>
-						</span>
+						<span th:text="${ti.autores.toString().substring(1, ti.autores.toString().length() - 1)}">
+					</span>
 					</td>
 					<td>
-					   <span th:text="${#lists.size(ti.ejemplares)}"></span>
+						<a class="btn btn-primary" th:href="@{/detalle/} + ${ti.id}" role="button">+ info</a>
 					</td>
-
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<footer th:replace="plantilla/template :: footer">
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
 	</footer>
 
 </body>

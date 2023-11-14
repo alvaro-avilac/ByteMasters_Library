@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateAdmin :: head}"> </head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
+	</header>
+
+
+	<div class="container m-4">
+
+		<h1 class="mb-3" th:text="'Titulo: ' + ${titulo.nombre}"></h1>
+
+		<a class="btn btn-success" th:href="@{/detalle/edit/} + ${titulo.id}" role="button">Editar</a>
+
+		<a class="btn btn-danger" th:href="@{/detalle/delete/} + ${titulo.id}" role="button">Eliminar</a>
+
+
+		<ul class="list-group list-unstyled mt-3">
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">ISBN</h5>
+					<small th:text="${titulo.isbn}"></small>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">Autor(es)</h5>
+					<span th:text="${titulo.autores.toString().substring(1, titulo.autores.toString().length() - 1)}">
+					</span>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<div>
+					<h5 class="mb-1">Numero de reservas</h5>
+					<small></small>
+				</div>
+			</li>
+			<li class="list-group-item p-3 mb-2 bg-light">
+				<h5 class="mb-1" th:text="'Numero de ejemplares: ' + ${numEjemplares}"></h5>
+
+				<form id="eliminarForm" th:action="@{/detalle/delete_ejemplares}" method="post">
+					<input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle"
+						placeholder="Ingresa el número de ejemplares" min="1" />
+					<select id="selected_ejemplares" name="selected_ejemplares" multiple="multiple" required>
+						<th:block th:each="e : ${listaEjemplares}">
+							<option th:text="${e.id}" th:value="${e.id}"></option>
+						</th:block>
+					</select>
+					<button class="btn btn-danger" type="submit">Eliminar</button>
+				</form>
+
+				<form th:object="${titulo}" id="agregarForm" th:action="@{/detalle/agregar_ejemplares} " method="post">
+					<input type="number" class="form-control" id="numeroEjemplares" name="numeroEjemplares"
+						placeholder="Ingresa el número de ejemplares" min="1" />
+					<input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle"
+						placeholder="Ingresa el número de ejemplares" min="1" />
+					<button class="btn btn-success" type="submit">Agregar</button>
+				</form>
+
+			</li>
+
+		</ul>
+	</div>
+
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
+	</footer>
+
+</body>
+
+</html>

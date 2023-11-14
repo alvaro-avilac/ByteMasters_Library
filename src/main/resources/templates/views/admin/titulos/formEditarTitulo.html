@@ -8,7 +8,7 @@
 	<header th:replace="~{plantilla/templateAdmin :: header}">
 	</header>
 
-	<form th:action="@{/saved}" th:object="${titulo}" method="POST">
+	<form th:action="@{/edited}" th:object="${titulo}" method="POST">
 		<div class="m-3 form-group row">
 			<input type="hidden" th:field="*{id}">
 			<label for="nombre" class="col-md-3">Nombre del titulo</label>
@@ -29,11 +29,6 @@
 				placeholder="nombre" />
 		</div>
 
-		<div class="m-3 form-group row">
-			<label for="numeroEjemplares">Número de Ejemplares:</label>
-			<input type="number" class="form-control" id="numEjemplaresStr"
-				name="numEjemplaresStr" placeholder="Ingresa el número de ejemplares" th:value="${titulo.ejemplares == null ? 1 : titulo.ejemplares.size()} " min="1" />
-		</div>
 		<input type="submit" class="btn btn-primary m-3" value="Guardar" />
 			 
 	</form>
