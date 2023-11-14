@@ -237,7 +237,6 @@ public class GestorTitulos {
 		for (Long ejemplar : selected_ejemplares) {
 			ejemplarService.bajaEjemplar(ejemplar);
 		}
-
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
