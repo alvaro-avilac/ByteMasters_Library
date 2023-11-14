@@ -43,4 +43,9 @@ public class ServiceUsuarioIMPL implements IServiceUsuario{
         this.usuario = usuario;
     }
 
+	@Override
+	public Usuario buscarUsuarioPorNombreyApellido(String nombre, String apellidos) {
+		return usuarioDAO.findByNombreAndApellidos(nombre, apellidos);
+	}
+
 }

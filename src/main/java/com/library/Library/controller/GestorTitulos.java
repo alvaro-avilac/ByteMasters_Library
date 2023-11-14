@@ -162,12 +162,18 @@ public class GestorTitulos {
 		// Lógica para procesar el formulario de inicio de sesión
 		// y redirigir a la página adecuada.
 		Usuario user = new Usuario();
-		user.setNombre(nombreUsuario);
-		user.setApellidos(apellidosUsuario);
-		usuarioService.guardarUsuario(user);
-		usuarioService.setGlobalUsuario(user);
+
+		if(usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario) == null) {
+			user.setNombre(nombreUsuario);
+			user.setApellidos(apellidosUsuario);
+			usuarioService.guardarUsuario(user);
+			usuarioService.setGlobalUsuario(user);
+		}else {
+			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
+			usuarioService.setGlobalUsuario(user);
+
+		}
 		
-	
 		if (rol.equals("admin")) {
 			return "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {

@@ -12,7 +12,7 @@
 	<div class="container">
 		<h3 th:text="'Ejemplares prestados a ' + ${nombreDeUsuario}"></h3>
 	</div>
-	<div th:if="${listadoDePrestamos != null}" class="container">
+	<div th:if="${listadoDePrestamos.size() == 0}" class="container">
 		<table class="table">
 			<thead>
 				<tr>
@@ -42,7 +42,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div th:unless="${listadoDePrestamos == null}">Ups! Aún no tiene títulos prestados</div>
+	<div th:unless="${listadoDePrestamos.size() == 0}">Ups! Aún no tiene títulos prestados</div>
 	<footer th:replace="~{plantilla/template :: footer}">
 	</footer>
 

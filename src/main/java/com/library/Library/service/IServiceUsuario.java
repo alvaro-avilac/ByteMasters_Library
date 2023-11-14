@@ -11,5 +11,7 @@ public interface IServiceUsuario {
 	public void guardarUsuario(Usuario user);
 	public Usuario getUsuario();
 	public void setGlobalUsuario(Usuario usuario);
+	public Usuario buscarUsuarioPorNombreyApellido(String nombre, String apellidos);
+ 
 	
 }

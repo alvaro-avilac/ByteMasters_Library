@@ -143,6 +143,7 @@ public class GestorPrestamos {
 	@GetMapping("/devolucion")
 	public String mostrarEjemplaresPrestados(Model model) {
 		Usuario user = usuarioService.getUsuario();
+		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
 		model.addAttribute("nombreDeUsuario", user.getNombre() + " " + user.getApellidos());
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
@@ -162,6 +163,6 @@ public class GestorPrestamos {
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
-		return "redirect:/";
+		return "redirect:/user";
 	}
 }
