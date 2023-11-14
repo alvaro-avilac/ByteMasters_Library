@@ -27,12 +27,11 @@
 					<td th:text="${ti.nombre}"></td>
 					<td th:text="${ti.isbn}"></td>
 					<td>
-						<span th:each="autor : ${ti.autores}">
-							<span th:text="${autor.nombre}"></span>
+						<span th:text="${ti.autores.toString().substring(1, ti.autores.toString().length() - 1)}">
 						</span>
 					</td>
 					<td>
-					   <span th:text="${#lists.size(ti.ejemplares)}"></span>
+						<span th:text="${#lists.size(ti.ejemplares)}"></span>
 					</td>
 
 				</tr>
