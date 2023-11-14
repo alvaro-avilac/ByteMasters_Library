@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th:="http://www.thymeleaf.org">
 
 <head th:replace="~{plantilla/template :: head}"></head>
 
 <body>
 
-    <header th:replace="~{plantilla/template :: header}"></header>
-    
-  <div th:style="'display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; margin: 0; font-family: \'Arial\', sans-serif; text-align: center;'">
-	<a th:href="@{/prestamoUser}"><button>Tomar prestado</button></a>
-    <a th:href="@{/endpoint}"><button>Reservar Título</button></a>
-    <a th:href="@{/mostrarTitulos}"><button>Ver Títulos</button></a>
-</div>
+	<header th:replace="~{plantilla/template :: header}"></header>
+	<h1 th:text="Bienvenido + ' ' + ${usuario.nombre} + ' ' + ${usuario.apellidos == null ? '' : usuario.apellidos}"></h1>
+	<div
+		th:style="'display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; margin: 0; font-family: \'Arial\', sans-serif; text-align: center;'">
+		<a th:href="@{/mostrarTitulos}"><button>Ver Títulos</button></a>
+		<a th:href="@{/prestarTitulo}"><button>Pedir prestamo</button></a>
+		<a th:href="@{/prestamosUsuario}"><button>Ver mis prestamos</button></a>
+		<a th:href="@{/reserva}" ><button>Reservar Título</button></a>
+		<a th:href="@{/devolucion}"><button>Devolver ejemplar</button></a>
+
+	</div>
 </body>
+
 </html>

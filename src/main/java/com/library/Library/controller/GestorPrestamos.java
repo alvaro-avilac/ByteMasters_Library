@@ -56,7 +56,6 @@ public class GestorPrestamos {
 	@GetMapping("/prestarTitulo")
 	public String titulosDisponiblesParaPrestamo(Model model) {
 		
-		
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
 
@@ -124,8 +123,8 @@ public class GestorPrestamos {
 	@PostMapping("/savedPrestamo")
 	public String guardarPrestamo(@ModelAttribute Prestamo prestamo,
 			@RequestParam("selected_ejemplares") Long idEjemplar) {
-
-		Usuario user = usuarioService.buscarUsuarioPorId((long) 1).get();
+		
+		Usuario user = usuarioService.getUsuario();
 
 		Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar).get();
 		prestamo.setEjemplar(ejemplar);
@@ -143,21 +142,21 @@ public class GestorPrestamos {
 
 	@GetMapping("/devolucion")
 	public String mostrarEjemplaresPrestados(Model model) {
-		Usuario user = usuarioService.buscarUsuarioPorId((long) 1).get();
+		Usuario user = usuarioService.getUsuario();
 		model.addAttribute("nombreDeUsuario", user.getNombre() + " " + user.getApellidos());
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
 
 		List<Prestamo> prestamosActivos = listadoDePrestamos.stream().filter(Prestamo::isActivo).collect(Collectors.toList());
-
-		model.addAttribute("listadoDePrestamos", prestamosActivos);
+		model.addAttribute("listadoDePrestamosActivos", prestamosActivos);
+		model.addAttribute("listadoDePrestamos", listadoDePrestamos);
+		
 		return "/views/prestamos/mostrarPrestamoDeUsuario";
 	}
 
 	@GetMapping("/registrarDevolucion/{id}")
 	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model) {
 
-		Usuario user = usuarioService.buscarUsuarioPorId((long) 1).get();
 		Prestamo prestamo = prestamoService.buscarPrestamoPorId(prestamoId).get();
 
 		prestamo.setActivo(false);

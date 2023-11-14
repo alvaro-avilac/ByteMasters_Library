@@ -25,9 +25,11 @@ import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Formulario;
 import com.library.Library.entity.Titulo;
+import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceAutor;
 import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServiceTitulo;
+import com.library.Library.service.IServiceUsuario;
 
 @RequestMapping("/")
 @Controller
@@ -43,17 +45,21 @@ public class GestorTitulos {
 	@Autowired
 	private IServiceAutor autorService;
 
+	@Autowired
+	private IServiceUsuario usuarioService;
+	
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarForm(Model model) {
 
 		Titulo titulo = new Titulo();
 		model.addAttribute("titulo", titulo);
 
-		return "views/titulos/formAltaTitulo"; // RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
+		return "views/admin/titulos/formAltaTitulo"; // RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
 
 	@PostMapping("/saved")
-	public String altaTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr, @RequestParam("numEjemplaresStr") Integer numEjemplaresStr) {
+	public String altaTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
+			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr) {
 
 		List<Autor> autores = new ArrayList<>();
 
@@ -105,7 +111,7 @@ public class GestorTitulos {
 
 		return "redirect:/mostrar";
 	}
-	
+
 	@PostMapping("/edited")
 	public String EditarTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr) {
 
@@ -149,22 +155,28 @@ public class GestorTitulos {
 
 		return "redirect:/detalle/" + titulo.getId();
 	}
+
+	@PostMapping("/userLogged")
+	public String processLoginForm(@RequestParam("nombreUsuario") String nombreUsuario, @RequestParam("apellidosUsuario") String apellidosUsuario,
+			@RequestParam("contrasena") String contrasena, @RequestParam("rol") String rol, Model model) {
+		// Lógica para procesar el formulario de inicio de sesión
+		// y redirigir a la página adecuada.
+		Usuario user = new Usuario();
+		user.setNombre(nombreUsuario);
+		user.setApellidos(apellidosUsuario);
+		usuarioService.guardarUsuario(user);
+		usuarioService.setGlobalUsuario(user);
+		
 	
-	@PostMapping("/index")
-	public String processLoginForm(@RequestParam("usuario") String usuario,
-	                               @RequestParam("contrasena") String contrasena,
-	                               @RequestParam("rol") String rol,
-	                               Model model) {
-	    // Lógica para procesar el formulario de inicio de sesión
-	    // y redirigir a la página adecuada.
-	    if(rol.equals("admin")) {
-	        return "redirect:/MenuAdmin";
-	    } else if(rol.equals("bibliotecario")) {
-	        return "redirect:/MenuBibliotecario";
-	    } else if(rol.equals("usuario")) {
-	        return "redirect:/MenuUsuario";
-	    }
-	    return "redirect:/";
+		if (rol.equals("admin")) {
+			return "redirect:/admin";
+		} else if (rol.equals("bibliotecario")) {
+			return "redirect:/user";
+		} else if (rol.equals("usuario")) {
+			model.addAttribute("usuario", user);
+			return "redirect:/user";
+		}
+		return "redirect:/";
 	}
 
 	@GetMapping("/mostrar")
@@ -172,11 +184,9 @@ public class GestorTitulos {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		model.addAttribute("nombre", "Lista de titulos");
 		model.addAttribute("titulos", listadoTitulos);
-		
-		
+
 		return "/views/admin/titulos/mostrarTitulos";
 	}
-	
 
 	@GetMapping("/detalle/{id}")
 	public String detallesTitulo(@PathVariable("id") Long tituloId, Model model) {
@@ -189,46 +199,49 @@ public class GestorTitulos {
 		model.addAttribute("numEjemplares", titulo.getEjemplares().size());
 		model.addAttribute("listaEjemplares", listaEjemplares);
 
-		return "/views/titulos/detalleTitulo";
+		return "/views/admin/titulos/detalleTitulo";
 	}
 
 	@GetMapping("detalle/edit/{id}")
 	public String mostrarFormEditarTitulo(@PathVariable("id") Long tituloId, Model model) {
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
-		
+
 		model.addAttribute("titulo", titulo);
-		model.addAttribute("autoresStr", titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
+		model.addAttribute("autoresStr",
+				titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
 		model.addAttribute("numEjemplares", titulo.getEjemplares().size());
-		
-		return "/views/titulos/formEditarTitulo";
+
+		return "/views/admin/titulos/formEditarTitulo";
 	}
 
 	@PostMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
 
 		tituloService.bajaTitulo(tituloId);
-		
+
 		return "redirect:/mostrar";
 	}
-	
+
 	@PostMapping("/detalle/delete_ejemplares")
-	public String EliminarEjemplares(@RequestParam("idTitle") Long idTitle, @RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model) {
+	public String EliminarEjemplares(@RequestParam("idTitle") Long idTitle,
+			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model) {
 		log.info("Lista Ejemplares seleccionados " + selected_ejemplares);
 		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
 		for (Long ejemplar : selected_ejemplares) {
 			ejemplarService.bajaEjemplar(ejemplar);
 		}
-		
+
 		return "redirect:/detalle/" + titulo.getId();
 	}
-	
+
 	@PostMapping("/detalle/agregar_ejemplares")
-	public String AgregarEjemplares(@RequestParam("numeroEjemplares") Integer numeroEjemplares, @RequestParam("idTitle") Long idTitle, Model model) {
+	public String AgregarEjemplares(@RequestParam("numeroEjemplares") Integer numeroEjemplares,
+			@RequestParam("idTitle") Long idTitle, Model model) {
 		log.info("Numero de Ejemplares seleccionados " + numeroEjemplares.toString());
-		
+
 		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
-		
+
 		log.info("Titulo: " + titulo.toString());
 
 		List<Ejemplar> ejemplares = new ArrayList<>();
@@ -240,31 +253,30 @@ public class GestorTitulos {
 			ejemplares.add(ejemplar);
 		}
 		titulo.setEjemplares(ejemplares);
-		
+
 		return "redirect:/detalle/" + titulo.getId();
 	}
+
 	@GetMapping("/mostrarTitulos")
 	public String mostrarTitulosUser(Model model) {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		model.addAttribute("nombre", "Lista de titulos");
 		model.addAttribute("titulos", listadoTitulos);
 		return "/views/Usuario/MostrarTitulosUser";
-		}
-	 @GetMapping("/MenuAdmin")
-	 public String menuAdmin() {
-	    return "/views/admin/titulos/MenuAdmin";
-	 }
-	 @GetMapping("/MenuUsuario")
-	 public String menuUsuario() {
-	    return "/views/Usuario/MenuUsuario";
-	 }
-	 @GetMapping("/MenuBibliotecario")
-	 public String menuBibliotecario() {
-	    return "/views/Bibliotecario/MenuBibliotecario";
-	 }
-	 @GetMapping("/prestamoUser")
-	 public String prestamoUser() {
-	    return "/views/Usuario/prestamoUser";
-	 }
+	}
+	
+	@GetMapping("/user")
+	public String mostraMainWindowUser(Model model) {
+		model.addAttribute("usuario", usuarioService.getUsuario());
+		return "/views/Usuario/MenuUsuario";
+	}
+	@GetMapping("/admin")
+	public String mostraMainWindowAdmin() {
+		return "/views/admin/titulos/MenuAdmin";
+	}
+	@GetMapping("/bibliotecario")
+	public String mostraMainWindowBibliotecario() {
+		return "";
+	}
 	
 }

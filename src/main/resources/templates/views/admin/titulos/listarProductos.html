@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th:="http://www.thymeleaf.org">
 
-<head th:replace="plantilla/template :: head"> </head>
+<head th:replace="plantilla/template_adminView :: head"> </head>
 
 <body>
 
-	<header th:replace="plantilla/template :: header">
+	<header th:replace="plantilla/template_adminView :: header">
 	</header>
 	<div class="m-2">
 		<h1 th:text="${titulo}"></h1>
@@ -29,7 +29,7 @@
 		</tbody>
 	</table>
 
-	<footer th:replace="plantilla/template :: footer">
+	<footer th:replace="plantilla/template_adminView :: footer">
 	</footer>
 
 </body>
