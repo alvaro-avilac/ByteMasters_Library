@@ -147,7 +147,6 @@ public class GestorPrestamos {
 		model.addAttribute("nombreDeUsuario", user.getNombre() + " " + user.getApellidos());
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
-
 		List<Prestamo> prestamosActivos = listadoDePrestamos.stream().filter(Prestamo::isActivo).collect(Collectors.toList());
 		model.addAttribute("listadoDePrestamosActivos", prestamosActivos);
 		model.addAttribute("listadoDePrestamos", listadoDePrestamos);
