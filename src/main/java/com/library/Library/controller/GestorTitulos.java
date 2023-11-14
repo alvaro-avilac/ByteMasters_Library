@@ -149,6 +149,23 @@ public class GestorTitulos {
 
 		return "redirect:/detalle/" + titulo.getId();
 	}
+	
+	@PostMapping("/index")
+	public String processLoginForm(@RequestParam("usuario") String usuario,
+	                               @RequestParam("contrasena") String contrasena,
+	                               @RequestParam("rol") String rol,
+	                               Model model) {
+	    // Lógica para procesar el formulario de inicio de sesión
+	    // y redirigir a la página adecuada.
+	    if(rol.equals("admin")) {
+	        return "redirect:/MenuAdmin";
+	    } else if(rol.equals("bibliotecario")) {
+	        return "redirect:/MenuBibliotecario";
+	    } else if(rol.equals("usuario")) {
+	        return "redirect:/MenuUsuario";
+	    }
+	    return "redirect:/";
+	}
 
 	@GetMapping("/mostrar")
 	public String mostrarTitulos(Model model) {
@@ -157,7 +174,7 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		
 		
-		return "/views/titulos/mostrarTitulos";
+		return "/views/admin/titulos/mostrarTitulos";
 	}
 	
 
@@ -226,4 +243,28 @@ public class GestorTitulos {
 		
 		return "redirect:/detalle/" + titulo.getId();
 	}
+	@GetMapping("/mostrarTitulos")
+	public String mostrarTitulosUser(Model model) {
+		List<Titulo> listadoTitulos = tituloService.listarTitulos();
+		model.addAttribute("nombre", "Lista de titulos");
+		model.addAttribute("titulos", listadoTitulos);
+		return "/views/Usuario/MostrarTitulosUser";
+		}
+	 @GetMapping("/MenuAdmin")
+	 public String menuAdmin() {
+	    return "/views/admin/titulos/MenuAdmin";
+	 }
+	 @GetMapping("/MenuUsuario")
+	 public String menuUsuario() {
+	    return "/views/Usuario/MenuUsuario";
+	 }
+	 @GetMapping("/MenuBibliotecario")
+	 public String menuBibliotecario() {
+	    return "/views/Bibliotecario/MenuBibliotecario";
+	 }
+	 @GetMapping("/prestamoUser")
+	 public String prestamoUser() {
+	    return "/views/Usuario/prestamoUser";
+	 }
+	
 }
