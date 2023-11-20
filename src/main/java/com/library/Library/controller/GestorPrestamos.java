@@ -30,6 +30,8 @@ import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServicePrestamo;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
+import com.library.Library.controller.GestorPenalizaciones;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +41,10 @@ public class GestorPrestamos {
 
 	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
 
-	private LocalDate fechaGlobal = LocalDate.now();
-
+	private LocalDate fechaLocal = LocalDate.now();
+	
+	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
+	
 	@Autowired
 	IServiceTitulo tituloService;
 
@@ -67,7 +71,7 @@ public class GestorPrestamos {
 				for (Prestamo p : listadoPrestamos) {
 					if (p.getEjemplar() == e
 							&& p.getFechaFinal()
-									.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+									.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 							&& p.isActivo()) {
 						disponible = false;
 						break;
@@ -99,7 +103,7 @@ public class GestorPrestamos {
 			for (Prestamo p : listadoPrestamos) {
 				if (p.getEjemplar() == e
 						&& p.getFechaFinal()
-								.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+								.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 						&& p.isActivo()) {
 					disponible = false;
 					break;
@@ -129,9 +133,9 @@ public class GestorPrestamos {
 		Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar).get();
 		prestamo.setEjemplar(ejemplar);
 		prestamo.setActivo(true);
-		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		prestamo.setFechaInicio(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		prestamo.setUsuario(user);
-		LocalDate fechaFinal = fechaGlobal.plusDays(14);
+		LocalDate fechaFinal = fechaLocal.plusDays(14);
 
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
@@ -156,9 +160,12 @@ public class GestorPrestamos {
 
 	@GetMapping("/registrarDevolucion/{id}")
 	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model) {
-
+		
+		Usuario user = usuarioService.getUsuario();
+		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
+		
 		Prestamo prestamo = prestamoService.buscarPrestamoPorId(prestamoId).get();
-
+		gestorPenalizaciones.aplicarPenalizaciones(user, fechaLocal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
