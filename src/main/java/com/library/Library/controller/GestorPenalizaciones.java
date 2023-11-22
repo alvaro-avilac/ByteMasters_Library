@@ -18,11 +18,11 @@ public class GestorPenalizaciones {
 	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
 
 	public static final double INDICE_PENALIZACION = 2.5;
+	public static final double CUPO_MAXIMO = 4;
+
 	
 	public void aplicarPenalizaciones(Usuario user, LocalDate fechaDevolucion, Prestamo prestamoUser) {
 		
-		LocalDate fechaActual = LocalDate.now();
-
 		// Verificar si la fecha de devolución es posterior a la fecha límite
 		if (fechaDevolucion.isAfter(prestamoUser.getFechaFinal().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
 			
@@ -40,6 +40,34 @@ public class GestorPenalizaciones {
 			log.info("Usuario " + user.getNombre() + " devolvió el libro a tiempo. Sin penalización.");
 		}
 
+	}
+	
+	public boolean comprobarPenalizaciones(Usuario user) {
+		LocalDate fechaActual = LocalDate.now();
+		
+		if(user.getFechaFinPenalizacion() != null) {
+	        LocalDate fechaFinPenalizacion = user.getFechaFinPenalizacion().toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+	      //Comprueba si tiene penalizaciones
+	        if(fechaActual.isBefore(fechaFinPenalizacion)) {
+	        	return false;
+	        }
+		}
+        
+		return true;
+	}
+	
+	public boolean comprobarCupo(Usuario user) {
+		
+		long prestamosActivos = user.getPrestamos().stream()
+	            .filter(Prestamo::isActivo)
+	            .count();
+		
+        //Comprueba cupo de prestamos (si ya tiene 4 prestamos no puede pedir prestados mas)
+        if(prestamosActivos + 1 > CUPO_MAXIMO) {
+        	return false;
+        }
+        
+        return true;
 	}
 
 }
