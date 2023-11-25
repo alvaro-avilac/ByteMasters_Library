@@ -9,7 +9,6 @@
 	<h1 th:text="Bienvenido + ' ' + ${usuario.nombre} + ' ' + ${usuario.apellidos == null ? '' : usuario.apellidos}"></h1>
 	<div
 		th:style="'display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; margin: 0; font-family: \'Arial\', sans-serif; text-align: center;'">
-		<a th:href="@{/mostrarTitulos}"><button>Ver Títulos</button></a>
 		<a th:href="@{/prestarTitulo}"><button>Pedir prestamo</button></a>
 		<a th:href="@{/reserva}" ><button>Reservar Título</button></a>
 		<a th:href="@{/devolucion}"><button>Devolver ejemplar</button></a>

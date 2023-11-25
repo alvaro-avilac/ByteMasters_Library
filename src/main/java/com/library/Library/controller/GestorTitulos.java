@@ -171,19 +171,34 @@ public class GestorTitulos {
 		}else {
 			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
 			usuarioService.setGlobalUsuario(user);
-
 		}
 		
 		if (rol.equals("admin")) {
 			return "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {
-			return "redirect:/user";
+			return "redirect:/bibliotecario";
 		} else if (rol.equals("usuario")) {
 			model.addAttribute("usuario", user);
 			return "redirect:/user";
 		}
 		return "redirect:/";
 	}
+	
+	@PostMapping("/selectedUser")
+	public String buscarUsuarioPorId(@RequestParam("idUsuario") long idUsuario) {
+	    Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
+
+	    if (optionalUser.isPresent()) {
+	        Usuario user = optionalUser.get();
+	        usuarioService.setGlobalUsuario(user);
+
+	        return "/views/Bibliotecario/MenuBibliotecario";
+	    } else {
+	    	//TODO manejo de error
+	        return "redirect:/";
+	    }
+	}
+
 
 	@GetMapping("/mostrar")
 	public String mostrarTitulos(Model model) {
@@ -281,7 +296,8 @@ public class GestorTitulos {
 	}
 	@GetMapping("/bibliotecario")
 	public String mostraMainWindowBibliotecario() {
-		return "";
+		return "/views/Bibliotecario/SeleccionUsuario";
 	}
+	
 	
 }

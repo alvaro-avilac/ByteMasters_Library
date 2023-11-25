@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateBibliotecario :: head}"></head>
+
+<body>
+
+<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
+
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 50px;
+    }
+
+    .login-container {
+      max-width: 300px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container label {
+      display: block;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .login-container input,
+    .login-container select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      box-sizing: border-box;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  </style>
+
+<div class="selectUser-container">
+	<h1>Introduce el id del usuario</h1>
+		<form id="selectUser" th:action="@{/selectedUser}" th:method="post">
+			<input type="text" id="idUsuario" name="idUsuario" required placeholder="id">
+			<button type="submit">Seleccionar</button>
+		</form>
+</div>
+</body>
