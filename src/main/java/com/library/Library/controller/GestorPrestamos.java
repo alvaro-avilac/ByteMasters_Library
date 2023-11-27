@@ -24,12 +24,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Prestamo;
+import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServicePrestamo;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
+import com.library.Library.service.IServiceReserva;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +54,9 @@ public class GestorPrestamos {
 
 	@Autowired
 	IServiceUsuario usuarioService;
+	
+	@Autowired
+	IServiceReserva reservaService;
 
 	@GetMapping("/prestarTitulo")
 	public String titulosDisponiblesParaPrestamo(Model model) {
@@ -164,4 +169,28 @@ public class GestorPrestamos {
 
 		return "redirect:/user";
 	}
+	@GetMapping("/reserva/{id}")
+	public String hacerReserva(@PathVariable("id") Long tituloId, Model model) {
+		Usuario user = usuarioService.getUsuario();
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+
+		long tiempoActual = System.currentTimeMillis();
+        Date fechaActual = new Date(tiempoActual);
+        
+        Reserva reserva = new Reserva();
+        reserva.setTitulo(titulo);
+        reserva.setUsuario(user);
+        reserva.setFecha(fechaActual);
+
+        reservaService.guardarReserva(reserva);
+
+		return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+	}
+	@GetMapping("/reservado")
+	public String reservaHecha() {
+		return "/views/Bibliotecario/MenuBibliotecario";
+	}
+	
+	
+	
 }
