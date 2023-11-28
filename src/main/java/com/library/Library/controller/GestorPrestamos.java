@@ -63,7 +63,7 @@ public class GestorPrestamos {
 		
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-
+		
 		for (Titulo t : listadoTitulos) {
 			List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class GestorPrestamos {
 					if (p.getEjemplar() == e
 							&& p.getFechaFinal()
 									.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-							&& p.isActivo()) {
+							&& p.isActivo() || isTituloReservado(t)) {
 						disponible = false;
 						break;
 					}
@@ -89,6 +89,20 @@ public class GestorPrestamos {
 		model.addAttribute("titulos", listadoTitulos);
 		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
 		return "views/prestamos/selectTituloPrestamoUsuario";
+	}
+	
+	public boolean isTituloReservado(Titulo titulo) {
+		
+		List<Reserva> listaReservas = reservaService.listarReservas();
+		
+		for (Reserva r : listaReservas) {
+			if(r.getTitulo() == titulo) {
+				return true;
+			}
+		}
+		
+		
+		return false;
 	}
 
 	@GetMapping("/prestamo/{id}")
@@ -173,11 +187,19 @@ public class GestorPrestamos {
 	public String hacerReserva(@PathVariable("id") Long tituloId, Model model) {
 		Usuario user = usuarioService.getUsuario();
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		
+		List<Reserva> listaReservas = reservaService.listarReservas();
 
 		long tiempoActual = System.currentTimeMillis();
         Date fechaActual = new Date(tiempoActual);
         
         Reserva reserva = new Reserva();
+        for (Reserva r : listaReservas) {
+        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        		return "/views/Bibliotecario/ReservaNoPosible";
+            }
+        }
+        
         reserva.setTitulo(titulo);
         reserva.setUsuario(user);
         reserva.setFecha(fechaActual);
@@ -188,6 +210,10 @@ public class GestorPrestamos {
 	}
 	@GetMapping("/reservado")
 	public String reservaHecha() {
+		return "/views/Bibliotecario/MenuBibliotecario";
+	}
+	@GetMapping("/no_reservado")
+	public String reservaNoPosible() {
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
 	
