@@ -24,10 +24,12 @@ import org.slf4j.LoggerFactory;
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Formulario;
+import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceAutor;
 import com.library.Library.service.IServiceEjemplar;
+import com.library.Library.service.IServiceReserva;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
 
@@ -47,6 +49,7 @@ public class GestorTitulos {
 
 	@Autowired
 	private IServiceUsuario usuarioService;
+	@Autowired IServiceReserva reservaService;
 	
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarForm(Model model) {
@@ -284,6 +287,27 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		return "/views/Usuario/MostrarTitulosUser";
 	}
+	
+	@SuppressWarnings("null")
+	@GetMapping("/reserva")
+	public String mostrarReservas(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		List<Reserva> listadoReservas = reservaService.listarReservas();
+		List<Titulo> listadoTitulos = new ArrayList<>();
+		
+		for(Reserva r : listadoReservas) {
+			if(r.getUsuario().getId()==user.getId()) {
+			listadoTitulos.add(r.getTitulo());
+			}
+		}
+		
+		model.addAttribute("nombre", "Lista de reservas");
+		model.addAttribute("titulos", listadoTitulos);
+		
+		return"/views/Bibliotecario/MostrarReservas";
+		
+	}
+	
 	
 	@GetMapping("/user")
 	public String mostraMainWindowUser(Model model) {
