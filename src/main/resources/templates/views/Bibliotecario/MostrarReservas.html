@@ -18,6 +18,7 @@
 					<th scope="col">ISBN</th>
 					<th scope="col">Autor</th>
 					<th scope="col">Disponibilidad</th>
+					<th scope="col">Cancelar</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -30,7 +31,18 @@
 						</span>
 					</td>
 					<td>
-					  
+					  <div th:if="${ti.ejemplares.size() == 0}">
+							<a class="btn btn-secondary" role="button">pedir prestamo</a>
+						</div>
+						
+						<div th:if="${ti.ejemplares.size() != 0}">
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir prestamo</a>	
+						</div>
+					</td>
+					<td>
+						<div>
+							<a class="btn btn-primary" th:href="@{/}  + ${ti.id}" role="button">Cancelar</a>	
+						</div>
 					</td>
 
 				</tr>
