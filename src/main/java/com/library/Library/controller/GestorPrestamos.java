@@ -32,7 +32,7 @@ import com.library.Library.service.IServicePrestamo;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
 import com.library.Library.service.IServiceReserva;
-
+import com.library.Library.controller.GestorPenalizaciones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,8 +41,10 @@ public class GestorPrestamos {
 
 	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
 
-	private LocalDate fechaGlobal = LocalDate.now();
-
+	private LocalDate fechaLocal = LocalDate.now();
+	
+	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
+	
 	@Autowired
 	IServiceTitulo tituloService;
 
@@ -60,6 +62,7 @@ public class GestorPrestamos {
 
 	@GetMapping("/prestarTitulo")
 	public String titulosDisponiblesParaPrestamo(Model model) {
+		
 		
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
@@ -85,7 +88,6 @@ public class GestorPrestamos {
 
 			t.setEjemplares(ejemplaresDisponibles);
 		}
-
 		model.addAttribute("titulos", listadoTitulos);
 		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
 		return "views/prestamos/selectTituloPrestamoUsuario";
@@ -107,7 +109,23 @@ public class GestorPrestamos {
 
 	@GetMapping("/prestamo/{id}")
 	public String mostrarFormPrestamo(@PathVariable("id") Long tituloId, Model model) {
-
+		
+		Usuario user = usuarioService.getUsuario();
+		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
+		
+		if(!gestorPenalizaciones.comprobarPenalizaciones(user)) {
+			log.info("Usuario " + user + "tiene penalizacion hasta " + user.getFechaFinPenalizacion());
+	        model.addAttribute("error", "Usuario " + user.getNombre() + " " + user.getApellidos() + " tiene penalización hasta " + user.getFechaFinPenalizacion());
+	        model.addAttribute("flag", true);
+	        return "views/error";
+		}
+		
+	    if(!gestorPenalizaciones.comprobarCupo(user)){
+			log.info("Usuario tiene cupo completo de prestamos cubierto");
+	        model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto"); 
+	        return "views/error";
+		}
+		
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 
 		List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
@@ -118,7 +136,7 @@ public class GestorPrestamos {
 			for (Prestamo p : listadoPrestamos) {
 				if (p.getEjemplar() == e
 						&& p.getFechaFinal()
-								.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+								.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 						&& p.isActivo()) {
 					disponible = false;
 					break;
@@ -132,7 +150,9 @@ public class GestorPrestamos {
 		titulo.setEjemplares(ejemplaresDisponibles);
 
 		log.info("Ejemplares disponibles: " + ejemplaresDisponibles.toString());
-
+		
+		
+		
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaEjemplares", ejemplaresDisponibles);
 
@@ -141,16 +161,17 @@ public class GestorPrestamos {
 
 	@PostMapping("/savedPrestamo")
 	public String guardarPrestamo(@ModelAttribute Prestamo prestamo,
-			@RequestParam("selected_ejemplares") Long idEjemplar) {
+			@RequestParam("selected_ejemplares") Long idEjemplar, Model model) {
 		
 		Usuario user = usuarioService.getUsuario();
-
+		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
+		
 		Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar).get();
 		prestamo.setEjemplar(ejemplar);
 		prestamo.setActivo(true);
-		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		prestamo.setFechaInicio(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		prestamo.setUsuario(user);
-		LocalDate fechaFinal = fechaGlobal.plusDays(14);
+		LocalDate fechaFinal = fechaLocal.plusDays(14);
 
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
@@ -175,9 +196,12 @@ public class GestorPrestamos {
 
 	@GetMapping("/registrarDevolucion/{id}")
 	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model) {
-
+		
+		Usuario user = usuarioService.getUsuario();
+		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
+		
 		Prestamo prestamo = prestamoService.buscarPrestamoPorId(prestamoId).get();
-
+		gestorPenalizaciones.aplicarPenalizaciones(user, fechaLocal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
