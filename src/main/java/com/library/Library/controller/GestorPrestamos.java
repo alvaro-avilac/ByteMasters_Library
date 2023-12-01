@@ -24,15 +24,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Prestamo;
+import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServicePrestamo;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
+import com.library.Library.service.IServiceReserva;
 import com.library.Library.controller.GestorPenalizaciones;
-
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,7 @@ public class GestorPrestamos {
 
 	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
 
-	private LocalDate fechaLocal = LocalDate.now();
+	private LocalDate fechaGlobal = LocalDate.now();
 	
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
 	
@@ -56,6 +56,9 @@ public class GestorPrestamos {
 
 	@Autowired
 	IServiceUsuario usuarioService;
+	
+	@Autowired
+	IServiceReserva reservaService;
 
 	@GetMapping("/prestarTitulo")
 	public String titulosDisponiblesParaPrestamo(Model model) {
@@ -63,7 +66,7 @@ public class GestorPrestamos {
 		
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-
+		
 		for (Titulo t : listadoTitulos) {
 			List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
 
@@ -72,8 +75,8 @@ public class GestorPrestamos {
 				for (Prestamo p : listadoPrestamos) {
 					if (p.getEjemplar() == e
 							&& p.getFechaFinal()
-									.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-							&& p.isActivo()) {
+									.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+							&& p.isActivo() || isTituloReservado(t)) {
 						disponible = false;
 						break;
 					}
@@ -88,6 +91,20 @@ public class GestorPrestamos {
 		model.addAttribute("titulos", listadoTitulos);
 		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
 		return "views/prestamos/selectTituloPrestamoUsuario";
+	}
+	
+	public boolean isTituloReservado(Titulo titulo) {
+		
+		List<Reserva> listaReservas = reservaService.listarReservas();
+		
+		for (Reserva r : listaReservas) {
+			if(r.getTitulo() == titulo) {
+				return true;
+			}
+		}
+		
+		
+		return false;
 	}
 
 	@GetMapping("/prestamo/{id}")
@@ -119,7 +136,7 @@ public class GestorPrestamos {
 			for (Prestamo p : listadoPrestamos) {
 				if (p.getEjemplar() == e
 						&& p.getFechaFinal()
-								.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+								.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 						&& p.isActivo()) {
 					disponible = false;
 					break;
@@ -152,9 +169,9 @@ public class GestorPrestamos {
 		Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar).get();
 		prestamo.setEjemplar(ejemplar);
 		prestamo.setActivo(true);
-		prestamo.setFechaInicio(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		prestamo.setUsuario(user);
-		LocalDate fechaFinal = fechaLocal.plusDays(14);
+		LocalDate fechaFinal = fechaGlobal.plusDays(14);
 
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
@@ -184,10 +201,46 @@ public class GestorPrestamos {
 		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
 		
 		Prestamo prestamo = prestamoService.buscarPrestamoPorId(prestamoId).get();
-		gestorPenalizaciones.aplicarPenalizaciones(user, fechaLocal, prestamo);
+		gestorPenalizaciones.aplicarPenalizaciones(user, fechaGlobal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
 		return "redirect:/user";
 	}
+	@GetMapping("/reserva/{id}")
+	public String hacerReserva(@PathVariable("id") Long tituloId, Model model) {
+		Usuario user = usuarioService.getUsuario();
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		
+		List<Reserva> listaReservas = reservaService.listarReservas();
+
+		long tiempoActual = System.currentTimeMillis();
+        Date fechaActual = new Date(tiempoActual);
+        
+        Reserva reserva = new Reserva();
+        for (Reserva r : listaReservas) {
+        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        		return "/views/Bibliotecario/ReservaNoPosible";
+            }
+        }
+        
+        reserva.setTitulo(titulo);
+        reserva.setUsuario(user);
+        reserva.setFecha(fechaActual);
+
+        reservaService.guardarReserva(reserva);
+
+		return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+	}
+	@GetMapping("/reservado")
+	public String reservaHecha() {
+		return "/views/Bibliotecario/MenuBibliotecario";
+	}
+	@GetMapping("/no_reservado")
+	public String reservaNoPosible() {
+		return "/views/Bibliotecario/MenuBibliotecario";
+	}
+	
+	
+	
 }
