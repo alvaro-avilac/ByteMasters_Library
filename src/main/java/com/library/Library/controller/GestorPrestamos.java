@@ -41,7 +41,7 @@ public class GestorPrestamos {
 
 	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
 
-	private LocalDate fechaLocal = LocalDate.now();
+	private LocalDate fechaGlobal = LocalDate.now();
 	
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
 	
@@ -136,7 +136,7 @@ public class GestorPrestamos {
 			for (Prestamo p : listadoPrestamos) {
 				if (p.getEjemplar() == e
 						&& p.getFechaFinal()
-								.after(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+								.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 						&& p.isActivo()) {
 					disponible = false;
 					break;
@@ -169,9 +169,9 @@ public class GestorPrestamos {
 		Ejemplar ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar).get();
 		prestamo.setEjemplar(ejemplar);
 		prestamo.setActivo(true);
-		prestamo.setFechaInicio(Date.from(fechaLocal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		prestamo.setUsuario(user);
-		LocalDate fechaFinal = fechaLocal.plusDays(14);
+		LocalDate fechaFinal = fechaGlobal.plusDays(14);
 
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
@@ -201,7 +201,7 @@ public class GestorPrestamos {
 		user = usuarioService.buscarUsuarioPorId(user.getId()).get();
 		
 		Prestamo prestamo = prestamoService.buscarPrestamoPorId(prestamoId).get();
-		gestorPenalizaciones.aplicarPenalizaciones(user, fechaLocal, prestamo);
+		gestorPenalizaciones.aplicarPenalizaciones(user, fechaGlobal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
