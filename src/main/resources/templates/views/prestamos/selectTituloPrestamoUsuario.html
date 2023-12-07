@@ -31,20 +31,23 @@
 					<td th:text="${ti.ejemplares.size()}"></td>
 
 					<td>
-						
+
 						<div th:if="${ti.ejemplares.size() == 0}">
-							<a class="btn btn-secondary" th:href="@{/reserva/} + ${ti.id}" role="button">pedir reserva</a>	
+							<a class="btn btn-secondary" th:href="@{/reserva/} + ${ti.id}" role="button">pedir
+								reserva</a>
 						</div>
-						
+
 						<div th:if="${ti.ejemplares.size() != 0}">
-							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir prestamo</a>	
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir
+								prestamo</a>
 						</div>
-						
+
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+    
 	<footer th:replace="~{plantilla/templateUser :: footer}">
 	</footer>
 

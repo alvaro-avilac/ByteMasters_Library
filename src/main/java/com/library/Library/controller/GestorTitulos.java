@@ -161,7 +161,7 @@ public class GestorTitulos {
 
 	@PostMapping("/userLogged")
 	public String processLoginForm(@RequestParam("nombreUsuario") String nombreUsuario, @RequestParam("apellidosUsuario") String apellidosUsuario,
-			@RequestParam("contrasena") String contrasena, @RequestParam("rol") String rol, Model model) {
+			@RequestParam("rol") String rol, Model model) {
 		// Lógica para procesar el formulario de inicio de sesión
 		// y redirigir a la página adecuada.
 		Usuario user = new Usuario();
@@ -235,15 +235,15 @@ public class GestorTitulos {
 		model.addAttribute("autoresStr",
 				titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
 		model.addAttribute("numEjemplares", titulo.getEjemplares().size());
-
+		
 		return "/views/admin/titulos/formEditarTitulo";
 	}
 
 	@PostMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
-
+		
 		tituloService.bajaTitulo(tituloId);
-
+		
 		return "redirect:/mostrar";
 	}
 
@@ -255,6 +255,7 @@ public class GestorTitulos {
 		for (Long ejemplar : selected_ejemplares) {
 			ejemplarService.bajaEjemplar(ejemplar);
 		}
+		
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
