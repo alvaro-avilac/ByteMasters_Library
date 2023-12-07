@@ -217,6 +217,30 @@ public class GestorPrestamos {
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
 	
+	@GetMapping("/reservaCancelada")
+	public String reservaCancelada() {
+		return "/views/Usuario/MenuUsuario";
+	}
+	
+	@GetMapping("/reservaEliminada/{id}")
+	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model){	
+		Usuario user = usuarioService.getUsuario();
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		List<Reserva> listaReservas = reservaService.listarReservas();
+		
+		for (Reserva r : listaReservas) {
+        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        		Long idReserva = r.getId();
+        		
+        		reservaService.eliminarReserva(idReserva);
+        		return "/views/Usuario/MenuUsuario";
+            }
+        }
+		
+		
+		return "/views/Usuario/MenuUsuario";
+	}
+	
 	
 	
 }
