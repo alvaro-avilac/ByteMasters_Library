@@ -34,7 +34,8 @@ public class ServiceTituloIMPL implements IServiceTitulo{
 
 	@Override
 	public Titulo buscarTituloPorId(Long id) {
-		return tituloDAO.findById(id).get();
+		Optional <Titulo> value = tituloDAO.findById(id);
+		return value.orElse(null);
 	}
 
 }
