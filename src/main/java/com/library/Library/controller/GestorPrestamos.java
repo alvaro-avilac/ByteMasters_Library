@@ -220,7 +220,9 @@ public class GestorPrestamos {
 		}
 		Optional<Prestamo> prestamoValue = prestamoService.buscarPrestamoPorId(prestamoId);
 		Prestamo prestamo = prestamoValue.orElse(null);
-		
+		if(prestamo == null) {
+			return "views/error";
+		}
 		gestorPenalizaciones.aplicarPenalizaciones(user, fechaGlobal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
