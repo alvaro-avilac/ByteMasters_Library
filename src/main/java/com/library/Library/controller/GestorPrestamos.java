@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -109,6 +110,9 @@ public class GestorPrestamos {
 		
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
+		if(user == null) {
+			return "views/error";
+		}
 		
 		if(!gestorPenalizaciones.comprobarPenalizaciones(user)) {
 			log.info("Usuario " + user + "tiene penalizacion hasta " + user.getFechaFinPenalizacion());
@@ -165,9 +169,14 @@ public class GestorPrestamos {
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
 		
-		Optional<Ejemplar> ejemplar = ejemplarService.buscarEjemplarPorId(idEjemplar);
-		prestamo.setEjemplar(ejemplar.orElse(null));
 		
+		Optional<Ejemplar> e_value = ejemplarService.buscarEjemplarPorId(idEjemplar);
+		Ejemplar ejemplar = e_value.orElse(null);
+		prestamo.setEjemplar(ejemplar);
+		
+		if(user == null || ejemplar == null) {
+			return "views/error";
+		}
 		prestamo.setActivo(true);
 		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 		prestamo.setUsuario(user);
@@ -186,7 +195,9 @@ public class GestorPrestamos {
 		
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
-		
+		if(user == null) {
+			return "views/error";
+		}
 		model.addAttribute("nombreDeUsuario", user.getNombre() + " " + user.getApellidos());
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
@@ -204,7 +215,9 @@ public class GestorPrestamos {
 		
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
-		
+		if(user == null) {
+			return "views/error";
+		}
 		Optional<Prestamo> prestamoValue = prestamoService.buscarPrestamoPorId(prestamoId);
 		Prestamo prestamo = prestamoValue.orElse(null);
 		
