@@ -11,19 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+
 import java.util.List;
 import java.util.Optional;
 
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
-import com.library.Library.entity.Formulario;
 import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
@@ -297,7 +294,7 @@ public class GestorTitulos {
 		List<Titulo> listadoTitulos = new ArrayList<>();
 		
 		for(Reserva r : listadoReservas) {
-			if(r.getUsuario().getId()==user.getId()) {
+			if(r.getUsuario().getId().equals(user.getId())) {
 			listadoTitulos.add(r.getTitulo());
 			}
 		}
