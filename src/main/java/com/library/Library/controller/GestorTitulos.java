@@ -3,6 +3,7 @@ package com.library.Library.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +15,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Optional;
-
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,8 @@ import com.library.Library.service.IServiceEjemplar;
 import com.library.Library.service.IServiceReserva;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
+
+import jakarta.validation.Valid;
 
 @RequestMapping("/")
 @Controller
@@ -49,18 +51,34 @@ public class GestorTitulos {
 	@Autowired IServiceReserva reservaService;
 	
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
-	public String mostrarForm(Model model) {
+	public String mostrarFormAltaTitulo(Model model) {
 
 		Titulo titulo = new Titulo();
+		List<Autor> listaAutores = autorService.listarAutores();
+		
 		model.addAttribute("titulo", titulo);
-
+		model.addAttribute("listaAutores", listaAutores);
 		return "views/admin/titulos/formAltaTitulo"; // RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
 	}
-
+	
+	@GetMapping("/altaAutor")
+	public String mostrarFormAltaAutor(Model model) {
+		Autor autor = new Autor();
+		model.addAttribute("autor", autor);
+		return "views/admin/autores/formAltaAutores";
+	}
+	
 	@PostMapping("/saved")
-	public String altaTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
-			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr) {
-
+	public String altaTitulo(@Valid @ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
+			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr, BindingResult result, Model model) {
+		
+		//System.out.println("Errores detectados: " + result.getErrorCount());
+		
+		if(result.hasErrors()){
+			model.addAttribute("titulo", titulo);
+		    return "views/admin/titulos/formAltaTitulo";
+		}
+		
 		List<Autor> autores = new ArrayList<>();
 
 		for (String nombreApellido : autoresStr) {
@@ -113,8 +131,13 @@ public class GestorTitulos {
 	}
 
 	@PostMapping("/edited")
-	public String EditarTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr) {
-
+	public String EditarTitulo(@Valid @ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr, BindingResult result, Model model) {
+		
+		if(result.hasErrors()) {
+			model.addAttribute("titulo", titulo);
+			return "views/admin/titulos/formAltaTitulo";
+		}
+		
 		List<Autor> autores = new ArrayList<>();
 
 		for (String nombreApellido : autoresStr) {
