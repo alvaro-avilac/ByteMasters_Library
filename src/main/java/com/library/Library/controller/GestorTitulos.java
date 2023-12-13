@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 
@@ -50,10 +51,9 @@ public class GestorTitulos {
 
 	@Autowired
 	private IServiceReserva reservaService;
-	
+
 	@Autowired
 	private IServicePrestamo prestamoService;
-
 
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarFormAltaTitulo(Model model) {
@@ -142,7 +142,7 @@ public class GestorTitulos {
 
 	@PostMapping("/edited")
 	public String EditarTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
-			Model model) {
+			Model model, RedirectAttributes attribute) {
 
 		List<Autor> autores = new ArrayList<>();
 
@@ -180,7 +180,7 @@ public class GestorTitulos {
 
 		titulo.setAutores(autores);
 		tituloService.altaTitulo(titulo);
-
+		attribute.addFlashAttribute("success", "Titulo editado con éxito");
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
@@ -274,18 +274,16 @@ public class GestorTitulos {
 	}
 
 	@GetMapping("detalle/delete/{id}")
-	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
+	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute) {
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		if (tituloTieneReservasPrestamos(titulo)) {
-			
-			System.out.println("ERROR TITULO TIENE ALGUN EJEMPLAR PRESTADO");
-			
-			return "redirect:/mostrar";
-		}else {
-			
+
+			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
+			return "redirect:/detalle/{id}";
+		} else {
+
 		}
-			
 
 		tituloService.bajaTitulo(tituloId);
 
@@ -293,11 +291,11 @@ public class GestorTitulos {
 	}
 
 	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
-		
+
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
 		for (Prestamo p : listadoPrestamos) {
-			for(Ejemplar e: titulo.getEjemplares()) {
-				if(p.getEjemplar().getId().equals(e.getId())){
+			for (Ejemplar e : titulo.getEjemplares()) {
+				if (p.getEjemplar().getId().equals(e.getId())) {
 					return true;
 				}
 			}
@@ -308,14 +306,35 @@ public class GestorTitulos {
 
 	@PostMapping("/detalle/delete_ejemplares")
 	public String EliminarEjemplares(@RequestParam("idTitle") Long idTitle,
-			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model) {
+			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model, RedirectAttributes attribute) {
 		log.info("Lista Ejemplares seleccionados " + selected_ejemplares);
 		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
 		for (Long ejemplar : selected_ejemplares) {
-			ejemplarService.bajaEjemplar(ejemplar);
+
+			if (ejemplarTieneReservasPrestamos(ejemplar)) {
+				attribute.addFlashAttribute("error", "El/los ejemplar que desea borrar tiene algun prestamo o reserva activo");
+
+			} else {
+				ejemplarService.bajaEjemplar(ejemplar);
+			}
 		}
 
 		return "redirect:/detalle/" + titulo.getId();
+	}
+
+	private boolean ejemplarTieneReservasPrestamos(Long ejemplarId) {
+
+		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		
+		for (Prestamo p : listadoPrestamos) {
+		
+			if (p.getEjemplar().getId().equals(ejemplarId)) {
+				return true;
+			}
+			
+		}
+		
+		return false;
 	}
 
 	@PostMapping("/detalle/agregar_ejemplares")
