@@ -2,7 +2,7 @@ package com.library.Library.entity;
 
 import java.util.List;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,10 +27,10 @@ public class Titulo {
 	
 	private String numReserva;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Autor> autores;
 	
-	@OneToMany(mappedBy = "title")
+	@OneToMany(mappedBy = "title", cascade = CascadeType.REMOVE)
 	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {

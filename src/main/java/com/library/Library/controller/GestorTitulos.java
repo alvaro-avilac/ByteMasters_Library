@@ -20,11 +20,13 @@ import org.slf4j.LoggerFactory;
 
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
+import com.library.Library.entity.Prestamo;
 import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceAutor;
 import com.library.Library.service.IServiceEjemplar;
+import com.library.Library.service.IServicePrestamo;
 import com.library.Library.service.IServiceReserva;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
@@ -45,8 +47,13 @@ public class GestorTitulos {
 
 	@Autowired
 	private IServiceUsuario usuarioService;
+
 	@Autowired
-	IServiceReserva reservaService;
+	private IServiceReserva reservaService;
+	
+	@Autowired
+	private IServicePrestamo prestamoService;
+
 
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarFormAltaTitulo(Model model) {
@@ -130,7 +137,6 @@ public class GestorTitulos {
 		}
 
 		titulo.setEjemplares(ejemplares);
-
 		return "redirect:/mostrar";
 	}
 
@@ -267,12 +273,37 @@ public class GestorTitulos {
 		return "/views/admin/titulos/formEditarTitulo";
 	}
 
-	@PostMapping("detalle/delete/{id}")
+	@GetMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
+
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		if (tituloTieneReservasPrestamos(titulo)) {
+			
+			System.out.println("ERROR TITULO TIENE ALGUN EJEMPLAR PRESTADO");
+			
+			return "redirect:/mostrar";
+		}else {
+			
+		}
+			
 
 		tituloService.bajaTitulo(tituloId);
 
 		return "redirect:/mostrar";
+	}
+
+	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
+		
+		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		for (Prestamo p : listadoPrestamos) {
+			for(Ejemplar e: titulo.getEjemplares()) {
+				if(p.getEjemplar().getId().equals(e.getId())){
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@PostMapping("/detalle/delete_ejemplares")
