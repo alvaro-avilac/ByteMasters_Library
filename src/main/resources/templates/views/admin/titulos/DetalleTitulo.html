@@ -45,7 +45,7 @@
                 <form th:object="${titulo}" id="agregarForm" th:action="@{/detalle/agregar_ejemplares}" method="post" class="mt-3">
                     <div class="form-row">
                         <div class="col">
-                            <input type="number" class="form-control" id="numeroEjemplares" name="numeroEjemplares" placeholder="Número de ejemplares" min="1" />
+                            <input type="number" class="form-control" id="numeroEjemplares" name="numeroEjemplares" placeholder="Número de ejemplares" min="1" required/>
                         </div>
                         <div class="col">
                             <input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle" />

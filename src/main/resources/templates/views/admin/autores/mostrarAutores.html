@@ -13,7 +13,8 @@
 		<h1 th:text="${nombre}"></h1>
 		<a class="btn btn-primary" th:href="@{/altaAutor}" role="button">Gestionar Autores</a>
 	</div>
-	
+
+
 	<div class="container">
 		<table class="table">
 			<thead>
@@ -21,6 +22,8 @@
 					<th scope="col">id</th>
 					<th scope="col">Nombre</th>
 					<th scope="col">Apellido</th>
+					<th scope="col">Editar Autor</th>
+					<th scope="col">Eliminar Autor</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -28,6 +31,13 @@
 					<td th scope="row" th:text="${a.id}"></td>
 					<td th:text="${a.nombre}"></td>
 					<td th:text="${a.apellido}"></td>
+					<td>
+						<a class="btn btn-primary" th:href="@{/autor/edit} + ${ti.id}" role="button">+ info</a>
+					</td>
+					
+					<td>
+						<a class="btn btn-primary" th:href="@{/autor/delete} + ${ti.id}" role="button">+ info</a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

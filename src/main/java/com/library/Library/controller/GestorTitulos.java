@@ -278,24 +278,26 @@ public class GestorTitulos {
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		if (tituloTieneReservasPrestamos(titulo)) {
-
+			
 			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
 			return "redirect:/detalle/{id}";
 		} else {
 
 		}
-
+		prestamoService.borrarPrestamosEjemplaresByTitulo(titulo);
+		titulo.getAutores().clear();
 		tituloService.bajaTitulo(tituloId);
 
 		return "redirect:/mostrar";
-	}
+	} 
 
 	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
 
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-		for (Prestamo p : listadoPrestamos) {
-			for (Ejemplar e : titulo.getEjemplares()) {
-				if (p.getEjemplar().getId().equals(e.getId())) {
+
+		for(Prestamo p: listadoPrestamos) {
+			if(p.getEjemplar().getTitulo().equals(titulo)) {
+				if (p.isActivo()  &&  p.getEjemplar().getTitulo().equals(titulo)) {
 					return true;
 				}
 			}
@@ -309,12 +311,14 @@ public class GestorTitulos {
 			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model, RedirectAttributes attribute) {
 		log.info("Lista Ejemplares seleccionados " + selected_ejemplares);
 		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
+		
 		for (Long ejemplar : selected_ejemplares) {
 
 			if (ejemplarTieneReservasPrestamos(ejemplar)) {
 				attribute.addFlashAttribute("error", "El/los ejemplar que desea borrar tiene algun prestamo o reserva activo");
 
 			} else {
+				prestamoService.borrarPrestamosByEjemplar(ejemplar);
 				ejemplarService.bajaEjemplar(ejemplar);
 			}
 		}
@@ -328,7 +332,7 @@ public class GestorTitulos {
 		
 		for (Prestamo p : listadoPrestamos) {
 		
-			if (p.getEjemplar().getId().equals(ejemplarId)) {
+			if (p.isActivo() && p.getEjemplar().getId().equals(ejemplarId)) {
 				return true;
 			}
 			

@@ -3,10 +3,11 @@ package com.library.Library.entity;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,17 +20,31 @@ public class Autor {
 
 	private String nombre;
 	private String apellido;
+	
+	@ManyToMany(mappedBy = "autores", fetch = FetchType.LAZY)
+	private List<Titulo> titulos;
 
 	public Autor() {
 	}
+
 
 	public Autor(Long id, String nombre, String apellido, List<Titulo> titulos) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
+		this.titulos = titulos;
 	}
 
+
+	public List<Titulo> getTitulos() {
+		return titulos;
+	}
+
+	public void setTitulos(List<Titulo> titulos) {
+		this.titulos = titulos;
+	}
+	
 	public Long getId() {
 		return id;
 	}
