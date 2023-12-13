@@ -3,7 +3,6 @@ package com.library.Library.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +29,6 @@ import com.library.Library.service.IServiceReserva;
 import com.library.Library.service.IServiceTitulo;
 import com.library.Library.service.IServiceUsuario;
 
-import jakarta.validation.Valid;
-
 @RequestMapping("/")
 @Controller
 public class GestorTitulos {
@@ -48,82 +45,80 @@ public class GestorTitulos {
 
 	@Autowired
 	private IServiceUsuario usuarioService;
-	@Autowired IServiceReserva reservaService;
-	
+	@Autowired
+	IServiceReserva reservaService;
+
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarFormAltaTitulo(Model model) {
 
 		Titulo titulo = new Titulo();
 		List<Autor> listaAutores = autorService.listarAutores();
-		
+
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaAutores", listaAutores);
-		return "views/admin/titulos/formAltaTitulo"; // RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN TITULO
+		return "views/admin/titulos/formAltaTitulo"; // RUTA A ARCHIVO .HTML DONDE ESTE EL FORMULARIO DE DAR DE ALTA UN
+														// TITULO
 	}
-	
+
 	@GetMapping("/altaAutor")
 	public String mostrarFormAltaAutor(Model model) {
 		Autor autor = new Autor();
 		model.addAttribute("autor", autor);
 		return "views/admin/autores/formAltaAutores";
 	}
-	
+
 	@PostMapping("/autor_saved")
 	public String altaAutor(@ModelAttribute Autor autor) {
-		
+
 		autorService.altaAutor(autor);
-		
+
 		return "redirect:/altaTitulo";
 	}
-	
-	@PostMapping("/saved")
-	public String altaTitulo(@Valid @ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
-			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr, BindingResult result, Model model) {
-		
-		//System.out.println("Errores detectados: " + result.getErrorCount());
-		
-		if(result.hasErrors()){
-			model.addAttribute("titulo", titulo);
-		    return "views/admin/titulos/formAltaTitulo";
-		}
-		
-		//List<Autor> autores = new ArrayList<>();
-		
-//		for (String nombreApellido : autoresStr) {
-//			String[] partes = nombreApellido.split(" ");
-//			if (partes.length >= 2) {
-//				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
-//
-//				if (autorExistente != null) {
-//					log.info("encontrado autor existente " + autorExistente.toString());
-//					autores.add(autorExistente);
-//				} else {
-//					Autor autor = new Autor();
-//					autor.setNombre(partes[0]);
-//					autor.setApellido(partes[1]);
-//					autorService.altaAutor(autor);
-//					log.info("añadiendo nuevo autor " + autor.toString());
-//					autores.add(autor);
-//				}
-//
-//			} else {
-//				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
-//
-//				if (autorExistente != null) {
-//					log.info("autor existente encontrado");
-//					autores.add(autorExistente);
-//				} else {
-//					Autor autor = new Autor();
-//					autor.setNombre(partes[0]);
-//					autorService.altaAutor(autor);
-//					log.info("añadiendo nuevo autor");
-//					autores.add(autor);
-//				}
-//			}
-//		}
 
-		//titulo.setAutores(autores);
-		
+	@PostMapping("/saved")
+	public String altaTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
+			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr, Model model) {
+
+		log.info("Autores: " + autoresStr.toString());
+
+		List<Autor> autores = new ArrayList<>();
+
+		for (String nombreApellido : autoresStr) {
+			String[] partes = nombreApellido.split(" ");
+			if (partes.length >= 2) {
+				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+
+				if (autorExistente != null) {
+					log.info("encontrado autor existente " + autorExistente.toString());
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autor.setApellido(partes[1]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor " + autor.toString());
+					autores.add(autor);
+				}
+
+			} else {
+				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+
+				if (autorExistente != null) {
+					log.info("autor existente encontrado");
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor");
+					autores.add(autor);
+				}
+			}
+		}
+
+		tituloService.altaTitulo(titulo);
+
+		titulo.setAutores(autores);
 
 		List<Ejemplar> ejemplares = new ArrayList<>();
 
@@ -133,80 +128,73 @@ public class GestorTitulos {
 			ejemplarService.altaEjemplar(ejemplar);
 			ejemplares.add(ejemplar);
 		}
-		
+
 		titulo.setEjemplares(ejemplares);
-		
-		tituloService.altaTitulo(titulo);
+
 		return "redirect:/mostrar";
 	}
 
 	@PostMapping("/edited")
-	public String EditarTitulo(@Valid @ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr, BindingResult result, Model model) {
-		
-		if(result.hasErrors()) {
-			model.addAttribute("titulo", titulo);
-			return "views/admin/titulos/formAltaTitulo";
+	public String EditarTitulo(@ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
+			Model model) {
+
+		List<Autor> autores = new ArrayList<>();
+
+		for (String nombreApellido : autoresStr) {
+			String[] partes = nombreApellido.split(" ");
+			if (partes.length >= 2) {
+				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+
+				if (autorExistente != null) {
+					log.info("encontrado autor existente " + autorExistente.toString());
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autor.setApellido(partes[1]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor " + autor.toString());
+					autores.add(autor);
+				}
+
+			} else {
+				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+				if (autorExistente != null) {
+					log.info("autor existente encontrado");
+					autores.add(autorExistente);
+				} else {
+					Autor autor = new Autor();
+					autor.setNombre(partes[0]);
+					autorService.altaAutor(autor);
+					log.info("añadiendo nuevo autor");
+					autores.add(autor);
+				}
+			}
 		}
-		
-		//List<Autor> autores = new ArrayList<>();
-		
-		
-//		for (String nombreApellido : autoresStr) {
-//			String[] partes = nombreApellido.split(" ");
-//			if (partes.length >= 2) {
-//				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
-//
-//				if (autorExistente != null) {
-//					log.info("encontrado autor existente " + autorExistente.toString());
-//					autores.add(autorExistente);
-//				} else {
-//					Autor autor = new Autor();
-//					autor.setNombre(partes[0]);
-//					autor.setApellido(partes[1]);
-//					autorService.altaAutor(autor);
-//					log.info("añadiendo nuevo autor " + autor.toString());
-//					autores.add(autor);
-//				}
-//
-//			} else {
-//				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
-//
-//				if (autorExistente != null) {
-//					log.info("autor existente encontrado");
-//					autores.add(autorExistente);
-//				} else {
-//					Autor autor = new Autor();
-//					autor.setNombre(partes[0]);
-//					autorService.altaAutor(autor);
-//					log.info("añadiendo nuevo autor");
-//					autores.add(autor);
-//				}
-//			}
-//		}
-//
-		//titulo.setAutores(autores);
+
+		titulo.setAutores(autores);
 		tituloService.altaTitulo(titulo);
 
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
 	@PostMapping("/userLogged")
-	public String processLoginForm(@RequestParam("nombreUsuario") String nombreUsuario, @RequestParam("apellidosUsuario") String apellidosUsuario,
-			@RequestParam("rol") String rol, Model model) {
+	public String processLoginForm(@RequestParam("nombreUsuario") String nombreUsuario,
+			@RequestParam("apellidosUsuario") String apellidosUsuario, @RequestParam("rol") String rol, Model model) {
 		// Lógica para procesar el formulario de inicio de sesión
 		// y redirigir a la página adecuada.
 		Usuario user = new Usuario();
 
-		if(usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario) == null) {
+		if (usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario) == null) {
 			user.setNombre(nombreUsuario);
 			user.setApellidos(apellidosUsuario);
 			usuarioService.guardarUsuario(user);
 			usuarioService.setGlobalUsuario(user);
-		}else {
+		} else {
 			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
 			usuarioService.setGlobalUsuario(user);
 		}
-		
+
 		if (rol.equals("admin")) {
 			return "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {
@@ -217,22 +205,21 @@ public class GestorTitulos {
 		}
 		return "redirect:/";
 	}
-	
+
 	@PostMapping("/selectedUser")
 	public String buscarUsuarioPorId(@RequestParam("idUsuario") long idUsuario) {
-	    Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
+		Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
 
-	    if (optionalUser.isPresent()) {
-	        Usuario user = optionalUser.get();
-	        usuarioService.setGlobalUsuario(user);
+		if (optionalUser.isPresent()) {
+			Usuario user = optionalUser.get();
+			usuarioService.setGlobalUsuario(user);
 
-	        return "/views/Bibliotecario/MenuBibliotecario";
-	    } else {
-	    	//TODO manejo de error
-	        return "redirect:/";
-	    }
+			return "/views/Bibliotecario/MenuBibliotecario";
+		} else {
+			// TODO manejo de error
+			return "redirect:/";
+		}
 	}
-
 
 	@GetMapping("/mostrar")
 	public String mostrarTitulos(Model model) {
@@ -242,7 +229,7 @@ public class GestorTitulos {
 
 		return "/views/admin/titulos/mostrarTitulos";
 	}
-	
+
 	@GetMapping("/mostrarAutores")
 	public String mostrarAutores(Model model) {
 		List<Autor> listadoAutores = autorService.listarAutores();
@@ -269,20 +256,22 @@ public class GestorTitulos {
 	public String mostrarFormEditarTitulo(@PathVariable("id") Long tituloId, Model model) {
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		List<Autor> listaAutores = autorService.listarAutores();
 
+		model.addAttribute("listaAutores", listaAutores);
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("autoresStr",
 				titulo.getAutores().toString().substring(1, titulo.getAutores().toString().length() - 1));
 		model.addAttribute("numEjemplares", titulo.getEjemplares().size());
-		
+
 		return "/views/admin/titulos/formEditarTitulo";
 	}
 
 	@PostMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
-		
+
 		tituloService.bajaTitulo(tituloId);
-		
+
 		return "redirect:/mostrar";
 	}
 
@@ -294,7 +283,7 @@ public class GestorTitulos {
 		for (Long ejemplar : selected_ejemplares) {
 			ejemplarService.bajaEjemplar(ejemplar);
 		}
-		
+
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
@@ -327,41 +316,41 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		return "/views/Usuario/MostrarTitulosUser";
 	}
-	
+
 	@SuppressWarnings("null")
 	@GetMapping("/reserva")
 	public String mostrarReservas(Model model) {
 		Usuario user = usuarioService.getUsuario();
 		List<Reserva> listadoReservas = reservaService.listarReservas();
 		List<Titulo> listadoTitulos = new ArrayList<>();
-		
-		for(Reserva r : listadoReservas) {
-			if(r.getUsuario().getId().equals(user.getId())) {
-			listadoTitulos.add(r.getTitulo());
+
+		for (Reserva r : listadoReservas) {
+			if (r.getUsuario().getId().equals(user.getId())) {
+				listadoTitulos.add(r.getTitulo());
 			}
 		}
-		
+
 		model.addAttribute("nombre", "Lista de reservas");
 		model.addAttribute("titulos", listadoTitulos);
-		
-		return"/views/Bibliotecario/MostrarReservas";
-		
+
+		return "/views/Bibliotecario/MostrarReservas";
+
 	}
-	
-	
+
 	@GetMapping("/user")
 	public String mostraMainWindowUser(Model model) {
 		model.addAttribute("usuario", usuarioService.getUsuario());
 		return "/views/Usuario/MenuUsuario";
 	}
+
 	@GetMapping("/admin")
 	public String mostraMainWindowAdmin() {
 		return "/views/admin/titulos/MenuAdmin";
 	}
+
 	@GetMapping("/bibliotecario")
 	public String mostraMainWindowBibliotecario() {
 		return "/views/Bibliotecario/SeleccionUsuario";
 	}
-	
-	
+
 }

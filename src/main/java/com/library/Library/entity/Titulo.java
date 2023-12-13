@@ -11,9 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
 
 @Entity
 @Table(name = "titulos")
@@ -23,11 +21,8 @@ public class Titulo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty(message = "Debe introducir un nombre para el titulo")
 	private String nombre;
-	
-	@NotEmpty(message = "Debe introducir un isbn para el titulo")
-	@Size(min=5,max=20, message = "La longitud del ISBN debe ser mayor que 5 y menor que 20")
+
 	private String isbn;
 	
 	private String numReserva;

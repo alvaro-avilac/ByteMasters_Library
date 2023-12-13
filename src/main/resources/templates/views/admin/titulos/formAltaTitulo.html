@@ -22,8 +22,7 @@
 				<div class="col-md-6">
 					<input type="hidden" th:field="*{id}">
 					<input type="text" name="nombre" th:field="*{nombre}" class="form-control form-control-sm"
-						id="nombre" placeholder="nombre del titulo" />
-					<small class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+						id="nombre" placeholder="nombre del titulo" minlength="1" maxlength="100" required/>
 				</div>
 			</div>
 
@@ -33,17 +32,16 @@
 				</div>
 				<div class="col-md-6">
 					<input type="text" name="isbn" th:field="*{isbn}" class="form-control form-control-sm" id="isbn"
-						placeholder="introduzca el isbn" />
-					<small class="text-danger" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></small>
+						placeholder="introduzca el isbn" required minlength="5" maxlength="10"/>
 				</div>
 			</div>
 
 			<div class="row mb-3">
 				<div class="col-md-3">
-					<label for="autores">Autor(es)</label>
+					<label for="autoresStr">Autor(es)</label>
 				</div>
 				<div class="col-md-4">
-					<select id="autores" name="autores" class="form-control form-control-sm" aria-placeholder="Seleccione un autor" multiple="multiple">
+					<select id="autoresStr" name="autoresStr" class="form-control form-control-sm" aria-placeholder="Seleccione un autor" multiple="multiple" required>
 						<!-- Itera sobre la lista de autores y crea opciones para cada uno -->
 						<th:block th:each="autor : ${listaAutores}">
 							<option th:value="${autor}" th:text="${autor.nombre} + ' ' + ${autor.apellido == null ? '' : autor.apellido}"></option>
