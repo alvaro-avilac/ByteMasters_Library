@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -218,11 +217,14 @@ public class GestorPrestamos {
 		if(user == null) {
 			return "views/error";
 		}
+		
 		Optional<Prestamo> prestamoValue = prestamoService.buscarPrestamoPorId(prestamoId);
 		Prestamo prestamo = prestamoValue.orElse(null);
+		
 		if(prestamo == null) {
 			return "views/error";
 		}
+		
 		gestorPenalizaciones.aplicarPenalizaciones(user, fechaGlobal, prestamo);
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
