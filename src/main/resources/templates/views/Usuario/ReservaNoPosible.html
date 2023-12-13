@@ -5,11 +5,11 @@
 
 <body>
 
-    <header th:replace="~{plantilla/templateUser :: header}"></header>
-    
-    <div
+<header th:replace="~{plantilla/templateUser :: header}"></header>
+
+	<div
 		th:style="'display: flex; flex-direction: column; align-items: center; justify-content: center; height: 70vh; margin: 0; font-family: \'Arial\', sans-serif; text-align: center;'">
-		<h1>Reserva cancelada con éxito</h1>
+		<h1>No ha sido posible realizar la reserva (ya existe una hecha)</h1>
         <a th:href="@{/menuUsuario}"><button>Volver al menu</button></a>
         
     </div>

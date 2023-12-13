@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{plantilla/templateBibliotecario :: head}"></head>
+<head th:replace="~{plantilla/templateUser :: head}"></head>
 
 <body>
 
-<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
+    <header th:replace="~{plantilla/templateUser :: header}"></header>
 
 	<div class="container">
 		<h1 th:text="${nombre}"></h1>
@@ -41,7 +41,7 @@
 					</td>
 					<td>
 						<div>
-							<a class="btn btn-primary" th:href="@{/reservaEliminadaBibliotecario/}  + ${ti.id}" role="button">Cancelar Reserva</a>	
+							<a class="btn btn-primary" th:href="@{/reservaEliminadaUsuario/}  + ${ti.id}" role="button">Cancelar Reserva</a>	
 						</div>
 					</td>
 

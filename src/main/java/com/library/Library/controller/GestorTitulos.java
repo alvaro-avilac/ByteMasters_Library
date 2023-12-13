@@ -239,7 +239,7 @@ public class GestorTitulos {
 		return "/views/admin/titulos/formEditarTitulo";
 	}
 
-	@PostMapping("detalle/delete/{id}")
+	@GetMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
 		
 		tituloService.bajaTitulo(tituloId);
@@ -289,12 +289,14 @@ public class GestorTitulos {
 		return "/views/Usuario/MostrarTitulosUser";
 	}
 	
-	@SuppressWarnings("null")
-	@GetMapping("/reserva")
-	public String mostrarReservas(Model model) {
+
+	@GetMapping("/reservaBibliotecario")
+	public String mostrarReservasBibliotecario(Model model) {
 		Usuario user = usuarioService.getUsuario();
+		log.info("Nombre: "+user.getNombre() +" "+ user.getApellidos()+" ID: "+ user.getId());
 		List<Reserva> listadoReservas = reservaService.listarReservas();
 		List<Titulo> listadoTitulos = new ArrayList<>();
+		
 		
 		for(Reserva r : listadoReservas) {
 			if(r.getUsuario().getId()==user.getId()) {
@@ -308,6 +310,28 @@ public class GestorTitulos {
 		return"/views/Bibliotecario/MostrarReservas";
 		
 	}
+	
+	@SuppressWarnings("null")
+	@GetMapping("/reservaUsuario")
+	public String mostrarReservasUsuario(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		List<Reserva> listadoReservas = reservaService.listarReservas();
+		List<Titulo> listadoTitulos = new ArrayList<>();
+		
+		
+		for(Reserva r : listadoReservas) {
+			if(r.getUsuario().getId()==user.getId()) {
+			listadoTitulos.add(r.getTitulo());
+			}
+		}
+		
+		model.addAttribute("nombre", "Lista de reservas");
+		model.addAttribute("titulos", listadoTitulos);
+		
+		return"/views/Usuario/MostrarReservas";
+		
+	}
+	
 	
 	
 	@GetMapping("/user")
