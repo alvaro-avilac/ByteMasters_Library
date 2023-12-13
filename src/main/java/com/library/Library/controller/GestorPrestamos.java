@@ -248,10 +248,15 @@ public class GestorPrestamos {
 	
 	@GetMapping("/reservaEliminada/{id}")
 	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model){	
+		
+		
 		Usuario user = usuarioService.getUsuario();
+
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
-		
+		model.addAttribute("usuario", user);
+
+
 		for (Reserva r : listaReservas) {
         	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
         		Long idReserva = r.getId();
