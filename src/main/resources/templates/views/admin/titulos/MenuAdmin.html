@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:th:="http://www.thymeleaf.org">
 
-<head th:replace="~{plantilla/templateAdmin :: head}"> </head>	
+<head th:replace="~{plantilla/templateAdmin :: head}">
+</head>
 
 <body>
-	
-	<header th:replace="~{plantilla/templateAdmin :: header}">	
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
 	</header>
-	
-	<a class="btn btn-primary" th:href="@{/altaTitulo}" role="button">Dar de alta titulo</a>
-	
-	
+
+	<div class="text-center" style="padding-top: 100px;">
+		<h1>Bienvenido a la sección de administración</h1>
+		<div class="d-flex justify-content-center gap-5 mt-5">
+			<a class="btn btn-primary" th:href="@{/altaTitulo}" role="button">Dar de alta titulo</a>
+			<a class="btn btn-primary" th:href="@{/mostrar}" role="button">Ver titulos</a>
+			<a class="btn btn-primary" th:href="@{/mostrarAutores}" role="button">Ver autores</a>
+		</div>
+	</div>
+
 	<footer th:replace="~{plantilla/templateAdmin :: footer}">
 	</footer>
-	
+
 </body>
-	
+
 </html>

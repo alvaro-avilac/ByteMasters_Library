@@ -68,6 +68,14 @@ public class GestorTitulos {
 		return "views/admin/autores/formAltaAutores";
 	}
 	
+	@PostMapping("/autor_saved")
+	public String altaAutor(@ModelAttribute Autor autor) {
+		
+		autorService.altaAutor(autor);
+		
+		return "redirect:/altaTitulo";
+	}
+	
 	@PostMapping("/saved")
 	public String altaTitulo(@Valid @ModelAttribute Titulo titulo, @RequestParam("autoresStr") List<String> autoresStr,
 			@RequestParam("numEjemplaresStr") Integer numEjemplaresStr, BindingResult result, Model model) {
@@ -79,43 +87,43 @@ public class GestorTitulos {
 		    return "views/admin/titulos/formAltaTitulo";
 		}
 		
-		List<Autor> autores = new ArrayList<>();
+		//List<Autor> autores = new ArrayList<>();
+		
+//		for (String nombreApellido : autoresStr) {
+//			String[] partes = nombreApellido.split(" ");
+//			if (partes.length >= 2) {
+//				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+//
+//				if (autorExistente != null) {
+//					log.info("encontrado autor existente " + autorExistente.toString());
+//					autores.add(autorExistente);
+//				} else {
+//					Autor autor = new Autor();
+//					autor.setNombre(partes[0]);
+//					autor.setApellido(partes[1]);
+//					autorService.altaAutor(autor);
+//					log.info("añadiendo nuevo autor " + autor.toString());
+//					autores.add(autor);
+//				}
+//
+//			} else {
+//				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+//
+//				if (autorExistente != null) {
+//					log.info("autor existente encontrado");
+//					autores.add(autorExistente);
+//				} else {
+//					Autor autor = new Autor();
+//					autor.setNombre(partes[0]);
+//					autorService.altaAutor(autor);
+//					log.info("añadiendo nuevo autor");
+//					autores.add(autor);
+//				}
+//			}
+//		}
 
-		for (String nombreApellido : autoresStr) {
-			String[] partes = nombreApellido.split(" ");
-			if (partes.length >= 2) {
-				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
-
-				if (autorExistente != null) {
-					log.info("encontrado autor existente " + autorExistente.toString());
-					autores.add(autorExistente);
-				} else {
-					Autor autor = new Autor();
-					autor.setNombre(partes[0]);
-					autor.setApellido(partes[1]);
-					autorService.altaAutor(autor);
-					log.info("añadiendo nuevo autor " + autor.toString());
-					autores.add(autor);
-				}
-
-			} else {
-				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
-
-				if (autorExistente != null) {
-					log.info("autor existente encontrado");
-					autores.add(autorExistente);
-				} else {
-					Autor autor = new Autor();
-					autor.setNombre(partes[0]);
-					autorService.altaAutor(autor);
-					log.info("añadiendo nuevo autor");
-					autores.add(autor);
-				}
-			}
-		}
-
-		titulo.setAutores(autores);
-		tituloService.altaTitulo(titulo);
+		//titulo.setAutores(autores);
+		
 
 		List<Ejemplar> ejemplares = new ArrayList<>();
 
@@ -125,8 +133,10 @@ public class GestorTitulos {
 			ejemplarService.altaEjemplar(ejemplar);
 			ejemplares.add(ejemplar);
 		}
+		
 		titulo.setEjemplares(ejemplares);
-
+		
+		tituloService.altaTitulo(titulo);
 		return "redirect:/mostrar";
 	}
 
@@ -138,42 +148,43 @@ public class GestorTitulos {
 			return "views/admin/titulos/formAltaTitulo";
 		}
 		
-		List<Autor> autores = new ArrayList<>();
-
-		for (String nombreApellido : autoresStr) {
-			String[] partes = nombreApellido.split(" ");
-			if (partes.length >= 2) {
-				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
-
-				if (autorExistente != null) {
-					log.info("encontrado autor existente " + autorExistente.toString());
-					autores.add(autorExistente);
-				} else {
-					Autor autor = new Autor();
-					autor.setNombre(partes[0]);
-					autor.setApellido(partes[1]);
-					autorService.altaAutor(autor);
-					log.info("añadiendo nuevo autor " + autor.toString());
-					autores.add(autor);
-				}
-
-			} else {
-				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
-
-				if (autorExistente != null) {
-					log.info("autor existente encontrado");
-					autores.add(autorExistente);
-				} else {
-					Autor autor = new Autor();
-					autor.setNombre(partes[0]);
-					autorService.altaAutor(autor);
-					log.info("añadiendo nuevo autor");
-					autores.add(autor);
-				}
-			}
-		}
-
-		titulo.setAutores(autores);
+		//List<Autor> autores = new ArrayList<>();
+		
+		
+//		for (String nombreApellido : autoresStr) {
+//			String[] partes = nombreApellido.split(" ");
+//			if (partes.length >= 2) {
+//				Autor autorExistente = autorService.buscarAutorPorNombreYApellido(partes[0], partes[1]);
+//
+//				if (autorExistente != null) {
+//					log.info("encontrado autor existente " + autorExistente.toString());
+//					autores.add(autorExistente);
+//				} else {
+//					Autor autor = new Autor();
+//					autor.setNombre(partes[0]);
+//					autor.setApellido(partes[1]);
+//					autorService.altaAutor(autor);
+//					log.info("añadiendo nuevo autor " + autor.toString());
+//					autores.add(autor);
+//				}
+//
+//			} else {
+//				Autor autorExistente = autorService.buscarAutorPorNombre(partes[0]);
+//
+//				if (autorExistente != null) {
+//					log.info("autor existente encontrado");
+//					autores.add(autorExistente);
+//				} else {
+//					Autor autor = new Autor();
+//					autor.setNombre(partes[0]);
+//					autorService.altaAutor(autor);
+//					log.info("añadiendo nuevo autor");
+//					autores.add(autor);
+//				}
+//			}
+//		}
+//
+		//titulo.setAutores(autores);
 		tituloService.altaTitulo(titulo);
 
 		return "redirect:/detalle/" + titulo.getId();
@@ -230,6 +241,14 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 
 		return "/views/admin/titulos/mostrarTitulos";
+	}
+	
+	@GetMapping("/mostrarAutores")
+	public String mostrarAutores(Model model) {
+		List<Autor> listadoAutores = autorService.listarAutores();
+		model.addAttribute("nombre", "Lista de Autores");
+		model.addAttribute("autores", listadoAutores);
+		return "/views/admin/autores/mostrarAutores";
 	}
 
 	@GetMapping("/detalle/{id}")
