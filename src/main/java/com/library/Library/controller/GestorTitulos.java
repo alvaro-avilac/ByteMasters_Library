@@ -272,7 +272,33 @@ public class GestorTitulos {
 
 		return "/views/admin/titulos/formEditarTitulo";
 	}
-
+	
+	@GetMapping("/autor/edit/{id}")
+	public String mostrarFormEditarAutor(@PathVariable("id") Long autorId, Model model) {
+		Optional<Autor> autor = autorService.buscarAutorPorId(autorId);
+		model.addAttribute("autor",autor);
+		return "/views/admin/autores/formAltaAutores";
+	}
+	
+	@GetMapping("autor/delete/{id}")
+	public String mostrarFormEliminarAutor(@PathVariable("id") Long autorId, Model model, RedirectAttributes attribute) {
+		
+		Autor autor = autorService.buscarAutorPorId(autorId).get();
+		if (autor == null) {
+			return "";
+		}
+		
+		for(Titulo t: autor.getTitulos()) {
+			if (tituloTieneReservasPrestamos(t)) {
+				
+				attribute.addFlashAttribute("error", "El Autor que desea borrar tiene algun titulo el cual tiene algun prestamo o reserva activo");
+				return "redirect:/mostrarAutores";
+			}
+		}
+		
+		return "redirect:/mostrarAutores";
+	}
+	
 	@GetMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute) {
 
@@ -281,9 +307,8 @@ public class GestorTitulos {
 			
 			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
 			return "redirect:/detalle/{id}";
-		} else {
-
 		}
+		
 		prestamoService.borrarPrestamosEjemplaresByTitulo(titulo);
 		titulo.getAutores().clear();
 		tituloService.bajaTitulo(tituloId);

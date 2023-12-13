@@ -10,8 +10,8 @@
 	</header>
 
 	<div class="container">
-		<h1 th:text="${nombre}"></h1>
-		<a class="btn btn-primary" th:href="@{/altaAutor}" role="button">Gestionar Autores</a>
+		<h1 class="mt-3" th:text="${nombre}"></h1>
+		<a class="btn btn-primary mt-4 mb-4" th:href="@{/altaAutor}" role="button">Añadir nuevo autor</a>
 	</div>
 
 
@@ -32,11 +32,11 @@
 					<td th:text="${a.nombre}"></td>
 					<td th:text="${a.apellido}"></td>
 					<td>
-						<a class="btn btn-primary" th:href="@{/autor/edit} + ${ti.id}" role="button">+ info</a>
+						<a class="btn btn-success" th:href="@{/autor/edit/} + ${a.id}" role="button">Editar</a>
 					</td>
 					
 					<td>
-						<a class="btn btn-primary" th:href="@{/autor/delete} + ${ti.id}" role="button">+ info</a>
+						<a class="btn btn-danger" th:href="@{/autor/delete/} + ${a.id}" role="button">Eliminar</a>
 					</td>
 				</tr>
 			</tbody>
