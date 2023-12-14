@@ -88,6 +88,70 @@ public class GestorPrestamos {
 		return "views/prestamos/selectTituloPrestamoUsuario";
 	}
 	
+	@GetMapping("/reservaBibliotecario")
+	public String mostrarReservasBibliotecario(Model model) {
+	
+		Usuario user = usuarioService.getUsuario();
+		log.info("Nombre: "+user.getNombre() +" "+ user.getApellidos()+" ID: "+ user.getId());
+		List<Reserva> listadoReservas = reservaService.listarReservas();
+		List<Titulo> listadoTitulos = new ArrayList<>();
+    
+		for(Reserva r : listadoReservas) {
+			if(r.getUsuario().getId()==user.getId()) {
+				listadoTitulos.add(r.getTitulo());
+			}
+		}
+
+		model.addAttribute("nombre", "Lista de reservas");
+		model.addAttribute("titulos", listadoTitulos);
+
+		return "/views/Bibliotecario/MostrarReservas";
+
+	}
+		
+	@GetMapping("/reservaUsuario")
+	public String mostrarReservasUsuario(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		List<Reserva> listadoReservas = reservaService.listarReservas();
+		List<Titulo> listadoTitulos = new ArrayList<>();
+		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		
+		for(Reserva r : listadoReservas) {
+			if(r.getUsuario().getId()==user.getId()) {
+			listadoTitulos.add(r.getTitulo());
+			}
+		}
+		
+		for (Titulo t : listadoTitulos) {
+			List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
+
+			for (Ejemplar e : t.getEjemplares()) {
+				boolean disponible = true;
+				for (Prestamo p : listadoPrestamos) {
+					if (p.getEjemplar() == e
+							&& p.getFechaFinal()
+									.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+							&& p.isActivo()) {
+						disponible = false;
+						break;
+					}
+				}
+				if (disponible) {
+					ejemplaresDisponibles.add(e);
+				}
+			}
+
+			t.setEjemplares(ejemplaresDisponibles);
+		}
+		
+		model.addAttribute("nombre", "Lista de reservas");
+		model.addAttribute("titulos", listadoTitulos);
+		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
+		
+		return"/views/Usuario/MostrarReservas";
+		
+	}
+	
 	public boolean isTituloReservado(Titulo titulo) {
 		
 		List<Reserva> listaReservas = reservaService.listarReservas();
