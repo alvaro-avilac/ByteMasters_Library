@@ -8,6 +8,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -28,7 +30,11 @@ public class Titulo {
 	private String numReserva;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	
+	@JoinTable(
+		    name = "titulos_autores",
+		    joinColumns = @JoinColumn(name = "titulo_id"),
+		    inverseJoinColumns = @JoinColumn(name = "autores_id")
+		)
 	private List<Autor> autores;
 	
 	@OneToMany(mappedBy = "title", cascade = CascadeType.REMOVE)
