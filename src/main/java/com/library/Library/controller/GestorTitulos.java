@@ -213,16 +213,17 @@ public class GestorTitulos {
 	}
 
 	@PostMapping("/selectedUser")
-	public String buscarUsuarioPorId(@RequestParam("idUsuario") long idUsuario) {
+	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model) {
 		Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
 
 		if (optionalUser.isPresent()) {
-			Usuario user = optionalUser.get();
-			usuarioService.setGlobalUsuario(user);
-
+			Usuario usuario = optionalUser.get();
+			usuarioService.setGlobalUsuario(usuario);
+			
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("titulo", "Bienvenido Bibliotecario ha elegido al usuario " + usuario.getNombre() + " " + usuario.getApellidos());
 			return "/views/Bibliotecario/MenuBibliotecario";
 		} else {
-			// TODO manejo de error
 			return "redirect:/";
 		}
 	}
@@ -302,8 +303,6 @@ public class GestorTitulos {
 	@GetMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute) {
 
-	@GetMapping("detalle/delete/{id}")
-	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model) {
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		if (tituloTieneReservasPrestamos(titulo)) {
 			
@@ -402,6 +401,7 @@ public class GestorTitulos {
 
 	@GetMapping("/reservaBibliotecario")
 	public String mostrarReservasBibliotecario(Model model) {
+	
 		Usuario user = usuarioService.getUsuario();
 		log.info("Nombre: "+user.getNombre() +" "+ user.getApellidos()+" ID: "+ user.getId());
 		List<Reserva> listadoReservas = reservaService.listarReservas();
@@ -409,7 +409,8 @@ public class GestorTitulos {
     
 		for(Reserva r : listadoReservas) {
 			if(r.getUsuario().getId()==user.getId()) {
-			listadoTitulos.add(r.getTitulo());
+				listadoTitulos.add(r.getTitulo());
+			}
 		}
 
 		model.addAttribute("nombre", "Lista de reservas");
@@ -418,6 +419,7 @@ public class GestorTitulos {
 		return "/views/Bibliotecario/MostrarReservas";
 
 	}
+		
 	@GetMapping("/reservaUsuario")
 	public String mostrarReservasUsuario(Model model) {
 		Usuario user = usuarioService.getUsuario();
@@ -439,7 +441,9 @@ public class GestorTitulos {
 	
 	@GetMapping("/user")
 	public String mostraMainWindowUser(Model model) {
-		model.addAttribute("usuario", usuarioService.getUsuario());
+		
+		Usuario user = usuarioService.getUsuario();
+		model.addAttribute("usuario", user);
 		return "/views/Usuario/MenuUsuario";
 	}
 
@@ -449,7 +453,9 @@ public class GestorTitulos {
 	}
 
 	@GetMapping("/bibliotecario")
-	public String mostraMainWindowBibliotecario() {
+	public String mostraMainWindowBibliotecario(Model model) {
+		List<Usuario> listadolistaUsuarios = usuarioService.listarUsuarios();
+		model.addAttribute("listaUsuarios", listadolistaUsuarios);
 		return "/views/Bibliotecario/SeleccionUsuario";
 	}
 

@@ -5,56 +5,28 @@
 
 <body>
 
-<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
+	<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
 
-<head>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      text-align: center;
-      padding: 50px;
-    }
+	<head>
 
-    .login-container {
-      max-width: 300px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .login-container label {
-      display: block;
-      margin-bottom: 8px;
-      text-align: left;
-    }
-
-    .login-container input,
-    .login-container select {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
-
-    .login-container button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-  </style>
-
-<div class="selectUser-container">
-	<h1>Introduce el id del usuario</h1>
-		<form id="selectUser" th:action="@{/selectedUser}" th:method="post">
-			<input type="text" id="idUsuario" name="idUsuario" required placeholder="id">
-			<button type="submit">Seleccionar</button>
-		</form>
-</div>
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				<div class="col-md-6">
+					<div class="selectUser-container text-center">
+						<h1>Introduce el id del usuario</h1>
+						<form id="selectUser" th:action="@{/selectedUser}" th:method="post" class="text-center m-5">
+							<div class="form-group d-inline-block">
+								<select id="selectedUser" name="selectedUser" class="form-control mr-2" required>
+									<th:block th:each="user : ${listaUsuarios}">
+										<option th:text="${user.id} + '-' + ${user.nombre} + ' ' + ${user.apellidos}"
+											th:value="${user.id}"></option>
+									</th:block>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-primary m-4">Seleccionar</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 </body>
