@@ -15,7 +15,7 @@ import com.library.Library.entity.Usuario;
 
 public class GestorPenalizaciones {
 	
-	private static final Logger log = LoggerFactory.getLogger(GestorTitulos.class);
+	private static final Logger log = LoggerFactory.getLogger(GestorPenalizaciones.class);
 
 	public static final double INDICE_PENALIZACION = 2.5;
 	public static final double CUPO_MAXIMO = 4;
@@ -57,17 +57,17 @@ public class GestorPenalizaciones {
 	}
 	
 	public boolean comprobarCupo(Usuario user) {
-		
+		boolean flag = true;
 		long prestamosActivos = user.getPrestamos().stream()
 	            .filter(Prestamo::isActivo)
 	            .count();
 		
         //Comprueba cupo de prestamos (si ya tiene 4 prestamos no puede pedir prestados mas)
         if(prestamosActivos + 1 > CUPO_MAXIMO) {
-        	return false;
+        	flag = false;
         }
         
-        return true;
+        return flag;
 	}
 
 }

@@ -19,8 +19,10 @@
 						<li class="nav-item">
 							<a class="nav-link active" href="/mostrar">Listar titulos</a>
 						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="/mostrarAutores">Listar autores</a>
+						</li>
 					</ul>
-
 				</div>
 				<ul class="nav navbar-nav navbar-left">
 					<li class="nav-link">
@@ -30,6 +32,16 @@
 			</div>
 		</nav>
 
+		<div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${error != null}">
+			<strong>¡Alerta!</strong> <label th:text="${error}"></label>.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		
+		<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${success != null}">
+			<strong>:)</strong> <label th:text="${success}"></label>.
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		
 	</header>
 
 

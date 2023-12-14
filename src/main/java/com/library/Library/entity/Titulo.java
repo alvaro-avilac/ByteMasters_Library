@@ -2,17 +2,16 @@ package com.library.Library.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 
 @Entity
 @Table(name = "titulos")
@@ -23,13 +22,15 @@ public class Titulo {
 	private Long id;
 	
 	private String nombre;
+
 	private String isbn;
+	
 	private String numReserva;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
 	private List<Autor> autores;
 	
-	@OneToMany(mappedBy = "title")
+	@OneToMany(mappedBy = "title", cascade = CascadeType.REMOVE)
 	private List<Ejemplar> ejemplares;
 	
 	public Titulo() {

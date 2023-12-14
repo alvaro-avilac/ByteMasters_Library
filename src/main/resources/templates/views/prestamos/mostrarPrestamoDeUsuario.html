@@ -9,7 +9,7 @@
 	<header th:replace="~{plantilla/templateUser :: header}">
 	</header>
 
-	<div class="container">
+	<div class="m-4">
 		<h3 th:text="'Ejemplares prestados a ' + ${nombreDeUsuario}"></h3>
 	</div>
 	<div th:if="${listadoDePrestamosActivos.size() != 0}" class="container">
@@ -42,7 +42,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div th:unless="${listadoDePrestamosActivos.size() != 0}">Ups! Aún no tiene títulos prestados</div>
+	<div class="m-4" th:unless="${listadoDePrestamosActivos.size() != 0}">Ups! Aún no tiene títulos prestados</div>
 	<footer th:replace="~{plantilla/templateUser :: footer}">
 	</footer>
 
