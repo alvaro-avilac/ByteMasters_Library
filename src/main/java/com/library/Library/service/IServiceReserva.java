@@ -10,4 +10,5 @@ public interface IServiceReserva {
 	public List<Reserva> listarReservas();
 	public void guardarReserva(Reserva reserva);
 	public Optional<Reserva> buscarReservaPorId(Long id);
+	public void eliminarReserva(Long id);
 }

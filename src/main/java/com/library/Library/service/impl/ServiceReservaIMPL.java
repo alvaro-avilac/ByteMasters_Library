@@ -30,5 +30,9 @@ public class ServiceReservaIMPL implements IServiceReserva{
 	public void guardarReserva(Reserva reserva) {
 		reservaDAO.save(reserva);
 	}
+	
+	public void eliminarReserva(Long id) {
+		reservaDAO.deleteById(id);
+	}
 
 }

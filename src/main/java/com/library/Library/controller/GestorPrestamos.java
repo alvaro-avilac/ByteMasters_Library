@@ -256,15 +256,62 @@ public class GestorPrestamos {
 
 		return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
 	}
-	@GetMapping("/reservado")
-	public String reservaHecha() {
+	@GetMapping("/menuBibliotecario")
+	public String menuBibliotecario() {
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
-	@GetMapping("/no_reservado")
-	public String reservaNoPosible() {
-		return "/views/Bibliotecario/MenuBibliotecario";
+	@GetMapping("/menuUsuario")
+	public String menuUsuario() {
+		return "/views/Usuario/MenuUsuario";
 	}
 	
+	@GetMapping("/reservaEliminadaUsuario/{id}")
+	public String eliminarReservaUsuario(@PathVariable("id") Long tituloId, Model model){	
+		
+		
+		Usuario user = usuarioService.getUsuario();
+
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		List<Reserva> listaReservas = reservaService.listarReservas();
+		model.addAttribute("usuario", user);
+
+
+		for (Reserva r : listaReservas) {
+        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        		Long idReserva = r.getId();
+        		
+        		reservaService.eliminarReserva(idReserva);
+        		return "/views/Usuario/MenuUsuario";
+            }
+        }
+		
+		
+		return "/views/Usuario/MenuUsuario";
+	}
+	
+	@GetMapping("/reservaEliminadaBibliotecario/{id}")
+	public String eliminarReservaBibliotecario(@PathVariable("id") Long tituloId, Model model){	
+		
+		
+		Usuario user = usuarioService.getUsuario();
+
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		List<Reserva> listaReservas = reservaService.listarReservas();
+		model.addAttribute("usuario", user);
+
+
+		for (Reserva r : listaReservas) {
+        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        		Long idReserva = r.getId();
+        		
+        		reservaService.eliminarReserva(idReserva);
+        		return "/views/Bibliotecario/MenuBibliotecario";
+            }
+        }
+		
+		
+		return "/views/Bibliotecario/MenuBibliotecario";
+	}
 	
 	
 }
