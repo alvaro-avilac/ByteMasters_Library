@@ -28,6 +28,7 @@ public class Titulo {
 	private String numReserva;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+	
 	private List<Autor> autores;
 	
 	@OneToMany(mappedBy = "title", cascade = CascadeType.REMOVE)

@@ -244,7 +244,7 @@ public class GestorPrestamos {
         Reserva reserva = new Reserva();
         for (Reserva r : listaReservas) {
         	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		return "/views/Bibliotecario/ReservaNoPosible";
+        		return "/views/Usuario/ReservaNoPosible";
             }
         }
         
@@ -254,14 +254,17 @@ public class GestorPrestamos {
 
         reservaService.guardarReserva(reserva);
 
-		return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+		return "/views/Usuario/ReservaRealizadaUsuario";
 	}
 	@GetMapping("/menuBibliotecario")
 	public String menuBibliotecario() {
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
 	@GetMapping("/menuUsuario")
-	public String menuUsuario() {
+	public String menuUsuario(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		model.addAttribute("usuario", user);
+		model.addAttribute("nombre", user.getNombre());
 		return "/views/Usuario/MenuUsuario";
 	}
 	
