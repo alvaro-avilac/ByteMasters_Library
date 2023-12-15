@@ -5,7 +5,7 @@
 
 <body>
 
-<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
+	<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
 
 	<div class="container">
 		<h1 th:text="${nombre}"></h1>
@@ -31,17 +31,19 @@
 						</span>
 					</td>
 					<td>
-					  <div th:if="${ti.ejemplares.size() == 0}">
+						<div th:if="${ti.ejemplares.size() == 0}">
 							<a class="btn btn-secondary" role="button">no disponible</a>
 						</div>
-						
+
 						<div th:if="${ti.ejemplares.size() != 0}">
-							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir prestamo</a>	
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir
+								prestamo</a>
 						</div>
 					</td>
 					<td>
 						<div>
-							<a class="btn btn-primary" th:href="@{/reservaEliminadaBibliotecario/}  + ${ti.id}" role="button">Cancelar Reserva</a>	
+							<a class="btn btn-primary" th:href="@{/reservaEliminadaBibliotecario/}  + ${ti.id}"
+								role="button">Cancelar Reserva</a>
 						</div>
 					</td>
 

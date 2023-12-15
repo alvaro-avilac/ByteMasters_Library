@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Prestamo;
@@ -320,10 +320,14 @@ public class GestorPrestamos {
 
 		return "/views/Usuario/ReservaRealizadaUsuario";
 	}
+	
 	@GetMapping("/menuBibliotecario")
-	public String menuBibliotecario() {
+	public String menuBibliotecario(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		model.addAttribute("usuario", user);
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
+	
 	@GetMapping("/menuUsuario")
 	public String menuUsuario(Model model) {
 		Usuario user = usuarioService.getUsuario();
@@ -333,7 +337,7 @@ public class GestorPrestamos {
 	}
 	
 	@GetMapping("/reservaEliminadaUsuario/{id}")
-	public String eliminarReservaUsuario(@PathVariable("id") Long tituloId, Model model){	
+	public String eliminarReservaUsuario(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
 		
 		
 		Usuario user = usuarioService.getUsuario();
@@ -341,6 +345,8 @@ public class GestorPrestamos {
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
 		model.addAttribute("usuario", user);
+
+		attribute.addFlashAttribute("error", "Reserva cancelada");
 
 
 		for (Reserva r : listaReservas) {
@@ -348,16 +354,16 @@ public class GestorPrestamos {
         		Long idReserva = r.getId();
         		
         		reservaService.eliminarReserva(idReserva);
-        		return "/views/Usuario/MenuUsuario";
+        		return "redirect:/menuUsuario";
             }
         }
 		
 		
-		return "/views/Usuario/MenuUsuario";
+		return "redirect:/menuUsuario";
 	}
 	
 	@GetMapping("/reservaEliminadaBibliotecario/{id}")
-	public String eliminarReservaBibliotecario(@PathVariable("id") Long tituloId, Model model){	
+	public String eliminarReservaBibliotecario(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
 		
 		
 		Usuario user = usuarioService.getUsuario();
@@ -365,8 +371,9 @@ public class GestorPrestamos {
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
 		model.addAttribute("usuario", user);
-
-
+		
+		attribute.addFlashAttribute("warning", "Reserva cancelada");
+		
 		for (Reserva r : listaReservas) {
         	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
         		Long idReserva = r.getId();

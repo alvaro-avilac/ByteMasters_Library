@@ -13,7 +13,7 @@
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
 			<div class="container-fluid">
 				<a class="navbar-brand" th:href="@{/user}">Home</a>
-				
+
 				<div class="collapse navbar-collapse" id="navbarNav">
 					<ul class="navbar-nav">
 						<li class="nav-item">
@@ -29,6 +29,16 @@
 			</div>
 		</nav>
 	</header>
+
+	<div class="alert alert-warning alert-dismissible fade show" role="alert" th:if="${error != null}">
+		<strong>¡Alerta!</strong> <label th:text="${error}"></label>.
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+
+	<div class="alert alert-success alert-dismissible fade show" role="alert" th:if="${success != null}">
+		<strong>:)</strong> <label th:text="${success}"></label>.
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
 
 
 	<footer th:fragment="footer">

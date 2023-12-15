@@ -349,6 +349,7 @@ public class GestorTitulos {
 			} else {
 				prestamoService.borrarPrestamosByEjemplar(ejemplar);
 				ejemplarService.bajaEjemplar(ejemplar);
+				attribute.addFlashAttribute("success", "Ejemplar/es borrados con exito");
 			}
 		}
 
@@ -400,7 +401,13 @@ public class GestorTitulos {
 		return "/views/Usuario/MostrarTitulosUser";
 	}
 	
-
+	@GetMapping("/mostrarTitulosBibliotecario")
+	public String mostrarTitulosBibliotecario(Model model) {
+		List<Titulo> listadoTitulos = tituloService.listarTitulos();
+		model.addAttribute("nombre", "Lista de titulos");
+		model.addAttribute("titulos", listadoTitulos);
+		return "/views/Bibliotecario/MostrarTitulosBibliotecario";
+	}
 	
 	
 	@GetMapping("/user")
@@ -408,6 +415,7 @@ public class GestorTitulos {
 		
 		Usuario user = usuarioService.getUsuario();
 		model.addAttribute("usuario", user);
+		log.info("Usuario loggeado como: " + user.getNombre() + " " + user.getApellidos());
 		return "/views/Usuario/MenuUsuario";
 	}
 
