@@ -128,7 +128,7 @@ public class GestorPrestamos {
 		
 		model.addAttribute("nombre", "Lista de reservas");
 		model.addAttribute("titulos", listadoTitulos);
-		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
+		model.addAttribute("nombre", "Listado de titulos reservados");
 		
 		if(isBibliotecarioMode) {
 			return"/views/Bibliotecario/MostrarReservas";
@@ -350,38 +350,12 @@ public class GestorPrestamos {
 		return "/views/Usuario/MenuUsuario";
 	}
 	
-	@GetMapping("/reservaEliminadaUsuario/{id}")
-	public String eliminarReservaUsuario(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
-		
-		
-		Usuario user = usuarioService.getUsuario();
-
-		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
-		List<Reserva> listaReservas = reservaService.listarReservas();
-		model.addAttribute("usuario", user);
-
-		attribute.addFlashAttribute("error", "Reserva cancelada");
-
-
-		for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		Long idReserva = r.getId();
-        		
-        		reservaService.eliminarReserva(idReserva);
-        		return "redirect:/menuUsuario";
-            }
-        }
-		
-		
-		return "redirect:/menuUsuario";
-	}
+	@GetMapping("/reservaEliminada/{id}")
+	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
 	
-	@GetMapping("/reservaEliminadaBibliotecario/{id}")
-	public String eliminarReservaBibliotecario(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
-		
-		
+	
 		Usuario user = usuarioService.getUsuario();
-
+	
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
 		model.addAttribute("usuario", user);
@@ -389,17 +363,23 @@ public class GestorPrestamos {
 		attribute.addFlashAttribute("warning", "Reserva cancelada");
 		
 		for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		Long idReserva = r.getId();
-        		
-        		reservaService.eliminarReserva(idReserva);
-        		return "/views/Bibliotecario/MenuBibliotecario";
-            }
-        }
+	    	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+	    		Long idReserva = r.getId();
+	    		
+	    		reservaService.eliminarReserva(idReserva);
+	    		if(isBibliotecarioMode)
+	    			return "/views/Bibliotecario/MenuBibliotecario";
+	    		else
+	    			return "/views/Usuario/MenuUsuario";
+	    	}
+	    }
 		
 		
-		return "/views/Bibliotecario/MenuBibliotecario";
+		if(isBibliotecarioMode)
+			return "/views/Bibliotecario/MenuBibliotecario";
+		else
+			return "/views/Usuario/MenuUsuario";
 	}
-	
-	
+
+
 }
