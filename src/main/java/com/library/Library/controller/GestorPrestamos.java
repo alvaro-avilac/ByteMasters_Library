@@ -38,6 +38,9 @@ public class GestorPrestamos {
 
 	private static LocalDate fechaGlobal = LocalDate.now();
 	
+	
+	private static boolean isBibliotecarioMode = false;
+
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
 	
 	@Autowired
@@ -225,7 +228,7 @@ public class GestorPrestamos {
 
 	@PostMapping("/savedPrestamo")
 	public String guardarPrestamo(@ModelAttribute Prestamo prestamo,
-			@RequestParam("selected_ejemplares") Long idEjemplar, Model model) {
+			@RequestParam("selected_ejemplares") Long idEjemplar, Model model, RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
 		
@@ -248,8 +251,13 @@ public class GestorPrestamos {
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
 		prestamoService.guardarPrestamo(prestamo);
-
-		return "redirect:/prestarTitulo";
+		if(isBibliotecarioMode) {
+			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			return "redirect:/menuBibliotecario";
+		}else {
+			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			return "redirect:/menuUsuario";
+		}
 	}
 
 	@GetMapping("/devolucion")
@@ -272,7 +280,7 @@ public class GestorPrestamos {
 	}
 
 	@GetMapping("/registrarDevolucion/{id}")
-	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model) {
+	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model, RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
 		
@@ -293,7 +301,13 @@ public class GestorPrestamos {
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
-		return "redirect:/user";
+		if(isBibliotecarioMode) {
+			attribute.addFlashAttribute("success", "Devolucion registrada con éxito");
+			return "redirect:/menuBibliotecario";
+		}else {
+			attribute.addFlashAttribute("success", "Devolución registrada realizado con éxito");
+			return "redirect:/menuUsuario";
+		}
 	}
 	@GetMapping("/reserva/{id}")
 	public String hacerReserva(@PathVariable("id") Long tituloId, Model model) {
@@ -322,15 +336,22 @@ public class GestorPrestamos {
 	}
 	
 	@GetMapping("/menuBibliotecario")
-	public String menuBibliotecario(Model model) {
-		Usuario user = usuarioService.getUsuario();
+	public String menuBibliotecario(Model model, @ModelAttribute("usuario") Usuario user ) {
+		
+		isBibliotecarioMode = true;
+		log.info("MODO BIBLIOTECARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+		user = usuarioService.getUsuario();
 		model.addAttribute("usuario", user);
+		
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
 	
 	@GetMapping("/menuUsuario")
-	public String menuUsuario(Model model) {
-		Usuario user = usuarioService.getUsuario();
+	public String menuUsuario(Model model, @ModelAttribute("usuario") Usuario user) {
+		user = usuarioService.getUsuario();
+
+		log.info("MODO USUARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+
 		model.addAttribute("usuario", user);
 		model.addAttribute("nombre", user.getNombre());
 		return "/views/Usuario/MenuUsuario";

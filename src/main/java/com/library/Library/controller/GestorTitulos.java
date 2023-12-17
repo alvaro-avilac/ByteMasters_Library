@@ -210,21 +210,21 @@ public class GestorTitulos {
 		} else if (rol.equals("usuario")) {
 			model.addAttribute("usuario", user);
 			return "redirect:/user";
-		}
+		} 
 		return "redirect:/";
 	}
 
 	@PostMapping("/selectedUser")
-	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model) {
+	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model, RedirectAttributes attribute) {
 		Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
 
 		if (optionalUser.isPresent()) {
 			Usuario usuario = optionalUser.get();
 			usuarioService.setGlobalUsuario(usuario);
 			
-			model.addAttribute("usuario", usuario);
-			model.addAttribute("titulo", "Bienvenido Bibliotecario ha elegido al usuario " + usuario.getNombre() + " " + usuario.getApellidos());
-			return "/views/Bibliotecario/MenuBibliotecario";
+			attribute.addFlashAttribute("usuario", usuario);
+
+			return "redirect:/menuBibliotecario";
 		} else {
 			return "redirect:/";
 		}
@@ -411,12 +411,12 @@ public class GestorTitulos {
 	
 	
 	@GetMapping("/user")
-	public String mostraMainWindowUser(Model model) {
+	public String mostraMainWindowUser(RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
-		model.addAttribute("usuario", user);
+		attribute.addFlashAttribute("usuario", user);
 		log.info("Usuario loggeado como: " + user.getNombre() + " " + user.getApellidos());
-		return "/views/Usuario/MenuUsuario";
+		return "redirect:/menuUsuario";
 	}
 
 	@GetMapping("/admin")
