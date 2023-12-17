@@ -5,6 +5,7 @@ on:
       - main
       - develop
       - feature-sonar
+      - feature-surefire
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
