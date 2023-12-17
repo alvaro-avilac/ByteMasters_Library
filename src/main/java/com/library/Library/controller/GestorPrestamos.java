@@ -322,7 +322,13 @@ public class GestorPrestamos {
         Reserva reserva = new Reserva();
         for (Reserva r : listaReservas) {
         	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		return "/views/Usuario/ReservaNoPosible";
+        		
+        		if(isBibliotecarioMode) {
+            		return "/views/Bibliotecario/ReservaNoPosible";
+        		}else {
+            		return "/views/Usuario/ReservaNoPosible";
+        		}
+        		
             }
         }
         
@@ -331,8 +337,12 @@ public class GestorPrestamos {
         reserva.setFecha(fechaActual);
 
         reservaService.guardarReserva(reserva);
-
-		return "/views/Usuario/ReservaRealizadaUsuario";
+        
+        if (isBibliotecarioMode) {
+        	return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+        }else {
+    		return "/views/Usuario/ReservaRealizadaUsuario";
+        }
 	}
 	
 	@GetMapping("/menuBibliotecario")

@@ -311,8 +311,9 @@ public class GestorTitulos {
 			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
 			return "redirect:/detalle/{id}";
 		}
-
 		
+		attribute.addFlashAttribute("success", "Titulo eliminado con éxito");
+		reservaService.borrarReservasByTitulo(titulo);
 		prestamoService.borrarPrestamosEjemplaresByTitulo(titulo);
 		titulo.getAutores().clear();
 		tituloService.bajaTitulo(tituloId);
@@ -323,7 +324,6 @@ public class GestorTitulos {
 	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
 
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-
 		for(Prestamo p: listadoPrestamos) {
 			if(p.getEjemplar().getTitulo().equals(titulo)) {
 				if (p.isActivo()  &&  p.getEjemplar().getTitulo().equals(titulo)) {
