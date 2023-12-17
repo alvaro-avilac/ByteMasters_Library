@@ -17,6 +17,7 @@
 					<th scope="col">Titulo</th>
 					<th scope="col">ISBN</th>
 					<th scope="col">Autor</th>
+					<th scope="col">Numero de ejemplares disponibles</th>
 					<th scope="col">Disponibilidad</th>
 					<th scope="col">Cancelar</th>
 				</tr>
@@ -30,20 +31,19 @@
 							<span th:text="${autor.nombre}"></span>
 						</span>
 					</td>
+					<td th:text="${ti.ejemplares.size()}"></td>
 					<td>
-						<div th:if="${ti.ejemplares.size() == 0}">
+					  <div th:if="${ti.ejemplares.size() == 0}">
 							<a class="btn btn-secondary" role="button">no disponible</a>
 						</div>
-
+						
 						<div th:if="${ti.ejemplares.size() != 0}">
-							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir
-								prestamo</a>
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir prestamo</a>	
 						</div>
 					</td>
 					<td>
 						<div>
-							<a class="btn btn-primary" th:href="@{/reservaEliminadaBibliotecario/}  + ${ti.id}"
-								role="button">Cancelar Reserva</a>
+							<a class="btn btn-primary" th:href="@{/reservaEliminadaUsuario/}  + ${ti.id}" role="button">Cancelar Reserva</a>	
 						</div>
 					</td>
 
