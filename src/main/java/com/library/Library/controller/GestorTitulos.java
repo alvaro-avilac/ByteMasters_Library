@@ -202,16 +202,25 @@ public class GestorTitulos {
 			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
 			usuarioService.setGlobalUsuario(user);
 		}
-
+		
+		return seleccionarEndpointPorRol(rol);
+		
+	}
+	
+	public String seleccionarEndpointPorRol(String rol) {
+		
+		String endpoint = "";
+		
 		if (rol.equals("admin")) {
-			return "redirect:/admin";
+			endpoint = "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {
-			return "redirect:/bibliotecario";
+			endpoint = "redirect:/bibliotecario";
 		} else if (rol.equals("usuario")) {
-			model.addAttribute("usuario", user);
-			return "redirect:/user";
-		} 
-		return "redirect:/";
+			endpoint = "redirect:/user";
+		}else {
+			endpoint = "redirect:/";
+		}
+		return endpoint;
 	}
 
 	@PostMapping("/selectedUser")
