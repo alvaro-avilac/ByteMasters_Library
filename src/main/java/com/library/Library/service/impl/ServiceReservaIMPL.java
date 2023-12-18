@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.library.Library.entity.Reserva;
+import com.library.Library.entity.Titulo;
 import com.library.Library.repository.ReservaDAO;
 import com.library.Library.service.IServiceReserva;
 
@@ -33,6 +34,18 @@ public class ServiceReservaIMPL implements IServiceReserva{
 	
 	public void eliminarReserva(Long id) {
 		reservaDAO.deleteById(id);
+	}
+
+	@Override
+	public void borrarReservasByTitulo(Titulo titulo) {
+		
+		List<Reserva> listadoReservas = (List<Reserva>) reservaDAO.findAll();
+		
+		for(Reserva r: listadoReservas) {
+			if(r.getTitulo().equals(titulo)) {
+				reservaDAO.delete(r);
+			}
+		}
 	}
 
 }

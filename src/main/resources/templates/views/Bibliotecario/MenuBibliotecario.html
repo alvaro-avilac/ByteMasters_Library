@@ -7,7 +7,7 @@
 
 	<header th:replace="~{plantilla/templateBibliotecario :: header}"></header>
 	
-	<h3 class="text-center mt-4" th:text="${titulo}">
+	<h3 class="text-center mt-4" th:text="'Modo Bibliotecario. Usuario seleccionado: ' +  ${usuario.nombre} + ' ' + ${usuario.apellidos}">
 	</h3>
 	
 	<!-- Contenedor con margen en ambos lados -->

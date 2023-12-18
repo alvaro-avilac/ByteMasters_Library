@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Prestamo;
@@ -38,6 +38,9 @@ public class GestorPrestamos {
 
 	private static LocalDate fechaGlobal = LocalDate.now();
 	
+	
+	private static boolean isBibliotecarioMode = false;
+
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
 	
 	@Autowired
@@ -86,6 +89,53 @@ public class GestorPrestamos {
 		model.addAttribute("titulos", listadoTitulos);
 		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
 		return "views/prestamos/selectTituloPrestamoUsuario";
+	}
+		
+	@GetMapping("/reserva")
+	public String mostrarReservasUsuario(Model model) {
+		Usuario user = usuarioService.getUsuario();
+		List<Reserva> listadoReservas = reservaService.listarReservas();
+		List<Titulo> listadoTitulos = new ArrayList<>();
+		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		
+		for(Reserva r : listadoReservas) {
+			if(r.getUsuario().getId()==user.getId()) {
+				listadoTitulos.add(r.getTitulo());
+			}
+		}
+		
+		for (Titulo t : listadoTitulos) {
+			List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
+
+			for (Ejemplar e : t.getEjemplares()) {
+				boolean disponible = true;
+				for (Prestamo p : listadoPrestamos) {
+					if (p.getEjemplar() == e
+							&& p.getFechaFinal()
+									.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+							&& p.isActivo()) {
+						disponible = false;
+						break;
+					}
+				}
+				if (disponible) {
+					ejemplaresDisponibles.add(e);
+				}
+			}
+			log.info("Ejemplares disponibles de " + t + ": " + ejemplaresDisponibles);
+			t.setEjemplares(ejemplaresDisponibles);
+		}
+		
+		model.addAttribute("nombre", "Lista de reservas");
+		model.addAttribute("titulos", listadoTitulos);
+		model.addAttribute("nombre", "Listado de titulos reservados");
+		
+		if(isBibliotecarioMode) {
+			return"/views/Bibliotecario/MostrarReservas";
+		}else {
+			return"/views/Usuario/MostrarReservas";
+		}
+		
 	}
 	
 	public boolean isTituloReservado(Titulo titulo) {
@@ -161,7 +211,7 @@ public class GestorPrestamos {
 
 	@PostMapping("/savedPrestamo")
 	public String guardarPrestamo(@ModelAttribute Prestamo prestamo,
-			@RequestParam("selected_ejemplares") Long idEjemplar, Model model) {
+			@RequestParam("selected_ejemplares") Long idEjemplar, Model model, RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
 		
@@ -184,8 +234,13 @@ public class GestorPrestamos {
 		prestamo.setFechaFinal(Date.from(fechaFinal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
 		prestamoService.guardarPrestamo(prestamo);
-
-		return "redirect:/prestarTitulo";
+		if(isBibliotecarioMode) {
+			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			return "redirect:/menuBibliotecario";
+		}else {
+			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			return "redirect:/menuUsuario";
+		}
 	}
 
 	@GetMapping("/devolucion")
@@ -208,7 +263,7 @@ public class GestorPrestamos {
 	}
 
 	@GetMapping("/registrarDevolucion/{id}")
-	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model) {
+	public String realizarDevolucion(@PathVariable("id") Long prestamoId, Model model, RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
 		
@@ -229,7 +284,13 @@ public class GestorPrestamos {
 		prestamo.setActivo(false);
 		prestamoService.guardarPrestamo(prestamo);
 
-		return "redirect:/user";
+		if(isBibliotecarioMode) {
+			attribute.addFlashAttribute("success", "Devolucion registrada con éxito");
+			return "redirect:/menuBibliotecario";
+		}else {
+			attribute.addFlashAttribute("success", "Devolución registrada realizado con éxito");
+			return "redirect:/menuUsuario";
+		}
 	}
 	@GetMapping("/reserva/{id}")
 	public String hacerReserva(@PathVariable("id") Long tituloId, Model model) {
@@ -244,7 +305,13 @@ public class GestorPrestamos {
         Reserva reserva = new Reserva();
         for (Reserva r : listaReservas) {
         	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		return "/views/Bibliotecario/ReservaNoPosible";
+        		
+        		if(isBibliotecarioMode) {
+            		return "/views/Bibliotecario/ReservaNoPosible";
+        		}else {
+            		return "/views/Usuario/ReservaNoPosible";
+        		}
+        		
             }
         }
         
@@ -253,65 +320,66 @@ public class GestorPrestamos {
         reserva.setFecha(fechaActual);
 
         reservaService.guardarReserva(reserva);
-
-		return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+        
+        if (isBibliotecarioMode) {
+        	return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
+        }else {
+    		return "/views/Usuario/ReservaRealizadaUsuario";
+        }
 	}
+	
 	@GetMapping("/menuBibliotecario")
-	public String menuBibliotecario() {
+	public String menuBibliotecario(Model model, @ModelAttribute("usuario") Usuario user ) {
+		
+		isBibliotecarioMode = true;
+		log.info("MODO BIBLIOTECARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+		user = usuarioService.getUsuario();
+		model.addAttribute("usuario", user);
+		
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
+	
 	@GetMapping("/menuUsuario")
-	public String menuUsuario() {
+	public String menuUsuario(Model model, @ModelAttribute("usuario") Usuario user) {
+		user = usuarioService.getUsuario();
+
+		log.info("MODO USUARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+
+		model.addAttribute("usuario", user);
+		model.addAttribute("nombre", user.getNombre());
 		return "/views/Usuario/MenuUsuario";
 	}
 	
-	@GetMapping("/reservaEliminadaUsuario/{id}")
-	public String eliminarReservaUsuario(@PathVariable("id") Long tituloId, Model model){	
-		
-		
+	@GetMapping("/reservaEliminada/{id}")
+	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
+	
+	
 		Usuario user = usuarioService.getUsuario();
-
+	
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
 		model.addAttribute("usuario", user);
-
-
+		
+		attribute.addFlashAttribute("warning", "Reserva cancelada");
+		
 		for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		Long idReserva = r.getId();
-        		
-        		reservaService.eliminarReserva(idReserva);
-        		return "/views/Usuario/MenuUsuario";
-            }
-        }
+	    	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+	    		Long idReserva = r.getId();
+	    		
+	    		reservaService.eliminarReserva(idReserva);
+	    		if(isBibliotecarioMode)
+	    			return "/views/Bibliotecario/MenuBibliotecario";
+	    		else
+	    			return "/views/Usuario/MenuUsuario";
+	    	}
+	    }
 		
 		
-		return "/views/Usuario/MenuUsuario";
+		if(isBibliotecarioMode)
+			return "/views/Bibliotecario/MenuBibliotecario";
+		else
+			return "/views/Usuario/MenuUsuario";
 	}
-	
-	@GetMapping("/reservaEliminadaBibliotecario/{id}")
-	public String eliminarReservaBibliotecario(@PathVariable("id") Long tituloId, Model model){	
-		
-		
-		Usuario user = usuarioService.getUsuario();
-
-		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
-		List<Reserva> listaReservas = reservaService.listarReservas();
-		model.addAttribute("usuario", user);
 
 
-		for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
-        		Long idReserva = r.getId();
-        		
-        		reservaService.eliminarReserva(idReserva);
-        		return "/views/Bibliotecario/MenuBibliotecario";
-            }
-        }
-		
-		
-		return "/views/Bibliotecario/MenuBibliotecario";
-	}
-	
-	
 }

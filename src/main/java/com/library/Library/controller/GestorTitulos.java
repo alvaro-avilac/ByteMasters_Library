@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Date;
+import java.time.ZoneId;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -200,29 +202,38 @@ public class GestorTitulos {
 			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
 			usuarioService.setGlobalUsuario(user);
 		}
-
+		
+		return seleccionarEndpointPorRol(rol);
+		
+	}
+	
+	public String seleccionarEndpointPorRol(String rol) {
+		
+		String endpoint = "";
+		
 		if (rol.equals("admin")) {
-			return "redirect:/admin";
+			endpoint = "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {
-			return "redirect:/bibliotecario";
+			endpoint = "redirect:/bibliotecario";
 		} else if (rol.equals("usuario")) {
-			model.addAttribute("usuario", user);
-			return "redirect:/user";
+			endpoint = "redirect:/user";
+		}else {
+			endpoint = "redirect:/";
 		}
-		return "redirect:/";
+		return endpoint;
 	}
 
 	@PostMapping("/selectedUser")
-	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model) {
+	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model, RedirectAttributes attribute) {
 		Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
 
 		if (optionalUser.isPresent()) {
 			Usuario usuario = optionalUser.get();
 			usuarioService.setGlobalUsuario(usuario);
 			
-			model.addAttribute("usuario", usuario);
-			model.addAttribute("titulo", "Bienvenido Bibliotecario ha elegido al usuario " + usuario.getNombre() + " " + usuario.getApellidos());
-			return "/views/Bibliotecario/MenuBibliotecario";
+			attribute.addFlashAttribute("usuario", usuario);
+
+			return "redirect:/menuBibliotecario";
 		} else {
 			return "redirect:/";
 		}
@@ -309,8 +320,9 @@ public class GestorTitulos {
 			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
 			return "redirect:/detalle/{id}";
 		}
-
 		
+		attribute.addFlashAttribute("success", "Titulo eliminado con éxito");
+		reservaService.borrarReservasByTitulo(titulo);
 		prestamoService.borrarPrestamosEjemplaresByTitulo(titulo);
 		titulo.getAutores().clear();
 		tituloService.bajaTitulo(tituloId);
@@ -321,7 +333,6 @@ public class GestorTitulos {
 	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
 
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-
 		for(Prestamo p: listadoPrestamos) {
 			if(p.getEjemplar().getTitulo().equals(titulo)) {
 				if (p.isActivo()  &&  p.getEjemplar().getTitulo().equals(titulo)) {
@@ -347,6 +358,7 @@ public class GestorTitulos {
 			} else {
 				prestamoService.borrarPrestamosByEjemplar(ejemplar);
 				ejemplarService.bajaEjemplar(ejemplar);
+				attribute.addFlashAttribute("success", "Ejemplar/es borrados con exito");
 			}
 		}
 
@@ -398,53 +410,22 @@ public class GestorTitulos {
 		return "/views/Usuario/MostrarTitulosUser";
 	}
 	
-
-	@GetMapping("/reservaBibliotecario")
-	public String mostrarReservasBibliotecario(Model model) {
+	@GetMapping("/mostrarTitulosBibliotecario")
+	public String mostrarTitulosBibliotecario(Model model) {
+		List<Titulo> listadoTitulos = tituloService.listarTitulos();
+		model.addAttribute("nombre", "Lista de titulos");
+		model.addAttribute("titulos", listadoTitulos);
+		return "/views/Bibliotecario/MostrarTitulosBibliotecario";
+	}
 	
-		Usuario user = usuarioService.getUsuario();
-		log.info("Nombre: "+user.getNombre() +" "+ user.getApellidos()+" ID: "+ user.getId());
-		List<Reserva> listadoReservas = reservaService.listarReservas();
-		List<Titulo> listadoTitulos = new ArrayList<>();
-    
-		for(Reserva r : listadoReservas) {
-			if(r.getUsuario().getId()==user.getId()) {
-				listadoTitulos.add(r.getTitulo());
-			}
-		}
-
-		model.addAttribute("nombre", "Lista de reservas");
-		model.addAttribute("titulos", listadoTitulos);
-
-		return "/views/Bibliotecario/MostrarReservas";
-
-	}
-		
-	@GetMapping("/reservaUsuario")
-	public String mostrarReservasUsuario(Model model) {
-		Usuario user = usuarioService.getUsuario();
-		List<Reserva> listadoReservas = reservaService.listarReservas();
-		List<Titulo> listadoTitulos = new ArrayList<>();
-		
-		for(Reserva r : listadoReservas) {
-			if(r.getUsuario().getId()==user.getId()) {
-			listadoTitulos.add(r.getTitulo());
-			}
-		}
-		
-		model.addAttribute("nombre", "Lista de reservas");
-		model.addAttribute("titulos", listadoTitulos);
-		
-		return"/views/Usuario/MostrarReservas";
-		
-	}
 	
 	@GetMapping("/user")
-	public String mostraMainWindowUser(Model model) {
+	public String mostraMainWindowUser(RedirectAttributes attribute) {
 		
 		Usuario user = usuarioService.getUsuario();
-		model.addAttribute("usuario", user);
-		return "/views/Usuario/MenuUsuario";
+		attribute.addFlashAttribute("usuario", user);
+		log.info("Usuario loggeado como: " + user.getNombre() + " " + user.getApellidos());
+		return "redirect:/menuUsuario";
 	}
 
 	@GetMapping("/admin")

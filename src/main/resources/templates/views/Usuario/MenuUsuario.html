@@ -6,47 +6,52 @@
 <body>
 
 	<header th:replace="~{plantilla/templateUser :: header}"></header>
-	<h1 class="text-center mt-4" th:text="Bienvenido + ' ' + ${usuario.nombre} + ' ' + ${usuario.apellidos == null ? '' : usuario.apellidos}">
+	<h1 class="text-center mt-4"
+		th:text="Bienvenido + ' ' + ${usuario.nombre} + ' ' + ${usuario.apellidos == null ? '' : usuario.apellidos}">
 	</h1>
 	<!-- Contenedor con margen en ambos lados -->
-<div class="container mt-5">
+	<div class="container mt-5">
 
-    <!-- Centro el contenido horizontalmente -->
-    <div class="row justify-content-center align-items-center">
+		<!-- Centro el contenido horizontalmente -->
+		<div class="row justify-content-center align-items-center">
 
-        <!-- Contenido de las tarjetas -->
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Pedir préstamo</h5>
-                    <p class="card-text">Solicita un préstamo de un título.</p>
-                    <a th:href="@{/prestarTitulo}" class="btn btn-primary">Pedir préstamo</a>
-                </div>
-            </div>
-        </div>
+			<!-- Contenido de las tarjetas -->
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Pedir préstamo</h5>
+						<p class="card-text">Solicita un préstamo de un título.</p>
+						<a th:href="@{/prestarTitulo}" class="btn btn-primary">Pedir préstamo</a>
+					</div>
+				</div>
+			</div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Mis reservas</h5>
-                    <p class="card-text">Consulta tus reservas activas.</p>
-                    <a th:href="@{/reservaUsuario}" class="btn btn-success">Mis reservas</a>
-                </div>
-            </div>
-        </div>
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Mis reservas</h5>
+						<p class="card-text">Consulta tus reservas activas.</p>
+						<a th:href="@{/reserva}" class="btn btn-success">Mis reservas</a>
+					</div>
+				</div>
+			</div>
 
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Devolver ejemplar</h5>
-                    <p class="card-text">Realiza la devolución de un ejemplar.</p>
-                    <a th:href="@{/devolucion}" class="btn btn-danger">Devolver ejemplar</a>
-                </div>
-            </div>
-        </div>
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">Devolver ejemplar</h5>
+						<p class="card-text">Realiza la devolución de un ejemplar.</p>
+						<a th:href="@{/devolucion}" class="btn btn-danger">Devolver ejemplar</a>
+					</div>
+				</div>
+			</div>
 
-    </div>
-</div>
+		</div>
+	</div>
+	
+	<footer th:replace="~{plantilla/templateUser :: footer}">
+	</footer>
+
 </body>
 
 </html>/
