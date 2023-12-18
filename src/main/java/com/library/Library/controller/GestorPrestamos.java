@@ -163,14 +163,14 @@ public class GestorPrestamos {
 			return "views/error";
 		}
 		
-		if(!gestorPenalizaciones.comprobarPenalizaciones(user)) {
+		if(gestorPenalizaciones.comprobarPenalizaciones(user)) {
 			log.info("Usuario " + user + "tiene penalizacion hasta " + user.getFechaFinPenalizacion());
 	        model.addAttribute("error", "Usuario " + user.getNombre() + " " + user.getApellidos() + " tiene penalización hasta " + user.getFechaFinPenalizacion());
 	        model.addAttribute("flag", true);
 	        return "views/error";
 		}
 		
-	    if(!gestorPenalizaciones.comprobarCupo(user)){
+	    if(gestorPenalizaciones.comprobarCupo(user)){
 			log.info("Usuario tiene cupo completo de prestamos cubierto");
 	        model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto"); 
 	        return "views/error";
