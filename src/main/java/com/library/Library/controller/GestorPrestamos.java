@@ -152,8 +152,10 @@ public class GestorPrestamos {
 	
 	private boolean verificarDisponibilidad(Ejemplar e, List<Prestamo> listadoPrestamos) {
 	    for (Prestamo p : listadoPrestamos) {
+	    	java.util.Date fechaActual = Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
 	        if (p.getEjemplar() == e
-	                && p.getFechaFinal().after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+	                && p.getFechaFinal().after(fechaActual)
 	                && p.isActivo()) {
 	            return false;
 	        }
