@@ -228,20 +228,11 @@ public class GestorPrestamos {
 	    List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
 
 	    for (Ejemplar e : titulo.getEjemplares()) {
-	        if (esEjemplarDisponible(e, listadoPrestamos)) {
+	        if (verificarDisponibilidad(e, listadoPrestamos)) {
 	            ejemplaresDisponibles.add(e);
 	        }
 	    }
 	    return ejemplaresDisponibles;
-	}
-	
-	private boolean esEjemplarDisponible(Ejemplar e, List<Prestamo> listadoPrestamos) {
-	    for (Prestamo p : listadoPrestamos) {
-	        if (p.getEjemplar() == e && p.getFechaFinal().after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant())) && p.isActivo()) {
-	            return false;
-	        }
-	    }
-	    return true;
 	}
 	
 	private void logPenalizacionUsuario(Usuario user) {
