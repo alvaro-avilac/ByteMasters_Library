@@ -58,7 +58,7 @@ public class GestorPenalizaciones {
 		return false;
 	}
 
-	public static boolean comprobarCupo(Usuario user) {
+	public boolean comprobarCupo(Usuario user) {
 		long prestamosActivos = user.getPrestamos().stream().filter(Prestamo::isActivo).count();
 
 		// Comprueba cupo de prestamos (si ya tiene 4 prestamos no puede pedir prestados
@@ -69,6 +69,5 @@ public class GestorPenalizaciones {
 
 		return false;
 	}
-	
 
 }
