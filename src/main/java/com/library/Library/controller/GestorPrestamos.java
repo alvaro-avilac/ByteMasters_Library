@@ -99,7 +99,7 @@ public class GestorPrestamos {
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
 		
 		for(Reserva r : listadoReservas) {
-			if(r.getUsuario().getId()==user.getId()) {
+			if(r.getUsuario().getId().equals(user.getId())) {
 				listadoTitulos.add(r.getTitulo());
 			}
 		}
@@ -304,7 +304,7 @@ public class GestorPrestamos {
         
         Reserva reserva = new Reserva();
         for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()){
+        	if (r.getUsuario().getId().equals(user.getId())  && r.getTitulo().getId().equals(titulo.getId())){
         		
         		if(isBibliotecarioMode) {
             		return "/views/Bibliotecario/ReservaNoPosible";
