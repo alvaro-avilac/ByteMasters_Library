@@ -175,66 +175,93 @@ public class GestorPrestamos {
 
 	@GetMapping("/prestamo/{id}")
 	public String mostrarFormPrestamo(@PathVariable("id") Long tituloId, Model model) {
-
-		Usuario user = usuarioService.getUsuario();
-
-		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
-		user = value.orElse(null);
-		if (user == null) {
-			return ERROR_VIEW;
-		}
-
-		if (gestorPenalizaciones.comprobarPenalizaciones(user)) {
-			if (log.isInfoEnabled()) {
-				log.info(String.format("Usuario %s tiene penalización hasta %s", user, user.getFechaFinPenalizacion()));
-			}
-			model.addAttribute("error", "Usuario " + user.getNombre() + " " + user.getApellidos()
-					+ " tiene penalización hasta " + user.getFechaFinPenalizacion());
-			model.addAttribute("flag", true);
-			return ERROR_VIEW;
-		}
-
-		if (gestorPenalizaciones.comprobarCupo(user)) {
-			if (log.isInfoEnabled()) {
-				log.info("Usuario tiene cupo completo de prestamos cubierto");
-			}
-			model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto");
+		Usuario user = obtenerUsuario();
+		
+		if (user == null || gestionarPenalizaciones(model, user) || gestionarCupo(model, user)) {
 			return ERROR_VIEW;
 		}
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 
-		List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-
-		for (Ejemplar e : titulo.getEjemplares()) {
-			boolean disponible = true;
-			for (Prestamo p : listadoPrestamos) {
-				if (p.getEjemplar() == e
-						&& p.getFechaFinal()
-								.after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-						&& p.isActivo()) {
-					disponible = false;
-					break;
-				}
-			}
-			if (disponible) {
-				ejemplaresDisponibles.add(e);
-			}
-		}
+		List<Ejemplar> ejemplaresDisponibles = obtenerEjemplaresDisponibles(titulo);
 
 		titulo.setEjemplares(ejemplaresDisponibles);
 		
-		if (log.isInfoEnabled()) {
-			log.info(String.format("Ejemplares disponibles: %s", ejemplaresDisponibles));
-		}
+		logInfoEjemplaresDisponibles(ejemplaresDisponibles);
 		
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaEjemplares", ejemplaresDisponibles);
 
 		return "views/prestamos/formHacerPrestamoUsuario";
 	}
+	
+	/*
+	 * Métodos auxiliares para mostrar formulario prestamo
+	 */
+	private Usuario obtenerUsuario() {
+		Usuario user = usuarioService.getUsuario();
+		return usuarioService.buscarUsuarioPorId(user.getId()).orElse(null);
+	}
+	
+	private boolean gestionarPenalizaciones(Model model, Usuario user) {
+	    if (gestorPenalizaciones.comprobarPenalizaciones(user)) {
+	        logPenalizacionUsuario(user);
+	        model.addAttribute("error", "Usuario " + user.getNombre() + " " + user.getApellidos()
+	                + " tiene penalización hasta " + user.getFechaFinPenalizacion());
+	        model.addAttribute("flag", true);
+	        return true;
+	    }
+	    return false;
+	}
+	
+	private boolean gestionarCupo(Model model, Usuario user) {
+	    if (gestorPenalizaciones.comprobarCupo(user)) {
+	        logCupoCompleto(user);
+	        model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto");
+	        return true;
+	    }
+	    return false;
+	}
+	
+	private List<Ejemplar> obtenerEjemplaresDisponibles(Titulo titulo) {
+	    List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
+	    List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
 
+	    for (Ejemplar e : titulo.getEjemplares()) {
+	        if (esEjemplarDisponible(e, listadoPrestamos)) {
+	            ejemplaresDisponibles.add(e);
+	        }
+	    }
+	    return ejemplaresDisponibles;
+	}
+	
+	private boolean esEjemplarDisponible(Ejemplar e, List<Prestamo> listadoPrestamos) {
+	    for (Prestamo p : listadoPrestamos) {
+	        if (p.getEjemplar() == e && p.getFechaFinal().after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant())) && p.isActivo()) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	
+	private void logPenalizacionUsuario(Usuario user) {
+	    if (log.isInfoEnabled()) {
+	        log.info(String.format("Usuario %s tiene penalización hasta %s", user, user.getFechaFinPenalizacion()));
+	    }
+	}
+	
+	private void logCupoCompleto(Usuario user) {
+	    if (log.isInfoEnabled()) {
+	        log.info(String.format("Usuario %s tiene cupo completo de préstamos cubierto", user));
+	    }  
+	}
+	
+	private void logInfoEjemplaresDisponibles(List<Ejemplar> ejemplaresDisponibles) {
+	    if (log.isInfoEnabled()) {
+	        log.info(String.format("Ejemplares disponibles: %s", ejemplaresDisponibles));
+	    }
+	}
+	
 	@PostMapping("/savedPrestamo")
 	public String guardarPrestamo(@ModelAttribute Prestamo prestamo,
 			@RequestParam("selected_ejemplares") Long idEjemplar, Model model, RedirectAttributes attribute) {
