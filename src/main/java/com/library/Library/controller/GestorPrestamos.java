@@ -38,25 +38,43 @@ public class GestorPrestamos {
 
 	private static LocalDate fechaGlobal = LocalDate.now();
 	
+	private static final String NOMBRE = "nombre";
 	
 	private static boolean isBibliotecarioMode = false;
 
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
 	
-	@Autowired
-	IServiceTitulo tituloService;
-
-	@Autowired
-	IServiceEjemplar ejemplarService;
-
-	@Autowired
-	IServicePrestamo prestamoService;
-
-	@Autowired
-	IServiceUsuario usuarioService;
+	
+	private final IServiceTitulo tituloService;
+	private final IServiceEjemplar ejemplarService;
+	private final IServicePrestamo prestamoService;
+	private final IServiceUsuario usuarioService;
+	private final IServiceReserva reservaService;
 	
 	@Autowired
-	IServiceReserva reservaService;
+	public GestorPrestamos(IServiceTitulo tituloService, IServiceEjemplar ejemplarService, IServicePrestamo prestamoService,
+			IServiceUsuario usuarioService, IServiceReserva reservaService) {
+		this.tituloService = tituloService;
+		this.ejemplarService = ejemplarService;
+		this.prestamoService = prestamoService;
+		this.usuarioService = usuarioService;
+		this.reservaService = reservaService;
+	}
+	
+//	@Autowired
+//	IServiceTitulo tituloService;
+
+//	@Autowired
+//	IServiceEjemplar ejemplarService;
+
+//	@Autowired
+//	IServicePrestamo prestamoService;
+
+//	@Autowired
+//	IServiceUsuario usuarioService;
+	
+//	@Autowired
+//	IServiceReserva reservaService;
 
 	@GetMapping("/prestarTitulo")
 	public String titulosDisponiblesParaPrestamo(Model model) {
@@ -87,7 +105,7 @@ public class GestorPrestamos {
 			t.setEjemplares(ejemplaresDisponibles);
 		}
 		model.addAttribute("titulos", listadoTitulos);
-		model.addAttribute("nombre", "Listado de titulos disponibles para prestar");
+		model.addAttribute(NOMBRE, "Listado de titulos disponibles para prestar");
 		return "views/prestamos/selectTituloPrestamoUsuario";
 	}
 		
@@ -126,9 +144,8 @@ public class GestorPrestamos {
 			t.setEjemplares(ejemplaresDisponibles);
 		}
 		
-		model.addAttribute("nombre", "Lista de reservas");
 		model.addAttribute("titulos", listadoTitulos);
-		model.addAttribute("nombre", "Listado de titulos reservados");
+		model.addAttribute(NOMBRE, "Listado de titulos reservados");
 		
 		if(isBibliotecarioMode) {
 			return"/views/Bibliotecario/MostrarReservas";
@@ -329,24 +346,24 @@ public class GestorPrestamos {
 	}
 	
 	@GetMapping("/menuBibliotecario")
-	public String menuBibliotecario(Model model, @ModelAttribute("usuario") Usuario user ) {
+	public String menuBibliotecario(Model model) {
 		
 		isBibliotecarioMode = true;
 		log.info("MODO BIBLIOTECARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
-		user = usuarioService.getUsuario();
+		Usuario user = usuarioService.getUsuario();
 		model.addAttribute("usuario", user);
 		
 		return "/views/Bibliotecario/MenuBibliotecario";
 	}
 	
 	@GetMapping("/menuUsuario")
-	public String menuUsuario(Model model, @ModelAttribute("usuario") Usuario user) {
-		user = usuarioService.getUsuario();
+	public String menuUsuario(Model model) {
+		Usuario user = usuarioService.getUsuario();
 
 		log.info("MODO USUARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
 
 		model.addAttribute("usuario", user);
-		model.addAttribute("nombre", user.getNombre());
+		model.addAttribute(NOMBRE, user.getNombre());
 		return "/views/Usuario/MenuUsuario";
 	}
 	
