@@ -35,10 +35,14 @@ public class GestorPenalizaciones {
 
 			// Convertir LocalDateTime a Date y asignarlo a al campo FechaFinPenalizacion
 			user.setFechaFinPenalizacion(Date.from(finFechaPenalizacion.atZone(ZoneId.systemDefault()).toInstant()));
-			log.info("Usuario " + user.getNombre() + " penalizado con " + penalizacion + " unidades.");
-			log.info("Fecha de fin de penalización: " + user.getFechaFinPenalizacion());
+			if (log.isInfoEnabled()) {
+				log.info(String.format( "Usuario %s penalizado con %s unidades.", user, penalizacion));
+				log.info(String.format("Fecha de fin de penalización: %s", user.getFechaFinPenalizacion()));
+			}
 		} else {
-			log.info("Usuario " + user.getNombre() + " devolvió el libro a tiempo. Sin penalización.");
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Usuario %s devolvió el libro a tiempo. Sin penalización.", user));
+			}
 		}
 
 	}
@@ -63,11 +67,7 @@ public class GestorPenalizaciones {
 
 		// Comprueba cupo de prestamos (si ya tiene 4 prestamos no puede pedir prestados
 		// mas)
-		if (prestamosActivos + 1 > CUPO_MAXIMO) {
-			return true;
-		}
-
-		return false;
+		return prestamosActivos + 1 > CUPO_MAXIMO;
 	}
 
 }
