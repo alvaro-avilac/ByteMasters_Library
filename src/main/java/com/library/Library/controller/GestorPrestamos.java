@@ -152,10 +152,9 @@ public class GestorPrestamos {
 	
 	private boolean verificarDisponibilidad(Ejemplar e, List<Prestamo> listadoPrestamos) {
 	    for (Prestamo p : listadoPrestamos) {
-	    	java.util.Date fechaActual = Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
+	    	
 	        if (p.getEjemplar() == e
-	                && p.getFechaFinal().after(fechaActual)
+	                && p.getFechaFinal().after(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()))
 	                && p.isActivo()) {
 	            return false;
 	        }
@@ -196,7 +195,9 @@ public class GestorPrestamos {
 		}
 
 		if (gestorPenalizaciones.comprobarCupo(user)) {
-			log.info("Usuario tiene cupo completo de prestamos cubierto");
+			if (log.isInfoEnabled()) {
+				log.info("Usuario tiene cupo completo de prestamos cubierto");
+			}
 			model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto");
 			return ERROR_VIEW;
 		}
@@ -223,9 +224,11 @@ public class GestorPrestamos {
 		}
 
 		titulo.setEjemplares(ejemplaresDisponibles);
-
-		log.info(String.format("Ejemplares disponibles: %s", ejemplaresDisponibles));
-
+		
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Ejemplares disponibles: %s", ejemplaresDisponibles));
+		}
+		
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("listaEjemplares", ejemplaresDisponibles);
 
@@ -278,7 +281,9 @@ public class GestorPrestamos {
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
 		List<Prestamo> prestamosActivos = listadoDePrestamos.stream().filter(Prestamo::isActivo).toList();
-		log.info(String.format("Listado de prestamos %s", prestamosActivos.toString()));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Listado de prestamos %s", prestamosActivos.toString()));
+		}
 		model.addAttribute("listadoDePrestamosActivos", prestamosActivos);
 		model.addAttribute("listadoDePrestamos", listadoDePrestamos);
 
@@ -329,13 +334,7 @@ public class GestorPrestamos {
 		Reserva reserva = new Reserva();
 		for (Reserva r : listaReservas) {
 			if (r.getUsuario().getId().equals(user.getId()) && r.getTitulo().getId().equals(titulo.getId())) {
-
-				if (isBibliotecarioMode) {
-					return "/views/Bibliotecario/ReservaNoPosible";
-				} else {
-					return "/views/Usuario/ReservaNoPosible";
-				}
-
+				return isBibliotecarioMode ? "/views/Bibliotecario/ReservaNoPosible" : "/views/Usuario/ReservaNoPosible";
 			}
 		}
 
@@ -345,18 +344,16 @@ public class GestorPrestamos {
 
 		reservaService.guardarReserva(reserva);
 
-		if (isBibliotecarioMode) {
-			return "/views/Bibliotecario/ReservaRealizadaBibliotecario";
-		} else {
-			return "/views/Usuario/ReservaRealizadaUsuario";
-		}
+		return isBibliotecarioMode ? "/views/Bibliotecario/ReservaRealizadaBibliotecario" : "/views/Usuario/ReservaRealizadaUsuario";
 	}
 
 	@GetMapping("/menuBibliotecario")
 	public String menuBibliotecario(Model model) {
 
 		this.isBibliotecarioMode = true;
-		log.info(String.format("Modo: Bibliotecario. FlagBibliotecario=%s", isBibliotecarioMode));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Modo: Bibliotecario. FlagBibliotecario=%s", isBibliotecarioMode));
+		}
 		Usuario user = usuarioService.getUsuario();
 		model.addAttribute(USUARIO, user);
 
@@ -367,7 +364,9 @@ public class GestorPrestamos {
 	public String menuUsuario(Model model) {
 		Usuario user = usuarioService.getUsuario();
 
-		log.info(String.format("Modo: Usuario. FlagBibliotecario=%s", isBibliotecarioMode));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Modo: Usuario. FlagBibliotecario=%s", isBibliotecarioMode));
+		}
 
 		model.addAttribute(USUARIO, user);
 		model.addAttribute(NOMBRE, user.getNombre());
@@ -386,7 +385,7 @@ public class GestorPrestamos {
 		attribute.addFlashAttribute("warning", "Reserva cancelada");
 
 		for (Reserva r : listaReservas) {
-			if (r.getUsuario().getId() == user.getId() && r.getTitulo().getId() == titulo.getId()) {
+			if (r.getUsuario().getId().equals(user.getId()) && r.getTitulo().getId().equals(titulo.getId())) {
 				Long idReserva = r.getId();
 
 				reservaService.eliminarReserva(idReserva);
