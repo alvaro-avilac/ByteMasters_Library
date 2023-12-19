@@ -96,7 +96,9 @@ public class Usuario {
 		this.reservas = reservas;
 	}
 	
-	
+	public String toString() {
+		return String.format("%s %s", nombre, apellidos);
+	}
 	
 	
 }

@@ -45,5 +45,9 @@ public class Ejemplar {
 	public void setTitulo(Titulo titulo) {
 		this.title = titulo;
 	}
+	
+	public String toString() {
+		return String.format("Ejemplar [id=%s, libro=%s, isbn=%s]", id, title.getNombre(), title.getIsbn());
+	}
 
 }

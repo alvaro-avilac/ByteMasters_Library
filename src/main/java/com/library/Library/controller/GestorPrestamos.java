@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,12 +37,16 @@ public class GestorPrestamos {
 
 	private static LocalDate fechaGlobal = LocalDate.now();
 	
+	private static final String ERROR_VIEW = "views/error";
+	private static final String MENU_BIBLIOTECARIO = "/views/Bibliotecario/MenuBibliotecario";
+	private static final String MENU_USUARIO = "/views/Usuario/MenuUsuario";
 	private static final String NOMBRE = "nombre";
+	private static final String USUARIO = "usuario";
+	private static final String SUCCESS = "success";
 	
-	private static boolean isBibliotecarioMode = false;
+	private boolean isBibliotecarioMode = false;
 
 	GestorPenalizaciones gestorPenalizaciones = new GestorPenalizaciones(); 
-	
 	
 	private final IServiceTitulo tituloService;
 	private final IServiceEjemplar ejemplarService;
@@ -140,7 +143,7 @@ public class GestorPrestamos {
 					ejemplaresDisponibles.add(e);
 				}
 			}
-			log.info("Ejemplares disponibles de " + t + ": " + ejemplaresDisponibles);
+			log.info(String.format("Ejemplares disponibles de %s : %s" , t, ejemplaresDisponibles));
 			t.setEjemplares(ejemplaresDisponibles);
 		}
 		
@@ -177,20 +180,20 @@ public class GestorPrestamos {
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
 		if(user == null) {
-			return "views/error";
+			return ERROR_VIEW;
 		}
 		
 		if(gestorPenalizaciones.comprobarPenalizaciones(user)) {
-			log.info("Usuario " + user + "tiene penalizacion hasta " + user.getFechaFinPenalizacion());
+			log.info(String.format("Usuario %s tiene penalización hasta %s", user, user.getFechaFinPenalizacion()));
 	        model.addAttribute("error", "Usuario " + user.getNombre() + " " + user.getApellidos() + " tiene penalización hasta " + user.getFechaFinPenalizacion());
 	        model.addAttribute("flag", true);
-	        return "views/error";
+	        return ERROR_VIEW;
 		}
 		
 	    if(gestorPenalizaciones.comprobarCupo(user)){
 			log.info("Usuario tiene cupo completo de prestamos cubierto");
 	        model.addAttribute("error", "Usuario tiene cupo completo de préstamos cubierto"); 
-	        return "views/error";
+	        return ERROR_VIEW;
 		}
 		
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
@@ -216,7 +219,7 @@ public class GestorPrestamos {
 
 		titulo.setEjemplares(ejemplaresDisponibles);
 
-		log.info("Ejemplares disponibles: " + ejemplaresDisponibles.toString());
+		log.info(String.format("Ejemplares disponibles: %s", ejemplaresDisponibles));
 		
 		
 		
@@ -236,12 +239,12 @@ public class GestorPrestamos {
 		user = value.orElse(null);
 		
 		
-		Optional<Ejemplar> e_value = ejemplarService.buscarEjemplarPorId(idEjemplar);
-		Ejemplar ejemplar = e_value.orElse(null);
+		Optional<Ejemplar> eValue = ejemplarService.buscarEjemplarPorId(idEjemplar);
+		Ejemplar ejemplar = eValue.orElse(null);
 		prestamo.setEjemplar(ejemplar);
 		
 		if(user == null || ejemplar == null) {
-			return "views/error";
+			return ERROR_VIEW;
 		}
 		prestamo.setActivo(true);
 		prestamo.setFechaInicio(Date.from(fechaGlobal.atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -252,10 +255,10 @@ public class GestorPrestamos {
 
 		prestamoService.guardarPrestamo(prestamo);
 		if(isBibliotecarioMode) {
-			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			attribute.addFlashAttribute(SUCCESS, "Prestamo realizado con éxito");
 			return "redirect:/menuBibliotecario";
 		}else {
-			attribute.addFlashAttribute("success", "Prestamo realizado con éxito");
+			attribute.addFlashAttribute(SUCCESS, "Prestamo realizado con éxito");
 			return "redirect:/menuUsuario";
 		}
 	}
@@ -267,12 +270,13 @@ public class GestorPrestamos {
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
 		if(user == null) {
-			return "views/error";
+			return ERROR_VIEW;
 		}
 		model.addAttribute("nombreDeUsuario", user.getNombre() + " " + user.getApellidos());
 
 		List<Prestamo> listadoDePrestamos = user.getPrestamos();
-		List<Prestamo> prestamosActivos = listadoDePrestamos.stream().filter(Prestamo::isActivo).collect(Collectors.toList());
+		List<Prestamo> prestamosActivos = listadoDePrestamos.stream().filter(Prestamo::isActivo).toList();
+		log.info(String.format("Listado de prestamos %s", prestamosActivos.toString()));
 		model.addAttribute("listadoDePrestamosActivos", prestamosActivos);
 		model.addAttribute("listadoDePrestamos", listadoDePrestamos);
 		
@@ -287,14 +291,14 @@ public class GestorPrestamos {
 		Optional<Usuario> value = usuarioService.buscarUsuarioPorId(user.getId());
 		user = value.orElse(null);
 		if(user == null) {
-			return "views/error";
+			return ERROR_VIEW;
 		}
 		
 		Optional<Prestamo> prestamoValue = prestamoService.buscarPrestamoPorId(prestamoId);
 		Prestamo prestamo = prestamoValue.orElse(null);
 		
 		if(prestamo == null) {
-			return "views/error";
+			return ERROR_VIEW;
 		}
 		
 		gestorPenalizaciones.aplicarPenalizaciones(user, fechaGlobal, prestamo);
@@ -302,10 +306,10 @@ public class GestorPrestamos {
 		prestamoService.guardarPrestamo(prestamo);
 
 		if(isBibliotecarioMode) {
-			attribute.addFlashAttribute("success", "Devolucion registrada con éxito");
+			attribute.addFlashAttribute(SUCCESS, "Devolucion registrada con éxito");
 			return "redirect:/menuBibliotecario";
 		}else {
-			attribute.addFlashAttribute("success", "Devolución registrada realizado con éxito");
+			attribute.addFlashAttribute(SUCCESS, "Devolución registrada realizado con éxito");
 			return "redirect:/menuUsuario";
 		}
 	}
@@ -321,7 +325,7 @@ public class GestorPrestamos {
         
         Reserva reserva = new Reserva();
         for (Reserva r : listaReservas) {
-        	if (r.getUsuario().getId().equals(user.getId())  && r.getTitulo().getId().equals(titulo.getId())){
+        	if (r.getUsuario().getId().equals(user.getId()) && r.getTitulo().getId().equals(titulo.getId())){
         		
         		if(isBibliotecarioMode) {
             		return "/views/Bibliotecario/ReservaNoPosible";
@@ -348,34 +352,33 @@ public class GestorPrestamos {
 	@GetMapping("/menuBibliotecario")
 	public String menuBibliotecario(Model model) {
 		
-		isBibliotecarioMode = true;
-		log.info("MODO BIBLIOTECARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+		this.isBibliotecarioMode = true;
+		log.info(String.format("Modo: Bibliotecario. FlagBibliotecario=%s", isBibliotecarioMode));
 		Usuario user = usuarioService.getUsuario();
-		model.addAttribute("usuario", user);
+		model.addAttribute(USUARIO, user);
 		
-		return "/views/Bibliotecario/MenuBibliotecario";
+		return MENU_BIBLIOTECARIO;
 	}
 	
 	@GetMapping("/menuUsuario")
 	public String menuUsuario(Model model) {
 		Usuario user = usuarioService.getUsuario();
 
-		log.info("MODO USUARIO. FLAGBIBLIOTECARIO= " + isBibliotecarioMode);
+		log.info(String.format("Modo: Usuario. FlagBibliotecario=%s", isBibliotecarioMode));
 
-		model.addAttribute("usuario", user);
+		model.addAttribute(USUARIO, user);
 		model.addAttribute(NOMBRE, user.getNombre());
-		return "/views/Usuario/MenuUsuario";
+		return MENU_USUARIO;
 	}
 	
 	@GetMapping("/reservaEliminada/{id}")
-	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){	
-	
+	public String eliminarReserva(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute){
 	
 		Usuario user = usuarioService.getUsuario();
 	
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		List<Reserva> listaReservas = reservaService.listarReservas();
-		model.addAttribute("usuario", user);
+		model.addAttribute(USUARIO, user);
 		
 		attribute.addFlashAttribute("warning", "Reserva cancelada");
 		
@@ -385,17 +388,17 @@ public class GestorPrestamos {
 	    		
 	    		reservaService.eliminarReserva(idReserva);
 	    		if(isBibliotecarioMode)
-	    			return "/views/Bibliotecario/MenuBibliotecario";
+	    			return MENU_BIBLIOTECARIO;
 	    		else
-	    			return "/views/Usuario/MenuUsuario";
+	    			return MENU_USUARIO;
 	    	}
 	    }
 		
 		
 		if(isBibliotecarioMode)
-			return "/views/Bibliotecario/MenuBibliotecario";
+			return MENU_BIBLIOTECARIO;
 		else
-			return "/views/Usuario/MenuUsuario";
+			return MENU_USUARIO;
 	}
 
 

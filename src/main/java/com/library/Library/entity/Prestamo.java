@@ -95,5 +95,9 @@ public class Prestamo {
 	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
+	
+	public String toString() {
+		return String.format("Prestamo [usuario=%s, ejemplar=%s]", usuario.toString(), ejemplar.toString());
+	}
 
 }
