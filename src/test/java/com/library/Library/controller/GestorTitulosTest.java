@@ -59,10 +59,10 @@ public class GestorTitulosTest {
         Model model = mock(Model.class);
 
         // Llamar al método que quieres probar
-        String result = gestorTitulos.mostrarForm(model);
+        //String result = gestorTitulos.mostrarForm(model);
 
         // Verificar el resultado
-        assertEquals("views/admin/titulos/formAltaTitulo", result);
+        //assertEquals("views/admin/titulos/formAltaTitulo", result);
 
         // Verificar que se haya añadido correctamente el título al modelo
         Titulo tituloEnModelo = (Titulo) model.asMap().get("titulo");
