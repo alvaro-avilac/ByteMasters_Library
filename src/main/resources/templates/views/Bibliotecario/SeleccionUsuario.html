@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateBibliotecario :: head}"></head>
+
+<body>
+
+	<head>
+
+		<div class="container mt-5">
+			<div class="row justify-content-center">
+				<div class="col-md-6">
+					<div class="selectUser-container text-center">
+						<h1>Introduce el id del usuario</h1>
+						<form id="selectUser" th:action="@{/selectedUser}" th:method="post" class="text-center m-5">
+							<div class="form-group d-inline-block">
+								<select id="selectedUser" name="selectedUser" class="form-control mr-2" required>
+									<th:block th:each="user : ${listaUsuarios}">
+										<option th:text="${user.id} + '-' + ${user.nombre} + ' ' + ${user.apellidos}"
+											th:value="${user.id}"></option>
+									</th:block>
+								</select>
+							</div>
+							<button type="submit" class="btn btn-primary m-4">Seleccionar</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateAdmin :: head}">
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
+	</header>
+
+	<div class="text-center" style="padding-top: 100px;">
+		<h1>Bienvenido a la sección de administración</h1>
+		<div class="d-flex justify-content-center gap-5 mt-5">
+
+			<!-- Tarjeta para "Dar de alta título" -->
+			<div class="card text-center" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">Dar de alta título</h5>
+					<p class="card-text">Registra un nuevo título en el sistema.</p>
+					<a class="btn btn-primary" th:href="@{/altaTitulo}" role="button">Dar de alta título</a>
+				</div>
+			</div>
+
+			<!-- Tarjeta para "Ver títulos" -->
+			<div class="card text-center" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">Ver títulos</h5>
+					<p class="card-text">Explora la lista de títulos disponibles.</p>
+					<a class="btn btn-primary" th:href="@{/mostrar}" role="button">Ver títulos</a>
+				</div>
+			</div>
+
+			<!-- Tarjeta para "Ver autores" -->
+			<div class="card text-center" style="width: 18rem;">
+				<div class="card-body">
+					<h5 class="card-title">Ver autores</h5>
+					<p class="card-text">Consulta la lista de autores registrados.</p>
+					<a class="btn btn-primary" th:href="@{/mostrarAutores}" role="button">Ver autores</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
+	</footer>
+
+</body>
+
+</html>

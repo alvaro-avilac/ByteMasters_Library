@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateUser :: head}"> </head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateUser :: header}">
+	</header>
+
+	<form th:action="@{/savedPrestamo}" th:object="${prestamo}" method="POST">
+		<div class="m-3 form-group row">
+			<input type="hidden" class="form-control" th:value="${titulo.id}" id="idTitle" name="idTitle"
+				placeholder="Ingresa el número de ejemplares" min="1" />
+			<select id="selected_ejemplares" name="selected_ejemplares" required>
+				<th:block th:each="e : ${listaEjemplares}">
+					<option th:text="${e.id}" th:value="${e.id}"></option>
+				</th:block>
+			</select>
+		</div>
+		<input type="submit" class="btn btn-primary m-3" value="Save" />
+
+	</form>
+
+	<footer th:replace="~{plantilla/templateUser :: footer}">
+	</footer>
+
+</body>
+
+</html>

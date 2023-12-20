@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateAdmin :: head}">
+	<style>
+		.container {
+			max-width: 1000px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
+	</header>
+	<div class="container mt-5">
+		<form th:action="@{/saved}" th:object="${titulo}" method="POST">
+			<div class="row mb-3">
+				<div class="col-md-3">
+					<label for="nombre">Nombre del titulo</label>
+				</div>
+				<div class="col-md-6">
+					<input type="hidden" th:field="*{id}">
+					<input type="text" name="nombre" th:field="*{nombre}" class="form-control form-control-sm"
+						id="nombre" placeholder="nombre del titulo" minlength="1" maxlength="100" required/>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-3">
+					<label for="isbn">ISBN</label>
+				</div>
+				<div class="col-md-6">
+					<input type="text" name="isbn" th:field="*{isbn}" class="form-control form-control-sm" id="isbn"
+						placeholder="introduzca el isbn" required minlength="5" maxlength="10"/>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-3">
+					<label for="autoresStr">Autor(es)</label>
+				</div>
+				<div class="col-md-4">
+					<select id="autoresStr" name="autoresStr" class="form-control form-control-sm" aria-placeholder="Seleccione un autor" multiple="multiple" required>
+						<!-- Itera sobre la lista de autores y crea opciones para cada uno -->
+						<th:block th:each="autor : ${listaAutores}">
+							<option th:value="${autor}" th:text="${autor.nombre} + ' ' + ${autor.apellido == null ? '' : autor.apellido}"></option>
+						</th:block>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<!-- Agrega un botón que redirija a otro formulario -->
+					<a th:href="@{/mostrarAutores}" class="btn btn-primary">Gestionar autores</a>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-md-3">
+					<label for="numeroEjemplares">Número de Ejemplares:</label>
+				</div>
+				<div class="col-md-6">
+					<input type="number" class="form-control" id="numEjemplaresStr" name="numEjemplaresStr"
+						placeholder="Ingresa el número de ejemplares"
+						th:value="${titulo.ejemplares == null ? 1 : titulo.ejemplares.size()} " min="1" />
+				</div>
+			</div>
+			<input type="submit" class="btn btn-primary" value="Guardar" />
+
+		</form>
+	</div>
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
+	</footer>
+
+</body>
+
+</html>

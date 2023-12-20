@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateAdmin :: head}"> </head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
+	</header>
+	<div class="container mt-5">
+		<form th:action="@{/edited}" th:object="${titulo}" method="POST">
+			<div class="m-3 form-group row">
+				<input type="hidden" th:field="*{id}">
+				<label for="nombre" class="col-md-3">Nombre del titulo</label>
+				<input type="text" name="nombre" th:field="*{nombre}" class="form-control form-control-sm col-md-6"
+					id="nombre" placeholder="nombre del titulo" minlength="1" maxlength="100" required/>
+			</div>
+
+			<div class="m-3 form-group row">
+				<label for="isbn" class="col-md-3">ISBN</label>
+				<input type="text" name="isbn" th:field="*{isbn}" class="form-control form-control-sm col-md-6"
+					id="isbn" placeholder="introduzca el isbn" minlength="5" maxlength="10" required/>
+			</div>
+
+			<div class="row m-3">
+				<div class="col-md-1">
+					<label for="autoresStr">Autor(es)</label>
+				</div>
+				<div class="col-md-4">
+					<select id="autoresStr" name="autoresStr" class="form-control form-control-sm"
+						aria-placeholder="Seleccione un autor" multiple="multiple" required>
+						<!-- Itera sobre la lista de autores y crea opciones para cada uno -->
+						<th:block th:each="autor : ${listaAutores}">
+							<option th:value="${autor}"
+								th:text="${autor.nombre} + ' ' + ${autor.apellido == null ? '' : autor.apellido}">
+							</option>
+						</th:block>
+					</select>
+				</div>
+				<div class="col-md-3">
+					<!-- Agrega un botón que redirija a otro formulario -->
+					<a th:href="@{/altaAutor}" class="btn btn-primary">Gestionar autores</a>
+				</div>
+			</div>
+
+			<input type="submit" class="btn btn-primary m-3" value="Guardar" />
+
+		</form>
+	</div>
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
+	</footer>
+
+</body>
+
+</html>

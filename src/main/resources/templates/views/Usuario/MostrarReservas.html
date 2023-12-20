@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateUser :: head}"></head>
+
+<body>
+
+    <header th:replace="~{plantilla/templateUser :: header}"></header>
+
+	<div class="container">
+		<h1 th:text="${nombre}"></h1>
+	</div>
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Titulo</th>
+					<th scope="col">ISBN</th>
+					<th scope="col">Autor</th>
+					<th scope="col">Numero de ejemplares disponibles</th>
+					<th scope="col">Disponibilidad</th>
+					<th scope="col">Cancelar</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="ti:${titulos}">
+					<td th:text="${ti.nombre}"></td>
+					<td th:text="${ti.isbn}"></td>
+					<td>
+						<span th:each="autor : ${ti.autores}">
+							<span th:text="${autor.nombre}"></span>
+						</span>
+					</td>
+					<td th:text="${ti.ejemplares.size()}"></td>
+					<td>
+					  <div th:if="${ti.ejemplares.size() == 0}">
+							<a class="btn btn-secondary" role="button">no disponible</a>
+						</div>
+						
+						<div th:if="${ti.ejemplares.size() != 0}">
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir prestamo</a>	
+						</div>
+					</td>
+					<td>
+						<div>
+							<a class="btn btn-primary" th:href="@{/reservaEliminada/}  + ${ti.id}" role="button">Cancelar Reserva</a>	
+						</div>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
