@@ -63,7 +63,7 @@ public class GestorPrestamos {
 		
 		
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		List<Prestamo> listadoPrestamos = IServicePrestamo.listarPrestamos();
 		
 		for (Titulo t : listadoTitulos) {
 			List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
@@ -96,7 +96,7 @@ public class GestorPrestamos {
 		Usuario user = usuarioService.getUsuario();
 		List<Reserva> listadoReservas = reservaService.listarReservas();
 		List<Titulo> listadoTitulos = new ArrayList<>();
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		List<Prestamo> listadoPrestamos = IServicePrestamo.listarPrestamos();
 		
 		for(Reserva r : listadoReservas) {
 			if(r.getUsuario().getId()==user.getId()) {
@@ -138,7 +138,7 @@ public class GestorPrestamos {
 		
 	}
 	
-	public boolean isTituloReservado(Titulo titulo) {
+	public  boolean isTituloReservado(Titulo titulo) {
 		
 		List<Reserva> listaReservas = reservaService.listarReservas();
 		
@@ -179,7 +179,7 @@ public class GestorPrestamos {
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 
 		List<Ejemplar> ejemplaresDisponibles = new ArrayList<>();
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		List<Prestamo> listadoPrestamos = IServicePrestamo.listarPrestamos();
 
 		for (Ejemplar e : titulo.getEjemplares()) {
 			boolean disponible = true;

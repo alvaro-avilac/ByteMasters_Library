@@ -129,11 +129,11 @@ public class GestorPenalizacionesTest {
         Usuario usuario = new Usuario();
         usuario.setPrestamos(Arrays.asList(new Prestamo(), new Prestamo(), new Prestamo())); // Sin prestamos activos
 
-        // Llamar al método que quieres probar
-       // boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
+         //Llamar al método que quieres probar
+        boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
 
         // Verificar el resultado
-        //assertFalse(resultado);
+        assertFalse(resultado);
     }
     // PRUEBA CON 4 PRESTAMOS 
     @Test
