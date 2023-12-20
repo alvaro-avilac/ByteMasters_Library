@@ -6,6 +6,8 @@ on:
       - develop
       - feature-sonar
       - feature-surefire
+      - mantenimiento
+      - releases
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:

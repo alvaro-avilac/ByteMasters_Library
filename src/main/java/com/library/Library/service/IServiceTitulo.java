@@ -1,7 +1,6 @@
 package com.library.Library.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.library.Library.entity.Titulo;
 
