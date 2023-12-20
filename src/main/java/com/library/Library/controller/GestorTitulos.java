@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.Date;
-import java.time.ZoneId;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import com.library.Library.entity.Autor;
 import com.library.Library.entity.Ejemplar;
 import com.library.Library.entity.Prestamo;
-import com.library.Library.entity.Reserva;
 import com.library.Library.entity.Titulo;
 import com.library.Library.entity.Usuario;
 import com.library.Library.service.IServiceAutor;
@@ -294,15 +291,16 @@ public class GestorTitulos {
 	
 	@GetMapping("autor/delete/{id}")
 	public String mostrarFormEliminarAutor(@PathVariable("id") Long autorId, Model model, RedirectAttributes attribute) {
+		Optional<Autor> optionalAutor = autorService.buscarAutorPorId(autorId);
 		
-		Autor autor = autorService.buscarAutorPorId(autorId).get();
-		if (autor == null) {
+		if (optionalAutor == null) {
 			return "";
 		}
 		
+		Autor autor = optionalAutor.get();
+		
 		for(Titulo t: autor.getTitulos()) {
 			if (tituloTieneReservasPrestamos(t)) {
-				
 				attribute.addFlashAttribute("error", "El Autor que desea borrar tiene algun titulo el cual tiene algun prestamo o reserva activo");
 				return "redirect:/mostrarAutores";
 			}
