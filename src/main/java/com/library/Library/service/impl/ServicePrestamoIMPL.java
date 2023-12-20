@@ -17,7 +17,6 @@ public class ServicePrestamoIMPL implements IServicePrestamo{
 	@Autowired
 	private PrestamoDAO prestamoDAO;
 	
-	@Override
 	public List<Prestamo> listarPrestamos() {
 		return (List<Prestamo>) prestamoDAO.findAll();
 	}
