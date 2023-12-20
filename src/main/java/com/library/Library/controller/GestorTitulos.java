@@ -199,35 +199,36 @@ public class GestorTitulos {
 			user = usuarioService.buscarUsuarioPorNombreyApellido(nombreUsuario, apellidosUsuario);
 			usuarioService.setGlobalUsuario(user);
 		}
-		
+
 		return seleccionarEndpointPorRol(rol);
-		
+
 	}
-	
+
 	public String seleccionarEndpointPorRol(String rol) {
-		
+
 		String endpoint = "";
-		
+
 		if (rol.equals("admin")) {
 			endpoint = "redirect:/admin";
 		} else if (rol.equals("bibliotecario")) {
 			endpoint = "redirect:/bibliotecario";
 		} else if (rol.equals("usuario")) {
 			endpoint = "redirect:/user";
-		}else {
+		} else {
 			endpoint = "redirect:/";
 		}
 		return endpoint;
 	}
 
 	@PostMapping("/selectedUser")
-	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model, RedirectAttributes attribute) {
+	public String buscarUsuarioPorId(@RequestParam("selectedUser") long idUsuario, Model model,
+			RedirectAttributes attribute) {
 		Optional<Usuario> optionalUser = usuarioService.buscarUsuarioPorId(idUsuario);
 
 		if (optionalUser.isPresent()) {
 			Usuario usuario = optionalUser.get();
 			usuarioService.setGlobalUsuario(usuario);
-			
+
 			attribute.addFlashAttribute("usuario", usuario);
 
 			return "redirect:/menuBibliotecario";
@@ -281,44 +282,47 @@ public class GestorTitulos {
 
 		return "/views/admin/titulos/formEditarTitulo";
 	}
-	
+
 	@GetMapping("/autor/edit/{id}")
 	public String mostrarFormEditarAutor(@PathVariable("id") Long autorId, Model model) {
 		Optional<Autor> autor = autorService.buscarAutorPorId(autorId);
-		model.addAttribute("autor",autor);
+		model.addAttribute("autor", autor);
 		return "/views/admin/autores/formAltaAutores";
 	}
-	
+
 	@GetMapping("autor/delete/{id}")
-	public String mostrarFormEliminarAutor(@PathVariable("id") Long autorId, Model model, RedirectAttributes attribute) {
+	public String mostrarFormEliminarAutor(@PathVariable("id") Long autorId, Model model,
+			RedirectAttributes attribute) {
+
 		Optional<Autor> optionalAutor = autorService.buscarAutorPorId(autorId);
-		
-		if (optionalAutor == null) {
+
+		if (!optionalAutor.isPresent()) {
 			return "";
 		}
-		
+
 		Autor autor = optionalAutor.get();
-		
-		for(Titulo t: autor.getTitulos()) {
+
+		for (Titulo t : autor.getTitulos()) {
 			if (tituloTieneReservasPrestamos(t)) {
-				attribute.addFlashAttribute("error", "El Autor que desea borrar tiene algun titulo el cual tiene algun prestamo o reserva activo");
+				attribute.addFlashAttribute("error",
+						"El Autor que desea borrar tiene algun titulo el cual tiene algun prestamo o reserva activo");
 				return "redirect:/mostrarAutores";
 			}
 		}
-		
+
 		return "redirect:/mostrarAutores";
 	}
-	
+
 	@GetMapping("detalle/delete/{id}")
 	public String EliminarTitulo(@PathVariable("id") Long tituloId, Model model, RedirectAttributes attribute) {
 
 		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
 		if (tituloTieneReservasPrestamos(titulo)) {
-			
+
 			attribute.addFlashAttribute("error", "El titulo que desea borrar tiene algun prestamo o reserva activo");
 			return "redirect:/detalle/{id}";
 		}
-		
+
 		attribute.addFlashAttribute("success", "Titulo eliminado con éxito");
 		reservaService.borrarReservasByTitulo(titulo);
 		prestamoService.borrarPrestamosEjemplaresByTitulo(titulo);
@@ -326,14 +330,14 @@ public class GestorTitulos {
 		tituloService.bajaTitulo(tituloId);
 
 		return "redirect:/mostrar";
-	} 
+	}
 
 	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
 
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-		for(Prestamo p: listadoPrestamos) {
-			if(p.getEjemplar().getTitulo().equals(titulo)) {
-				if (p.isActivo()  &&  p.getEjemplar().getTitulo().equals(titulo)) {
+		for (Prestamo p : listadoPrestamos) {
+			if (p.getEjemplar().getTitulo().equals(titulo)) {
+				if (p.isActivo() && p.getEjemplar().getTitulo().equals(titulo)) {
 					return true;
 				}
 			}
@@ -344,14 +348,16 @@ public class GestorTitulos {
 
 	@PostMapping("/detalle/delete_ejemplares")
 	public String EliminarEjemplares(@RequestParam("idTitle") Long idTitle,
-			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model, RedirectAttributes attribute) {
+			@RequestParam("selected_ejemplares") List<Long> selected_ejemplares, Model model,
+			RedirectAttributes attribute) {
 		log.info("Lista Ejemplares seleccionados " + selected_ejemplares);
 		Titulo titulo = tituloService.buscarTituloPorId(idTitle);
-		
+
 		for (Long ejemplar : selected_ejemplares) {
 
 			if (ejemplarTieneReservasPrestamos(ejemplar)) {
-				attribute.addFlashAttribute("error", "El/los ejemplar que desea borrar tiene algun prestamo o reserva activo");
+				attribute.addFlashAttribute("error",
+						"El/los ejemplar que desea borrar tiene algun prestamo o reserva activo");
 
 			} else {
 				prestamoService.borrarPrestamosByEjemplar(ejemplar);
@@ -366,15 +372,15 @@ public class GestorTitulos {
 	private boolean ejemplarTieneReservasPrestamos(Long ejemplarId) {
 
 		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
-		
+
 		for (Prestamo p : listadoPrestamos) {
-		
+
 			if (p.isActivo() && p.getEjemplar().getId().equals(ejemplarId)) {
 				return true;
 			}
-			
+
 		}
-		
+
 		return false;
 	}
 
@@ -407,7 +413,7 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		return "/views/Usuario/MostrarTitulosUser";
 	}
-	
+
 	@GetMapping("/mostrarTitulosBibliotecario")
 	public String mostrarTitulosBibliotecario(Model model) {
 		List<Titulo> listadoTitulos = tituloService.listarTitulos();
@@ -415,11 +421,10 @@ public class GestorTitulos {
 		model.addAttribute("titulos", listadoTitulos);
 		return "/views/Bibliotecario/MostrarTitulosBibliotecario";
 	}
-	
-	
+
 	@GetMapping("/user")
 	public String mostraMainWindowUser(RedirectAttributes attribute) {
-		
+
 		Usuario user = usuarioService.getUsuario();
 		attribute.addFlashAttribute("usuario", user);
 		log.info("Usuario loggeado como: " + user.getNombre() + " " + user.getApellidos());
