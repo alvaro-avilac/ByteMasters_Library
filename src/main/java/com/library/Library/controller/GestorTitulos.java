@@ -55,7 +55,7 @@ public class GestorTitulos {
 	private IServiceReserva reservaService;
 
 	@Autowired
-	private IServicePrestamo prestamoService;
+	static IServicePrestamo prestamoService;
 
 	@GetMapping("/altaTitulo") // endpoint que estamos mapeando
 	public String mostrarFormAltaTitulo(Model model) {
@@ -330,9 +330,9 @@ public class GestorTitulos {
 		return "redirect:/mostrar";
 	} 
 
-	private boolean tituloTieneReservasPrestamos(Titulo titulo) {
+	public static boolean tituloTieneReservasPrestamos(Titulo titulo) {
 
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		List<Prestamo> listadoPrestamos = IServicePrestamo.listarPrestamos();
 		for(Prestamo p: listadoPrestamos) {
 			if(p.getEjemplar().getTitulo().equals(titulo)) {
 				if (p.isActivo()  &&  p.getEjemplar().getTitulo().equals(titulo)) {
@@ -365,9 +365,9 @@ public class GestorTitulos {
 		return "redirect:/detalle/" + titulo.getId();
 	}
 
-	private boolean ejemplarTieneReservasPrestamos(Long ejemplarId) {
+	public boolean ejemplarTieneReservasPrestamos(Long ejemplarId) {
 
-		List<Prestamo> listadoPrestamos = prestamoService.listarPrestamos();
+		List<Prestamo> listadoPrestamos = IServicePrestamo.listarPrestamos();
 		
 		for (Prestamo p : listadoPrestamos) {
 		
@@ -439,5 +439,22 @@ public class GestorTitulos {
 		model.addAttribute("listaUsuarios", listadolistaUsuarios);
 		return "/views/Bibliotecario/SeleccionUsuario";
 	}
+	
+	public String detallesTitutloTest (@PathVariable("id")Long tituloId,Model model) {
+		Titulo titulo = tituloService.buscarTituloPorId(tituloId);
+		if(titulo==null) {
+			model.addAttribute("mensaje , el titulo no se encontro");
+			return "/views/admin/titulos/detalleTitulo";
+		}
+		List<Ejemplar>listaEjemplar=ejemplarService.listarEjemplaresPorTitulo(tituloId);
+			model.addAttribute("titulo",titulo);
+			model.addAttribute("autoresStr",titulo.getAutores().toString());
+			model.addAttribute("numEjemplares",titulo.getEjemplares().size());
+			model.addAttribute("listaEjemplares",listaEjemplar);
+			
+			return "/views/admin/titulos/detalleTitulo";
+		}
+		 
+	}
 
-}
+ 

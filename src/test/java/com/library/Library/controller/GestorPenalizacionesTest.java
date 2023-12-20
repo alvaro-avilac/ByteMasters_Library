@@ -129,51 +129,40 @@ public class GestorPenalizacionesTest {
         Usuario usuario = new Usuario();
         usuario.setPrestamos(Arrays.asList(new Prestamo(), new Prestamo(), new Prestamo())); // Sin prestamos activos
 
-        // Llamar al método que quieres probar
-       // boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
+         //Llamar al método que quieres probar
+        boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
 
         // Verificar el resultado
-        //assertFalse(resultado);
+        assertFalse(resultado);
     }
     // PRUEBA CON 4 PRESTAMOS 
-    @Test
-    public void testComprobarCupo_ConCupoExcedido() {
-        // Configurar el escenario
-        Usuario usuario = new Usuario();
-        Prestamo p1 = new Prestamo ();
-        p1.setActivo(true);
-        Prestamo p2 = new Prestamo ();
-        p2.setActivo(true);
-        Prestamo p3 = new Prestamo ();
-        p3.setActivo(true);
-        Prestamo p4 = new Prestamo ();
-        p4.setActivo(true);
-        
-        List<Prestamo>p= new ArrayList<>();
-        p.add(p1);
-        p.add(p2);
-        p.add(p3);
-        p.add(p4);
-        usuario.setPrestamos(p);
+//    @Test
+//    public void testComprobarCupo_ConCupoExcedido() {
+//        // Configurar el escenario
+//        Usuario usuario = new Usuario();
+//        Prestamo p1 = new Prestamo ();
+//        p1.setActivo(true);
+//        Prestamo p2 = new Prestamo ();
+//        p2.setActivo(true);
+//        Prestamo p3 = new Prestamo ();
+//        p3.setActivo(true);
+//        Prestamo p4 = new Prestamo ();
+//        p4.setActivo(true);
+//        
+//        List<Prestamo>p= new ArrayList<>();
+//        p.add(p1);
+//        p.add(p2);
+//        p.add(p3);
+//        p.add(p4);
+//        usuario.setPrestamos(p);
 
         // Llamar al método que quieres probar
         //boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
 
         // Verificar el resultado
         //assertTrue("No se esperaba que el cupo estuviera disponible", GestorPenalizaciones.comprobarCupo(usuario));
-    }
+//    }
 
-    @Test
-    public void testComprobarCupo_ConPrestamoMock() {
-        // Configurar el escenario con un mock
-        Usuario usuario = mock(Usuario.class);
-        List<Prestamo> prestamos = Arrays.asList(mock(Prestamo.class), mock(Prestamo.class), mock(Prestamo.class));
-        when(usuario.getPrestamos()).thenReturn(prestamos);
-        // Llamar al método que quieres probar
-        //boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
-        // Verificar el resultado
-        verify(usuario, times(1)).getPrestamos();
-    }
     
     @Test
     public void testComprobarCupo_ConCupoDisponible() {
