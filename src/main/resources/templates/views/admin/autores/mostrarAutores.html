@@ -23,7 +23,6 @@
 					<th scope="col">Nombre</th>
 					<th scope="col">Apellido</th>
 					<th scope="col">Editar Autor</th>
-					<th scope="col">Eliminar Autor</th>
 				</tr>
 			</thead>
 			<tbody class="table-group-divider">
@@ -34,10 +33,7 @@
 					<td>
 						<a class="btn btn-success" th:href="@{/autor/edit/} + ${a.id}" role="button">Editar</a>
 					</td>
-					
-					<td>
-						<a class="btn btn-danger" th:href="@{/autor/delete/} + ${a.id}" role="button">Eliminar</a>
-					</td>
+				
 				</tr>
 			</tbody>
 		</table>

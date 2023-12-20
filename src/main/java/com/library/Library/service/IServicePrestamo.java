@@ -8,10 +8,7 @@ import com.library.Library.entity.Titulo;
 
 public interface IServicePrestamo {
 	
-	public static List<Prestamo> listarPrestamos() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<Prestamo> listarPrestamos();
 	public void guardarPrestamo(Prestamo prestamo);
 	public Optional<Prestamo> buscarPrestamoPorId(Long id);
 	public void borrarPrestamosEjemplaresByTitulo(Titulo titulo);
