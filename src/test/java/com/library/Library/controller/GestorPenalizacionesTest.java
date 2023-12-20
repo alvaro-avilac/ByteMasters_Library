@@ -163,17 +163,6 @@ public class GestorPenalizacionesTest {
         //assertTrue("No se esperaba que el cupo estuviera disponible", GestorPenalizaciones.comprobarCupo(usuario));
     }
 
-    @Test
-    public void testComprobarCupo_ConPrestamoMock() {
-        // Configurar el escenario con un mock
-        Usuario usuario = mock(Usuario.class);
-        List<Prestamo> prestamos = Arrays.asList(mock(Prestamo.class), mock(Prestamo.class), mock(Prestamo.class));
-        when(usuario.getPrestamos()).thenReturn(prestamos);
-        // Llamar al método que quieres probar
-        //boolean resultado = GestorPenalizaciones.comprobarCupo(usuario);
-        // Verificar el resultado
-        verify(usuario, times(1)).getPrestamos();
-    }
     
     @Test
     public void testComprobarCupo_ConCupoDisponible() {

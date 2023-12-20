@@ -84,33 +84,7 @@ public class GestorTitulosTest {
 		// Caso de prueba 4
 		String resultDefault = gestor.seleccionarEndpointPorRol("otro");
 		assertEquals("redirect:/", resultDefault);
-	}
-
-//    @Test
-//    public void testEjemplarTieneReservasPrestamos_NoPrestamosActivos() {
-//        // Configurar el escenario
-//        Ejemplar ejem= new Ejemplar();
-//        Titulo mititulo=new Titulo();
-//        List<Prestamo> listadoPrestamos = new ArrayList<>();
-//        Prestamo p1 = new Prestamo();
-//        ejem.setTitulo(mititulo);
-//        p1.setActivo(false);
-//        p1.setEjemplar(ejem);
-//        Prestamo p2 = new Prestamo();
-//        Prestamo p3 = new Prestamo();
-//        p2.setActivo(true);
-//        Prestamo p4 = new Prestamo();
-//        p3.setActivo(true);
-//        p4.setActivo(false);
-//        listadoPrestamos.add(p1);
-//        listadoPrestamos.add(p2);
-//        listadoPrestamos.add(p3);
-//        
-//        boolean resultado = gestorTitulos.tituloTieneReservasPrestamos(mititulo);
-//        // Verificar el resultado
-//        assertFalse(resultado);
-//    }
-	
+	}	
 	 @Test
 	    public void testEjemplarTieneReservasPrestamos_NoPrestamosActivos() {
 	        // Configurar el escenario
@@ -200,6 +174,8 @@ public class GestorTitulosTest {
 	        verify(model).addAttribute("numEjemplares", titulo.getEjemplares().size());
 	        verify(model).addAttribute("listaEjemplares", new ArrayList<>());
 	    }
+	 
+	 
 	 
 	 
 
