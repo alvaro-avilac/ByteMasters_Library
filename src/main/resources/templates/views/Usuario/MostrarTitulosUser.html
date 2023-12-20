@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateUser :: head}">
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateUser :: header}">
+	</header>
+
+	<div class="container">
+		<h1 th:text="${nombre}"></h1>
+	</div>
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Titulo</th>
+					<th scope="col">ISBN</th>
+					<th scope="col">Autor</th>
+					<th scope="col">Ejemplares</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="ti:${titulos}">
+					<td th:text="${ti.nombre}"></td>
+					<td th:text="${ti.isbn}"></td>
+					<td>
+						<span th:text="${ti.autores.toString().substring(1, ti.autores.toString().length() - 1)}">
+						</span>
+					</td>
+					<td>
+						<span th:text="${#lists.size(ti.ejemplares)}"></span>
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:replace="~{plantilla/templateUser :: footer}">
+	</footer>
+
+</body>
+
+</html>

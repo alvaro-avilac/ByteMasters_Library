@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateUser :: head}">
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateUser :: header}">
+	</header>
+
+	<div class="container">
+		<h3 th:text="${nombre}"></h3>
+	</div>
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">Titulo</th>
+					<th scope="col">ISBN</th>
+					<th scope="col">Numero de ejemplares disponibles</th>
+					<th scope="col">Pedir Prestamo</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="ti:${titulos}">
+					<td th scope="row" th:text="${ti.id}"></td>
+					<td th:text="${ti.nombre}"></td>
+					<td th:text="${ti.isbn}"></td>
+					<td th:text="${ti.ejemplares.size()}"></td>
+
+					<td>
+
+						<div th:if="${ti.ejemplares.size() == 0}">
+							<a class="btn btn-secondary" th:href="@{/reserva/} + ${ti.id}" role="button">pedir
+								reserva</a>
+						</div>
+
+						<div th:if="${ti.ejemplares.size() != 0}">
+							<a class="btn btn-primary" th:href="@{/prestamo/}  + ${ti.id}" role="button">pedir
+								prestamo</a>
+						</div>
+
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+    
+	<footer th:replace="~{plantilla/templateUser :: footer}">
+	</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th:="http://www.thymeleaf.org">
+
+<head th:replace="~{plantilla/templateAdmin :: head}">
+</head>
+
+<body>
+
+	<header th:replace="~{plantilla/templateAdmin :: header}">
+	</header>
+
+	<div class="container">
+		<h1 class="mt-3" th:text="${nombre}"></h1>
+		<a class="btn btn-primary mt-4 mb-4" th:href="@{/altaAutor}" role="button">Añadir nuevo autor</a>
+	</div>
+
+
+	<div class="container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">id</th>
+					<th scope="col">Nombre</th>
+					<th scope="col">Apellido</th>
+					<th scope="col">Editar Autor</th>
+				</tr>
+			</thead>
+			<tbody class="table-group-divider">
+				<tr th:each="a:${autores}">
+					<td th scope="row" th:text="${a.id}"></td>
+					<td th:text="${a.nombre}"></td>
+					<td th:text="${a.apellido}"></td>
+					<td>
+						<a class="btn btn-success" th:href="@{/autor/edit/} + ${a.id}" role="button">Editar</a>
+					</td>
+				
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<footer th:replace="~{plantilla/templateAdmin :: footer}">
+	</footer>
+
+</body>
+
+</html>
