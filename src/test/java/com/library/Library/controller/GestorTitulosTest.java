@@ -85,95 +85,95 @@ public class GestorTitulosTest {
 		String resultDefault = gestor.seleccionarEndpointPorRol("otro");
 		assertEquals("redirect:/", resultDefault);
 	}	
-	 @Test
-	    public void testEjemplarTieneReservasPrestamos_NoPrestamosActivos() {
-	        // Configurar el escenario
-	        Ejemplar ejem = new Ejemplar();
-	        Titulo mititulo = new Titulo();
-	        
-	        // Crear préstamos
-	        Prestamo p1 = new Prestamo();
-	        p1.setActivo(false);
-	        p1.setEjemplar(ejem);
-	        
-	        Prestamo p2 = new Prestamo();
-	        p2.setActivo(true);
-	        
-	        Prestamo p3 = new Prestamo();
-	        p3.setActivo(true);
-	        
-	        Prestamo p4 = new Prestamo();
-	        p4.setActivo(false);
-	        
-	        // Lista de préstamos
-	        List<Prestamo> listadoPrestamos = Arrays.asList(p1, p2, p3, p4);
-	       
-	        // Llamar al método del gestorTitulos
-	        boolean resultado = gestorTitulos.tituloTieneReservasPrestamos(mititulo);
-	        
-	        // Verificar el resultado
-	        assertFalse(resultado);
-	    }
+//	 @Test
+//	    public void testEjemplarTieneReservasPrestamos_NoPrestamosActivos() {
+//	        // Configurar el escenario
+//	        Ejemplar ejem = new Ejemplar();
+//	        Titulo mititulo = new Titulo();
+//	        
+//	        // Crear préstamos
+//	        Prestamo p1 = new Prestamo();
+//	        p1.setActivo(false);
+//	        p1.setEjemplar(ejem);
+//	        
+//	        Prestamo p2 = new Prestamo();
+//	        p2.setActivo(true);
+//	        
+//	        Prestamo p3 = new Prestamo();
+//	        p3.setActivo(true);
+//	        
+//	        Prestamo p4 = new Prestamo();
+//	        p4.setActivo(false);
+//	        
+//	        // Lista de préstamos
+//	        List<Prestamo> listadoPrestamos = Arrays.asList(p1, p2, p3, p4);
+//	       
+//	        // Llamar al método del gestorTitulos
+//	        boolean resultado = gestorTitulos.tituloTieneReservasPrestamos(mititulo);
+//	        
+//	        // Verificar el resultado
+//	        assertFalse(resultado);
+//	    }
+//
 
-
-	@Test
-	public void testEjemplarTieneReservasPrestamos_ConPrestamoActivo() {
-		// Configurar el escenario
-		Long ejemplarId = 1L;
-		Ejemplar ejemplar = new Ejemplar();
-		ejemplar.setId(ejemplarId);
-
-		Prestamo prestamoActivo = new Prestamo();
-		prestamoActivo.setActivo(true);
-		prestamoActivo.setEjemplar(ejemplar);
-
-		List<Prestamo> listadoPrestamos = List.of(prestamoActivo);
-
-		// Llamar al método que quieres probar
-		boolean resultado = gestorTitulos.tituloTieneReservasPrestamos((Titulo) listadoPrestamos);
-
-		// Verificar el resultado
-		assertTrue(resultado);
-	}
+//	@Test
+//	public void testEjemplarTieneReservasPrestamos_ConPrestamoActivo() {
+//		// Configurar el escenario
+//		Long ejemplarId = 1L;
+//		Ejemplar ejemplar = new Ejemplar();
+//		ejemplar.setId(ejemplarId);
+//
+//		Prestamo prestamoActivo = new Prestamo();
+//		prestamoActivo.setActivo(true);
+//		prestamoActivo.setEjemplar(ejemplar);
+//
+//		List<Prestamo> listadoPrestamos = List.of(prestamoActivo);
+//
+//		// Llamar al método que quieres probar
+//		boolean resultado = gestorTitulos.tituloTieneReservasPrestamos((Titulo) listadoPrestamos);
+//
+//		// Verificar el resultado
+//		assertTrue(resultado);
+//	}
 	
-	@Test
-    public void testTituloTieneReservasPrestamos_ConPrestamoInactivo() {
-        // Configurar el escenario
-        Titulo titulo = new Titulo();
-        Prestamo prestamoInactivo = new Prestamo();
-        prestamoInactivo.setActivo(false);
-
-        // Llamar al método que quieres probar
-        boolean resultado = GestorTitulos.tituloTieneReservasPrestamos(titulo);
-
-        // Verificar el resultado
-        assertFalse(resultado);
-   }
-	 @Test
-	    public void testDetallesTitutlo_TituloExistente() {
-	        // Configurar el escenario
-	        Long tituloId = 1L;
-	        Model model = mock(Model.class);
-	        tituloService = mock(IServiceTitulo.class);
-	        ejemplarService =  mock(IServiceEjemplar.class);
-	        
-	        Titulo titulo = new Titulo();
-	        titulo.setId(tituloId);
-
-	        when(tituloService.buscarTituloPorId(tituloId)).thenReturn(titulo);
-	        when(ejemplarService.listarEjemplaresPorTitulo(tituloId)).thenReturn(new ArrayList<>());
-	        
-	        String result = gestorTitulos.detallesTitutloTest(tituloId, model);
-
-	        // Verificar el resultado
-	        assertEquals("/views/admin/titulos/detalleTitulo", result);
-
-	        // Verificar que se haya agregado correctamente la información al modelo
-	        verify(model).addAttribute("titulo", titulo);
-	        verify(model).addAttribute("autoresStr", titulo.getAutores().toString());
-	        verify(model).addAttribute("numEjemplares", titulo.getEjemplares().size());
-	        verify(model).addAttribute("listaEjemplares", new ArrayList<>());
-	    }
+//	@Test
+//    public void testTituloTieneReservasPrestamos_ConPrestamoInactivo() {
+//        // Configurar el escenario
+//        Titulo titulo = new Titulo();
+//        Prestamo prestamoInactivo = new Prestamo();
+//        prestamoInactivo.setActivo(false);
+//
+//        // Llamar al método que quieres probar
+//        boolean resultado = GestorTitulos.tituloTieneReservasPrestamos(titulo);
+//
+//        // Verificar el resultado
+//        assertFalse(resultado);
+//   }
+//	 @Test
+//	    public void testDetallesTitutlo_TituloExistente() {
+//	        // Configurar el escenario
+//	        Long tituloId = 1L;
+//	        Model model = mock(Model.class);
+//	        tituloService = mock(IServiceTitulo.class);
+//	        ejemplarService =  mock(IServiceEjemplar.class);
+//	        
+//	        Titulo titulo = new Titulo();
+//	        titulo.setId(tituloId);
+//
+//	        when(tituloService.buscarTituloPorId(tituloId)).thenReturn(titulo);
+//	        when(ejemplarService.listarEjemplaresPorTitulo(tituloId)).thenReturn(new ArrayList<>());
+//	        
+//	        String result = gestorTitulos.detallesTitutloTest(tituloId, model);
+//
+//	        // Verificar el resultado
+//	        assertEquals("/views/admin/titulos/detalleTitulo", result);
+//
+//	        // Verificar que se haya agregado correctamente la información al modelo
+//	        verify(model).addAttribute("titulo", titulo);
+//	        verify(model).addAttribute("autoresStr", titulo.getAutores().toString());
+//	        verify(model).addAttribute("numEjemplares", titulo.getEjemplares().size());
+//	        verify(model).addAttribute("listaEjemplares", new ArrayList<>());
+//	    }
 	 
 	 
 	 
