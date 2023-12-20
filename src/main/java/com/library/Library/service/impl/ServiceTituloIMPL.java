@@ -1,6 +1,5 @@
 package com.library.Library.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +34,14 @@ public class ServiceTituloIMPL implements IServiceTitulo{
 
 	@Override
 	public void bajaTitulo(Long id) {
-		Titulo t = tituloDAO.findById(id).get();
-		for (Ejemplar e : t.getEjemplares()) {
-			if(e.getTitulo().equals(t)) {
-				ejemplarDAO.deleteById(e.getId());
-			}
-		}
-		tituloDAO.deleteById(id);
+		tituloDAO.findById(id).ifPresent(t -> {
+	        for (Ejemplar e : t.getEjemplares()) {
+	            if (e.getTitulo().equals(t)) {
+	                ejemplarDAO.deleteById(e.getId());
+	            }
+	        }
+	        tituloDAO.deleteById(id);
+	    });
 	}
 
 	@Override
